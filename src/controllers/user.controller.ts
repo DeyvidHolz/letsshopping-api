@@ -16,14 +16,15 @@ class UserController {
       email: req.body.email,
       birthDate: req.body.birthDate,
     }
-  
+
     const userCreated = await User.create(user)
-  
+      .catch(err => {})
+
     if (userCreated) {
       return res.status(201).json({ error: false, message: 'User created' })
     }
   
-    return res.status(422).json({ error: true, message: 'An error occurred while attempt to create user' })
+    return res.status(422).json({ error: true, message: 'An error occurred while attempting to create user' })
   }
 
   public static getAll = async (req, res) => {
