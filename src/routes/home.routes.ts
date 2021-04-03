@@ -6,10 +6,7 @@ import AuthMiddleware from '../middlewares/auth.middleware'
 const router = express.Router()
 
 router.get('/', /* AuthMiddleware */ (req, res) => {
-  res.status(200).send('Hello world!')
-})
-
-router.post('/api/auth', UserController.auth)
-router.post('/api/users/create', UserController.create)
+  res.status(200).send('Hello world!');
+});
 
 export default router

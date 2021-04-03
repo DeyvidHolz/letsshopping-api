@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 // import jwt_decode from 'jwt-decode'
+import { Request, Response } from 'express';
 
 import jwtConfig from '../config/jwt.config'
 
@@ -7,7 +8,7 @@ import { connection } from '../../server';
 import { User } from '../entity/User';
 
 import CryptHelper from '../helpers/crypt.helper';
-import { Request, Response } from 'express';
+import StringHelper from '../helpers/string.helper';
 
 class UserController {
   
@@ -22,21 +23,33 @@ class UserController {
     }
 
     const user = new User();
-    user.firstName = data.firstName;
-    user.lastName = data.lastName;
+    user.firstName = StringHelper.uppercaseFirst(data.firstName);
+    user.lastName = StringHelper.uppercaseFirst(data.lastName);
     user.username = data.username;
     user.password = CryptHelper.encryptPassword(data.password);
     user.email = data.email;
     user.birthDate = data.birthDate;
     
     const userRepository = await connection.getRepository(User);
-    await userRepository.save(user);
 
-    if (user) {
-      return res.status(201).json({ error: false, message: 'User created' })
+    try {
+      await userRepository.save(user);
+
+      if (user.id) {
+        delete user.password;
+        return res.status(201).json({ message: 'User created', user });
+      }
+
+    } catch (err) {
+
+      if (err.code === '23505') {
+        return res.status(422).json({ error: true, message: 'This username is already in user.' }); 
+      }
+      return res.status(500).json({ error: true, message: err });  
+
     }
   
-    return res.status(422).json({ error: true, message: 'An error occurred while attempting to create user' })
+    return res.status(400).json({ error: true, message: 'An error occurred while attempting to create user' })
   }
 
   public static getAll = async (req: Request, res: Response) => {
@@ -47,8 +60,12 @@ class UserController {
 
   public static get = async (req, res) => {
     const userRepository = await connection.getRepository(User);
+
+    if (!req.query.email) 
+      return res.status(422).json({ error: true, message: 'Invalid email' });
+
     const user = await userRepository.findOne({ email: req.query.email });
-    return res.json(user)
+    return res.json(user);
   }
 
   public static auth = async (req, res) => {

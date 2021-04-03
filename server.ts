@@ -2,40 +2,34 @@ import 'reflect-metadata';
 import express, { Application, Router } from 'express'
 import bodyParser from 'body-parser'
 
-import { createConnection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 import { User } from './src/entity/User';
 
 import jwtConfig from './src/config/jwt.config'
 
-import homeRoutes from './src/routes/home.routes'
+import homeRoutes from './src/routes/home.routes';
+import userRoutes from './src/routes/user.routes';
 
 import passport from 'passport'
 import passportJWT from 'passport-jwt';
 
-let connection = null;
+let connection: Connection = null;
 createConnection()
   .then(dbConnection => connection =  dbConnection)
 
 class Server {
-  private app;
-  public connection;
+  private app: Application;
 
   constructor() {
     this.app = express();
     this.config();
     this.passportConfig()
     this.routerConfig();
-    this.setConnection();
   }
 
   private config() {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(bodyParser.json({ limit: '1mb' }));
-  }
-
-  private async setConnection() {
-    this.connection = await createConnection();
-    return this;
   }
 
   private passportConfig() {
@@ -70,6 +64,7 @@ class Server {
 
   private routerConfig() {
     this.app.use('/', homeRoutes);
+    this.app.use('/api/users', userRoutes);
   }
 
   public start = (port: number) => {
