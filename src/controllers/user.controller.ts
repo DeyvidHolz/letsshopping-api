@@ -1,10 +1,13 @@
 import jwt from 'jsonwebtoken'
-import jwt_decode from 'jwt-decode'
+// import jwt_decode from 'jwt-decode'
 
 import jwtConfig from '../config/jwt.config'
 
 import { connection } from '../../server';
 import { User } from '../entity/User';
+
+import CryptHelper from '../helpers/crypt.helper';
+import { Request, Response } from 'express';
 
 class UserController {
   
@@ -22,7 +25,7 @@ class UserController {
     user.firstName = data.firstName;
     user.lastName = data.lastName;
     user.username = data.username;
-    user.password = data.password;
+    user.password = CryptHelper.encryptPassword(data.password);
     user.email = data.email;
     user.birthDate = data.birthDate;
     
@@ -36,7 +39,7 @@ class UserController {
     return res.status(422).json({ error: true, message: 'An error occurred while attempting to create user' })
   }
 
-  public static getAll = async (req, res) => {
+  public static getAll = async (req: Request, res: Response) => {
     const userRepository = await connection.getRepository(User);
     const users = await userRepository.find();
     return res.json(users)
@@ -61,7 +64,7 @@ class UserController {
 
     if (!user) return res.status(401).json({ error: true, message: 'User not found' })
 
-    if (user.password === password) {
+    if (CryptHelper.checkPassword(password, user.password)) {
       let payload = { id: user.id, name: user.firstName, email: user.email }
       let token = jwt.sign(payload, jwtConfig.secretOrKey, { expiresIn: 10000000 })
       
