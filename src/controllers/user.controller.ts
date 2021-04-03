@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken'
 // import jwt_decode from 'jwt-decode'
 import { Request, Response } from 'express';
+import { getConnection  } from 'typeorm';
 
 import jwtConfig from '../config/jwt.config'
 
-import { connection } from '../../server';
 import { User } from '../entity/User';
 
 import CryptHelper from '../helpers/crypt.helper';
@@ -30,7 +30,7 @@ class UserController {
     user.email = data.email;
     user.birthDate = data.birthDate;
     
-    const userRepository = await connection.getRepository(User);
+    const userRepository = await getConnection().getRepository(User);
 
     try {
       await userRepository.save(user);
@@ -53,13 +53,13 @@ class UserController {
   }
 
   public static getAll = async (req: Request, res: Response) => {
-    const userRepository = await connection.getRepository(User);
+    const userRepository = await getConnection().getRepository(User);
     const users = await userRepository.find();
     return res.json(users)
   }
 
   public static get = async (req, res) => {
-    const userRepository = await connection.getRepository(User);
+    const userRepository = await getConnection().getRepository(User);
 
     if (!req.query.email) 
       return res.status(422).json({ error: true, message: 'Invalid email' });
@@ -75,7 +75,7 @@ class UserController {
       return res.status(422).json({ error: true, message: 'Invalid username or password' })
     }
 
-    const userRepository = await connection.getRepository(User);
+    const userRepository = await getConnection().getRepository(User);
 
     let user = await userRepository.findOne({ username });
 
@@ -85,7 +85,8 @@ class UserController {
       let payload = { id: user.id, name: user.firstName, email: user.email }
       let token = jwt.sign(payload, jwtConfig.secretOrKey, { expiresIn: 10000000 })
       
-      return res.json({ error: false, message: token })
+      delete user.password;
+      return res.json({ message: token, user });
     }
 
     return res.status(401).json({ error: true, message: 'Invalid username or password' })

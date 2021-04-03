@@ -2,7 +2,7 @@
    "name": "letsshopping",
    "version": "1.0.0",
    "description": "E-commerce project",
-   "main": "server.ts",
+   "main": "app.ts",
    "scripts": {
       "start": "ts-node src/index.ts",
       "start:dev": "ts-node-dev app.ts",

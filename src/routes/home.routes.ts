@@ -9,4 +9,6 @@ router.get('/', /* AuthMiddleware */ (req, res) => {
   res.status(200).send('Hello world!');
 });
 
+router.post('/api/auth', UserController.auth);
+
 export default router
