@@ -1,25 +1,31 @@
+import 'reflect-metadata';
 import express, { Application, Router } from 'express'
 import bodyParser from 'body-parser'
-// import pool from './src/config/database.config';
+
+import { createConnection } from 'typeorm';
+import { User } from './src/entity/User';
 
 import jwtConfig from './src/config/jwt.config'
-
-import User from './src/models/user.model'
 
 import homeRoutes from './src/routes/home.routes'
 
 import passport from 'passport'
 import passportJWT from 'passport-jwt';
 
+let connection = null;
+createConnection()
+  .then(dbConnection => connection =  dbConnection)
+
 class Server {
   private app;
+  public connection;
 
   constructor() {
     this.app = express();
     this.config();
     this.passportConfig()
     this.routerConfig();
-    // this.dbConnect();
+    this.setConnection();
   }
 
   private config() {
@@ -27,12 +33,10 @@ class Server {
     this.app.use(bodyParser.json({ limit: '1mb' }));
   }
 
-  // private dbConnect() {
-  //   pool.connect(function (err, client, done) {
-  //     if (err) throw new Error(err.message);
-  //     console.log('Database connected');
-  //   })
-  // }
+  private async setConnection() {
+    this.connection = await createConnection();
+    return this;
+  }
 
   private passportConfig() {
 
@@ -44,9 +48,12 @@ class Server {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
     }
 
-    let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
-      const id = jwt_payload.id
-      let user = User.findByPk(id)
+    let strategy = new JwtStrategy(jwtOptions, async function(jwt_payload, next) {
+      const connection = await createConnection();
+      const userRepository = connection.getRepository(User);
+
+      const id = jwt_payload.id;
+      let user = userRepository.findOne(id);
 
       if (user) {
         next(null, user);
@@ -75,4 +82,4 @@ class Server {
 
 }
 
-export default Server;
+export { Server, connection };

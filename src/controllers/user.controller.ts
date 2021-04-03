@@ -3,12 +3,13 @@ import jwt_decode from 'jwt-decode'
 
 import jwtConfig from '../config/jwt.config'
 
-import User from '../models/user.model'
+import { connection } from '../../server';
+import { User } from '../entity/User';
 
 class UserController {
   
   public static create = async (req, res) => {
-    const user = {
+    const data = {
       username: req.body.username,
       password: req.body.password,
       firstName: req.body.firstName,
@@ -17,10 +18,18 @@ class UserController {
       birthDate: req.body.birthDate,
     }
 
-    const userCreated = await User.create(user)
-      .catch(err => {})
+    const user = new User();
+    user.firstName = data.firstName;
+    user.lastName = data.lastName;
+    user.username = data.username;
+    user.password = data.password;
+    user.email = data.email;
+    user.birthDate = data.birthDate;
+    
+    const userRepository = await connection.getRepository(User);
+    await userRepository.save(user);
 
-    if (userCreated) {
+    if (user) {
       return res.status(201).json({ error: false, message: 'User created' })
     }
   
@@ -28,17 +37,14 @@ class UserController {
   }
 
   public static getAll = async (req, res) => {
-    const users = await User.findAll()
+    const userRepository = await connection.getRepository(User);
+    const users = await userRepository.find();
     return res.json(users)
   }
 
   public static get = async (req, res) => {
-    const user = await User.findOne({
-      where: {
-        email: req.query.email
-      }
-    })
-
+    const userRepository = await connection.getRepository(User);
+    const user = await userRepository.findOne({ email: req.query.email });
     return res.json(user)
   }
 
@@ -49,7 +55,9 @@ class UserController {
       return res.status(422).json({ error: true, message: 'Invalid username or password' })
     }
 
-    let user = await User.findOne({ where: { username } })
+    const userRepository = await connection.getRepository(User);
+
+    let user = await userRepository.findOne({ username });
 
     if (!user) return res.status(401).json({ error: true, message: 'User not found' })
 
