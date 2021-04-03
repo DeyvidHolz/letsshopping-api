@@ -74,7 +74,7 @@ createConnection().then(connection => {
   
   }
 
-  const port = parseInt(process.env.PORT || '4000')
+  const port = parseInt(process.env.PORT || '3000')
 
   new Server().start(port)
     .then(port => console.log(`Running on port ${port}`))
