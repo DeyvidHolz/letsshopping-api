@@ -37,11 +37,11 @@ class ProductController {
       validationErrors.push({ field: 'code', message: 'The product code must have 6 characters.'});
     }
 
-    if (product.code.match(/[A-Za-z0-9]+/g)) {
+    if (!product.code.match(/[A-Za-z0-9]+/g)) {
       validationErrors.push({ field: 'code', message: 'Invalid product code.'});
     }
 
-    if (product.name.match(/[A-Za-z0-9]+/g)) {
+    if (!product.name.match(/[A-Za-z0-9]+/g)) {
       validationErrors.push({ field: 'name', message: 'Invalid product name.'});
     }
 
