@@ -16,7 +16,7 @@ export class Category {
   @Column('text')
   description: string;
 
-  @ManyToMany(type => Product)
+  @ManyToMany(() => Product/*, product => product.categories*/)
   @JoinTable()
   products: Product[]
 

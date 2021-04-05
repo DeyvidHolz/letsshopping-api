@@ -9,6 +9,7 @@ import jwtConfig from './src/config/jwt.config'
 
 import homeRoutes from './src/routes/home.routes';
 import userRoutes from './src/routes/user.routes';
+import productRoutes from './src/routes/product.routes';
 
 import passport from 'passport'
 import passportJWT from 'passport-jwt';
@@ -62,6 +63,7 @@ createConnection().then(connection => {
     private routerConfig() {
       this.app.use('/', homeRoutes);
       this.app.use('/api/users', userRoutes);
+      this.app.use('/api/products', productRoutes);
     }
   
     public start = (port: number) => {

@@ -25,14 +25,17 @@ export class Product {
   @Column()
   isActive: boolean;
 
+  @Column({ default: 0 })
+  stock: number;
+
   @CreateDateColumn()
   createdAt: string;
 
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToMany(type => Category)
+  @ManyToMany(() => Category/*, category => category.products*/)
   @JoinTable()
-  categories: Category[]
+  categories: Category[];
 
 }

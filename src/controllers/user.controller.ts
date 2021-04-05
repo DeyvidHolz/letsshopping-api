@@ -9,6 +9,7 @@ import { User } from '../entity/User';
 
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
+import validator from 'validator';
 
 class UserController {
   
@@ -20,6 +21,36 @@ class UserController {
       lastName: req.body.lastName,
       email: req.body.email,
       birthDate: req.body.birthDate,
+    }
+
+    const validationErrors = [];
+
+    if (!data.username.match(/[\w\.]+/g)) {
+      validationErrors.push({ field: 'username', message: 'Invalid username.'});
+    }
+
+    if (!(data.password.length > 5 && data.password.length < 100)) {
+      validationErrors.push({ field: 'passwrd', message: 'Invalid password.', tip: 'Password length must be between 6-99 characters.'});
+    }
+
+    if (!validator.isAlpha(data.firstName)) {
+      validationErrors.push({ field: 'firstName', message: 'Invalid first name.'});
+    }
+
+    if (!data.lastName.match(/^[A-Za-z]+$/)) {
+      validationErrors.push({ field: 'lastName', message: 'Invalid last name.'});
+    }
+
+    if (!validator.isEmail(data.email)) {
+      validationErrors.push({ field: 'email', message: 'Invalid email.'});
+    }
+
+    if (!validator.isDate(data.birthDate)) {
+      validationErrors.push({ field: 'birthDate', message: 'Invalid birth date.', tip: 'Birth date format must be YYYY-MM-DD.'});
+    }
+
+    if (validationErrors.length) {
+      return res.status(422).json({ error: true, message: 'Invalid data.', errors: validationErrors }); 
     }
 
     const user = new User();
@@ -43,7 +74,7 @@ class UserController {
     } catch (err) {
 
       if (err.code === '23505') {
-        return res.status(422).json({ error: true, message: 'This username is already in user.' }); 
+        return res.status(422).json({ error: true, message: 'This username is already in use.' }); 
       }
       return res.status(500).json({ error: true, message: err });  
 
@@ -95,4 +126,4 @@ class UserController {
 
 }
 
-export default UserController
+export default UserController;
