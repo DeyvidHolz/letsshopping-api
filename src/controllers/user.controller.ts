@@ -10,6 +10,8 @@ import { User } from '../entity/User';
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
 import UserValidator from '../validators/user.validator';
+import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import internalServerError from '../errors/http/internalServer.error';
 
 class UserController {
   
@@ -34,11 +36,11 @@ class UserController {
     const validation = new UserValidator(user);
 
     if (validation.hasErrors()) {
-      return res.status(422).json({
-        error: true,
+      return unprocessableEntity({
         message: 'Invalid data.',
         errors: validation.validationErrors
-      }); 
+      })
+      .send(res);
     }
     
     const userRepository = await getConnection().getRepository(User);
@@ -54,13 +56,17 @@ class UserController {
     } catch (err) {
 
       if (err.code === '23505') {
-        return res.status(422).json({ error: true, message: 'This username is already in use.' }); 
+        return unprocessableEntity({
+          message: 'This username is already in use.',
+          errors: validation.validationErrors
+        })
+        .send(res);
       }
-      return res.status(500).json({ error: true, message: err });  
-
+      
+      return internalServerError({ message: err.message })
+        .send(res);
     }
   
-    return res.status(400).json({ error: true, message: 'An error occurred while attempting to create user' })
   }
 
   public static getAll = async (req: Request, res: Response) => {
@@ -73,7 +79,10 @@ class UserController {
     const userRepository = await getConnection().getRepository(User);
 
     if (!req.query.email) 
-      return res.status(422).json({ error: true, message: 'Invalid email' });
+      return unprocessableEntity({
+        message: 'Invalid email.',
+      })
+      .send(res);
 
     const user = await userRepository.findOne({ email: req.query.email });
     return res.json(user);
@@ -83,14 +92,21 @@ class UserController {
     const { username, password } = req.body
 
     if (!username || !password) {
-      return res.status(422).json({ error: true, message: 'Invalid username or password' })
+      return unprocessableEntity({
+        message: 'Invalid username or password.',
+      })
+      .send(res);
     }
 
     const userRepository = await getConnection().getRepository(User);
 
     let user = await userRepository.findOne({ username });
 
-    if (!user) return res.status(401).json({ error: true, message: 'User not found' })
+    if (!user) 
+      return unprocessableEntity({
+        message: 'Invalid username or password.',
+      })
+      .send(res);
 
     if (CryptHelper.checkPassword(password, user.password)) {
       let payload = { id: user.id, name: user.firstName, email: user.email }
@@ -100,7 +116,10 @@ class UserController {
       return res.json({ message: token, user });
     }
 
-    return res.status(401).json({ error: true, message: 'Invalid username or password' })
+    return unprocessableEntity({
+      message: 'Invalid username or password.',
+    })
+    .send(res);
 
   }
 

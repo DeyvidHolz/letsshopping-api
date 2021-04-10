@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import { Product } from '../entity/Product';
 import { Category } from '../entity/Category';
 import ProductValidator from '../validators/product.validator';
+import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import internalServerError from '../errors/http/internalServer.error';
 
 class ProductController {
 
@@ -33,7 +35,11 @@ class ProductController {
     const validation = new ProductValidator(product);
 
     if (validation.hasErrors()) {
-      return res.status(422).json({ error: true, message: 'Invalid data.', errors: validation.validationErrors }); 
+      return unprocessableEntity({
+        message: 'Invalid data.',
+        errors: validation.validationErrors
+      })
+      .send(res);
     }
 
     try {
@@ -41,9 +47,12 @@ class ProductController {
       return res.status(201).json({ message: 'Product created', product });
     } catch (err) {
       if (err.code === '23505') {
-        return res.status(422).json({ error: true, message: 'This code is already in use.' }); 
+        return unprocessableEntity({ message: 'This code is already in use.' })
+          .send(res);
       }
-      return res.status(500).json({ error: true, message: err });  
+
+      return internalServerError({ message: err.message })
+        .send(res);
     }
     
   }
