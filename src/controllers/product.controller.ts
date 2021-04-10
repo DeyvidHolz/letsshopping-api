@@ -3,8 +3,7 @@ import { Request, Response } from 'express';
 
 import { Product } from '../entity/Product';
 import { Category } from '../entity/Category';
-
-import validator from 'validator';
+import ProductValidator from '../validators/product.validator';
 
 class ProductController {
 
@@ -31,22 +30,10 @@ class ProductController {
       product.categories = categories;
     }
 
-    const validationErrors = [];
+    const validation = new ProductValidator(product);
 
-    if (product.code.length !== 6) {
-      validationErrors.push({ field: 'code', message: 'The product code must have 6 characters.'});
-    }
-
-    if (!product.code.match(/[A-Za-z0-9]+/g)) {
-      validationErrors.push({ field: 'code', message: 'Invalid product code.'});
-    }
-
-    if (!product.name.match(/[A-Za-z0-9]+/g)) {
-      validationErrors.push({ field: 'name', message: 'Invalid product name.'});
-    }
-
-    if (validationErrors.length) {
-      return res.status(422).json({ error: true, message: 'Invalid data.', errors: validationErrors }); 
+    if (validation.hasErrors()) {
+      return res.status(422).json({ error: true, message: 'Invalid data.', errors: validation.validationErrors }); 
     }
 
     try {

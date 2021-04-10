@@ -9,7 +9,7 @@ import { User } from '../entity/User';
 
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
-import validator from 'validator';
+import UserValidator from '../validators/user.validator';
 
 class UserController {
   
@@ -23,36 +23,6 @@ class UserController {
       birthDate: req.body.birthDate,
     }
 
-    const validationErrors = [];
-
-    if (!data.username.match(/[\w\.]+/g)) {
-      validationErrors.push({ field: 'username', message: 'Invalid username.'});
-    }
-
-    if (!(data.password.length > 5 && data.password.length < 100)) {
-      validationErrors.push({ field: 'passwrd', message: 'Invalid password.', tip: 'Password length must be between 6-99 characters.'});
-    }
-
-    if (!validator.isAlpha(data.firstName)) {
-      validationErrors.push({ field: 'firstName', message: 'Invalid first name.'});
-    }
-
-    if (!data.lastName.match(/^[A-Za-z]+$/)) {
-      validationErrors.push({ field: 'lastName', message: 'Invalid last name.'});
-    }
-
-    if (!validator.isEmail(data.email)) {
-      validationErrors.push({ field: 'email', message: 'Invalid email.'});
-    }
-
-    if (!validator.isDate(data.birthDate)) {
-      validationErrors.push({ field: 'birthDate', message: 'Invalid birth date.', tip: 'Birth date format must be YYYY-MM-DD.'});
-    }
-
-    if (validationErrors.length) {
-      return res.status(422).json({ error: true, message: 'Invalid data.', errors: validationErrors }); 
-    }
-
     const user = new User();
     user.firstName = StringHelper.uppercaseFirst(data.firstName);
     user.lastName = StringHelper.uppercaseFirst(data.lastName);
@@ -60,6 +30,16 @@ class UserController {
     user.password = CryptHelper.encryptPassword(data.password);
     user.email = data.email;
     user.birthDate = data.birthDate;
+
+    const validation = new UserValidator(user);
+
+    if (validation.hasErrors()) {
+      return res.status(422).json({
+        error: true,
+        message: 'Invalid data.',
+        errors: validation.validationErrors
+      }); 
+    }
     
     const userRepository = await getConnection().getRepository(User);
 
