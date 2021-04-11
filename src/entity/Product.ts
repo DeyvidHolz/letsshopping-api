@@ -1,9 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
-import { Category } from './Category';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
+import { Category } from "./Category";
 
-@Entity({ name: 'products' })
+@Entity({ name: "products" })
 export class Product {
-
   @PrimaryGeneratedColumn()
   id: string;
 
@@ -16,7 +23,7 @@ export class Product {
   @Column()
   shortDescription: string;
 
-  @Column('text')
+  @Column("text")
   description: string;
 
   @Column()
@@ -34,8 +41,7 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToMany(() => Category/*, category => category.products*/)
+  @ManyToMany(() => Category /*, category => category.products*/)
   @JoinTable()
   categories: Category[];
-
 }
