@@ -60,24 +60,40 @@ class ProductController {
     const product = await getConnection()
       .getRepository(Product)
       .findOne(Number(req.params.id), { relations: ["categories"] });
+
+    if (!product) {
+      return notFound({
+        message: `Product with ID ${req.params.id} not found.`,
+      }).send(res);
+    }
+
     return res.status(200).json(product);
   };
 
   public static getAll = async (req: Request, res: Response) => {
     const products = await getConnection()
       .getRepository(Product)
-      .find({ relations: ["categories"] });
+      .find({ relations: ["categories"], order: { id: "DESC" } });
+
     return res.status(200).json(products);
   };
 
   public static update = async (req: Request, res: Response) => {
     const productRepository = ProductController.getRespository();
 
+    const productIDisEmpty = req.body.id === undefined || req.body.id === "";
+
+    if (productIDisEmpty) {
+      return unprocessableEntity({
+        message: "Field 'id' is required.",
+      }).send(res);
+    }
+
     const product = await productRepository.findOne(Number(req.body.id));
 
     if (!product) {
       return notFound({
-        message: `Product ${req.body.id} not found.`,
+        message: `Product with ID ${req.body.id} not found.`,
       }).send(res);
     }
 
@@ -129,13 +145,13 @@ class ProductController {
 
     if (!product) {
       return notFound({
-        message: `Product ${req.body.id} not found.`,
+        message: `Product ${req.params.id} not found.`,
       }).send(res);
     }
 
     try {
-      await productRepository.delete(product);
-      return res.status(200).json({ message: "Product deleted" });
+      await productRepository.remove(product);
+      return res.status(200).json({ message: "Product deleted." });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
