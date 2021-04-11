@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { validationMessages } from "../../validators/validator";
+import { Response } from 'express';
+import { validationMessages } from '../../validators/validator';
 
 class HTTPError {
   public message!: string;

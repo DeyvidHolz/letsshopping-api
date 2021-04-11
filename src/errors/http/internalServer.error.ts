@@ -1,4 +1,4 @@
-import { HTTPError, httpErrorData } from "./error";
+import { HTTPError, httpErrorData } from './error';
 
 class InternalServerError extends HTTPError {}
 

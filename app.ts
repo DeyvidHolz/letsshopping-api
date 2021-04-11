@@ -1,18 +1,18 @@
-import "reflect-metadata";
-import express, { Application, Router } from "express";
-import bodyParser from "body-parser";
+import 'reflect-metadata';
+import express, { Application, Router } from 'express';
+import bodyParser from 'body-parser';
 
-import { createConnection, getConnection } from "typeorm";
-import { User } from "./src/entity/User";
+import { createConnection, getConnection } from 'typeorm';
+import { User } from './src/entity/User';
 
-import jwtConfig from "./src/config/jwt.config";
+import jwtConfig from './src/config/jwt.config';
 
-import homeRoutes from "./src/routes/home.routes";
-import userRoutes from "./src/routes/user.routes";
-import productRoutes from "./src/routes/product.routes";
+import homeRoutes from './src/routes/home.routes';
+import userRoutes from './src/routes/user.routes';
+import productRoutes from './src/routes/product.routes';
 
-import passport from "passport";
-import passportJWT from "passport-jwt";
+import passport from 'passport';
+import passportJWT from 'passport-jwt';
 
 createConnection().then((connection) => {
   class Server {
@@ -27,7 +27,7 @@ createConnection().then((connection) => {
 
     private config() {
       this.app.use(bodyParser.urlencoded({ extended: true }));
-      this.app.use(bodyParser.json({ limit: "1mb" }));
+      this.app.use(bodyParser.json({ limit: '1mb' }));
     }
 
     private passportConfig() {
@@ -52,7 +52,7 @@ createConnection().then((connection) => {
           } else {
             next(null, false);
           }
-        }
+        },
       );
 
       passport.use(strategy);
@@ -60,9 +60,9 @@ createConnection().then((connection) => {
     }
 
     private routerConfig() {
-      this.app.use("/", homeRoutes);
-      this.app.use("/api/users", userRoutes);
-      this.app.use("/api/products", productRoutes);
+      this.app.use('/', homeRoutes);
+      this.app.use('/api/users', userRoutes);
+      this.app.use('/api/products', productRoutes);
     }
 
     public start = (port: number) => {
@@ -71,12 +71,12 @@ createConnection().then((connection) => {
           .listen(port, () => {
             resolve(port);
           })
-          .on("error", (err: Object) => reject(err));
+          .on('error', (err: Object) => reject(err));
       });
     };
   }
 
-  const port = parseInt(process.env.PORT || "3000");
+  const port = parseInt(process.env.PORT || '3000');
 
   new Server()
     .start(port)

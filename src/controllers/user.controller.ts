@@ -1,18 +1,18 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 // import jwt_decode from 'jwt-decode'
-import { Request, Response } from "express";
-import { getConnection } from "typeorm";
+import { Request, Response } from 'express';
+import { getConnection } from 'typeorm';
 
-import jwtConfig from "../config/jwt.config";
+import jwtConfig from '../config/jwt.config';
 
-import { User } from "../entity/User";
+import { User } from '../entity/User';
 
-import CryptHelper from "../helpers/crypt.helper";
-import StringHelper from "../helpers/string.helper";
-import UserValidator from "../validators/user.validator";
-import unprocessableEntity from "../errors/http/unprocessableEntity.error";
-import internalServerError from "../errors/http/internalServer.error";
-import notFound from "../errors/http/notFound.error";
+import CryptHelper from '../helpers/crypt.helper';
+import StringHelper from '../helpers/string.helper';
+import UserValidator from '../validators/user.validator';
+import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import internalServerError from '../errors/http/internalServer.error';
+import notFound from '../errors/http/notFound.error';
 
 class UserController {
   public static create = async (req, res) => {
@@ -37,7 +37,7 @@ class UserController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: "Invalid data.",
+        message: 'Invalid data.',
         errors: validation.validationErrors,
       }).send(res);
     }
@@ -49,12 +49,12 @@ class UserController {
 
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: "User created", user });
+        return res.status(201).json({ message: 'User created', user });
       }
     } catch (err) {
-      if (err.code === "23505") {
+      if (err.code === '23505') {
         return unprocessableEntity({
-          message: "This username is already in use.",
+          message: 'This username is already in use.',
           errors: validation.validationErrors,
         }).send(res);
       }
@@ -74,7 +74,7 @@ class UserController {
 
     if (!req.query.email)
       return unprocessableEntity({
-        message: "Invalid email.",
+        message: 'Invalid email.',
       }).send(res);
 
     const user = await userRepository.findOne({ email: req.query.email });
@@ -86,7 +86,7 @@ class UserController {
 
     if (!username || !password) {
       return unprocessableEntity({
-        message: "Invalid username or password.",
+        message: 'Invalid username or password.',
       }).send(res);
     }
 
@@ -96,7 +96,7 @@ class UserController {
 
     if (!user)
       return unprocessableEntity({
-        message: "Invalid username or password.",
+        message: 'Invalid username or password.',
       }).send(res);
 
     if (CryptHelper.checkPassword(password, user.password)) {
@@ -110,14 +110,14 @@ class UserController {
     }
 
     return unprocessableEntity({
-      message: "Invalid username or password.",
+      message: 'Invalid username or password.',
     }).send(res);
   };
 
   public static update = async (req, res) => {
     const userRepository = await getConnection().getRepository(User);
 
-    const userIDisEmpty = req.body.id === undefined || req.body.id === "";
+    const userIDisEmpty = req.body.id === undefined || req.body.id === '';
 
     if (userIDisEmpty) {
       return unprocessableEntity({
@@ -134,7 +134,7 @@ class UserController {
     }
 
     const currentPasswordIsEmpty =
-      req.body.currentPassword === undefined || req.body.currentPassword === "";
+      req.body.currentPassword === undefined || req.body.currentPassword === '';
 
     if (currentPasswordIsEmpty) {
       return unprocessableEntity({
@@ -144,7 +144,7 @@ class UserController {
 
     if (!CryptHelper.checkPassword(req.body.currentPassword, user.password)) {
       return unprocessableEntity({
-        message: "Password incorrect.",
+        message: 'Password incorrect.',
       }).send(res);
     }
 
@@ -166,7 +166,7 @@ class UserController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: "Invalid data.",
+        message: 'Invalid data.',
         errors: validation.validationErrors,
       }).send(res);
     }
@@ -176,12 +176,12 @@ class UserController {
 
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: "User created", user });
+        return res.status(201).json({ message: 'User created', user });
       }
     } catch (err) {
-      if (err.code === "23505") {
+      if (err.code === '23505') {
         return unprocessableEntity({
-          message: "This username is already in use.",
+          message: 'This username is already in use.',
           errors: validation.validationErrors,
         }).send(res);
       }

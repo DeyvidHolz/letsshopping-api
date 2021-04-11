@@ -1,12 +1,12 @@
-import { getConnection } from "typeorm";
-import { Request, Response } from "express";
+import { getConnection } from 'typeorm';
+import { Request, Response } from 'express';
 
-import { Product } from "../entity/Product";
-import { Category } from "../entity/Category";
-import ProductValidator from "../validators/product.validator";
-import unprocessableEntity from "../errors/http/unprocessableEntity.error";
-import internalServerError from "../errors/http/internalServer.error";
-import notFound from "../errors/http/notFound.error";
+import { Product } from '../entity/Product';
+import { Category } from '../entity/Category';
+import ProductValidator from '../validators/product.validator';
+import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import internalServerError from '../errors/http/internalServer.error';
+import notFound from '../errors/http/notFound.error';
 
 class ProductController {
   private static getRespository() {
@@ -28,7 +28,7 @@ class ProductController {
     if (req.body.categories) {
       const categoryRepository = getConnection().getRepository(Category);
       const categories = await categoryRepository.findByIds(
-        req.body.categories
+        req.body.categories,
       );
       product.categories = categories;
     }
@@ -37,18 +37,18 @@ class ProductController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: "Invalid data.",
+        message: 'Invalid data.',
         errors: validation.validationErrors,
       }).send(res);
     }
 
     try {
       await productRepository.save(product);
-      return res.status(201).json({ message: "Product created", product });
+      return res.status(201).json({ message: 'Product created', product });
     } catch (err) {
-      if (err.code === "23505") {
+      if (err.code === '23505') {
         return unprocessableEntity({
-          message: "This code is already in use.",
+          message: 'This code is already in use.',
         }).send(res);
       }
 
@@ -59,7 +59,7 @@ class ProductController {
   public static get = async (req: Request, res: Response) => {
     const product = await getConnection()
       .getRepository(Product)
-      .findOne(Number(req.params.id), { relations: ["categories"] });
+      .findOne(Number(req.params.id), { relations: ['categories'] });
 
     if (!product) {
       return notFound({
@@ -73,7 +73,7 @@ class ProductController {
   public static getAll = async (req: Request, res: Response) => {
     const products = await getConnection()
       .getRepository(Product)
-      .find({ relations: ["categories"], order: { id: "DESC" } });
+      .find({ relations: ['categories'], order: { id: 'DESC' } });
 
     return res.status(200).json(products);
   };
@@ -81,7 +81,7 @@ class ProductController {
   public static update = async (req: Request, res: Response) => {
     const productRepository = ProductController.getRespository();
 
-    const productIDisEmpty = req.body.id === undefined || req.body.id === "";
+    const productIDisEmpty = req.body.id === undefined || req.body.id === '';
 
     if (productIDisEmpty) {
       return unprocessableEntity({
@@ -110,7 +110,7 @@ class ProductController {
     if (req.body.categories) {
       const categoryRepository = getConnection().getRepository(Category);
       const categories = await categoryRepository.findByIds(
-        req.body.categories
+        req.body.categories,
       );
       product.categories = categories;
     }
@@ -119,18 +119,18 @@ class ProductController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: "Invalid data.",
+        message: 'Invalid data.',
         errors: validation.validationErrors,
       }).send(res);
     }
 
     try {
       await productRepository.save(product);
-      return res.status(200).json({ message: "Product updated", product });
+      return res.status(200).json({ message: 'Product updated', product });
     } catch (err) {
-      if (err.code === "23505") {
+      if (err.code === '23505') {
         return unprocessableEntity({
-          message: "This code is already in use.",
+          message: 'This code is already in use.',
         }).send(res);
       }
 
@@ -151,7 +151,7 @@ class ProductController {
 
     try {
       await productRepository.remove(product);
-      return res.status(200).json({ message: "Product deleted." });
+      return res.status(200).json({ message: 'Product deleted.' });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }

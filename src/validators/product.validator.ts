@@ -1,5 +1,5 @@
-import { Product } from "../entity/Product";
-import { validation, validationMessages, Validator } from "./validator";
+import { Product } from '../entity/Product';
+import { validation, validationMessages, Validator } from './validator';
 
 export default class ProductValidator extends Validator {
   public product: Product;
@@ -15,22 +15,22 @@ export default class ProductValidator extends Validator {
 
     if (this.product.code.length !== 6) {
       this.validationErrors.push({
-        field: "code",
-        message: "The product code must have 6 characters.",
+        field: 'code',
+        message: 'The product code must have 6 characters.',
       });
     }
 
     if (!this.product.code.match(/[A-Za-z0-9]+/g)) {
       this.validationErrors.push({
-        field: "code",
-        message: "Invalid product code.",
+        field: 'code',
+        message: 'Invalid product code.',
       });
     }
 
     if (!this.product.name.match(/[A-Za-z0-9]+/g)) {
       this.validationErrors.push({
-        field: "name",
-        message: "Invalid product name.",
+        field: 'name',
+        message: 'Invalid product name.',
       });
     }
 

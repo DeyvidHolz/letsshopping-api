@@ -4,10 +4,10 @@ import {
   Column,
   ManyToMany,
   JoinTable,
-} from "typeorm";
-import { Product } from "./Product";
+} from 'typeorm';
+import { Product } from './Product';
 
-@Entity({ name: "categories" })
+@Entity({ name: 'categories' })
 export class Category {
   @PrimaryGeneratedColumn()
   id: number;
@@ -18,7 +18,7 @@ export class Category {
   @Column()
   shortDescription: string;
 
-  @Column("text")
+  @Column('text')
   description: string;
 
   @ManyToMany(() => Product /*, product => product.categories*/)

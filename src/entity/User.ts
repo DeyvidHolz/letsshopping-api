@@ -4,9 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
-@Entity({ name: "users" })
+@Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,7 +26,7 @@ export class User {
   @Column()
   email: string;
 
-  @Column({ type: "date" })
+  @Column({ type: 'date' })
   birthDate: string;
 
   @CreateDateColumn()
