@@ -49,7 +49,7 @@ class UserController {
 
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: 'User created', user });
+        return res.status(201).json({ message: 'User created.', user });
       }
     } catch (err) {
       if (err.code === '23505') {
@@ -78,6 +78,14 @@ class UserController {
       }).send(res);
 
     const user = await userRepository.findOne({ email: req.query.email });
+
+    if (!user)
+      return notFound({
+        message: `User with email ${req.query.email} not found.`,
+      }).send(res);
+
+    delete user.password;
+
     return res.json(user);
   };
 
@@ -172,11 +180,9 @@ class UserController {
     }
 
     try {
-      await userRepository.save(user);
-
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: 'User created', user });
+        return res.status(201).json({ message: 'User updated.', user });
       }
     } catch (err) {
       if (err.code === '23505') {
