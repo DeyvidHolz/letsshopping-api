@@ -15,7 +15,7 @@ export default class UserValidator extends Validator {
   public validate(): validation {
     this.validationErrors = [];
 
-    if (!this.user.username.match(/[\w\.]+/g)) {
+    if (!this.user.username.match(/^[\w\.]+$/)) {
       this.validationErrors.push({
         field: 'username',
         message: 'Invalid username.',
@@ -30,14 +30,14 @@ export default class UserValidator extends Validator {
       });
     }
 
-    if (!validator.isAlpha(this.user.firstName)) {
+    if (!this.user.firstName.match(/^[A-Za-z]+$/)) {
       this.validationErrors.push({
         field: 'firstName',
         message: 'Invalid first name.',
       });
     }
 
-    if (!this.user.lastName.match(/^[A-Za-z]+$/)) {
+    if (!this.user.lastName.match(/^[A-Za-z ]+$/)) {
       this.validationErrors.push({
         field: 'lastName',
         message: 'Invalid last name.',
