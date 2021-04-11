@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import ProductController from '../controllers/product.controller';
 
 import AuthMiddleware from '../middlewares/auth.middleware';
