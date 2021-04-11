@@ -10,7 +10,7 @@ type validation = {
 };
 
 abstract class Validator {
-  public validationErrors: validationMessages[];
+  public validationErrors: validationMessages[] | null = null;
 
   public validate(): validation {
     this.validationErrors = [];
