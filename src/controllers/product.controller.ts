@@ -13,7 +13,7 @@ class ProductController {
     return getConnection().getRepository(Product);
   }
 
-  public static create = async (req: Request, res: Response) => {
+  public static async create(req: Request, res: Response) {
     const productRepository = ProductController.getRespository();
 
     const product = new Product();
@@ -54,9 +54,9 @@ class ProductController {
 
       return internalServerError({ message: err.message }).send(res);
     }
-  };
+  }
 
-  public static get = async (req: Request, res: Response) => {
+  public static async get(req: Request, res: Response) {
     const product = await getConnection()
       .getRepository(Product)
       .findOne(Number(req.params.id), { relations: ['categories'] });
@@ -68,17 +68,17 @@ class ProductController {
     }
 
     return res.status(200).json(product);
-  };
+  }
 
-  public static getAll = async (req: Request, res: Response) => {
+  public static async getAll(req: Request, res: Response) {
     const products = await getConnection()
       .getRepository(Product)
       .find({ relations: ['categories'], order: { id: 'DESC' } });
 
     return res.status(200).json(products);
-  };
+  }
 
-  public static update = async (req: Request, res: Response) => {
+  public static async update(req: Request, res: Response) {
     const productRepository = ProductController.getRespository();
 
     const productIDisEmpty = req.body.id === undefined || req.body.id === '';
@@ -136,9 +136,9 @@ class ProductController {
 
       return internalServerError({ message: err.message }).send(res);
     }
-  };
+  }
 
-  public static delete = async (req: Request, res: Response) => {
+  public static async delete(req: Request, res: Response) {
     const productRepository = ProductController.getRespository();
 
     try {
@@ -150,7 +150,7 @@ class ProductController {
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
-  };
+  }
 }
 
 export default ProductController;

@@ -16,7 +16,7 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 
 class UserController {
-  public static create = async (req, res) => {
+  public static async create(req: Request, res: Response) {
     const data = {
       username: req.body.username,
       password: req.body.password,
@@ -62,15 +62,15 @@ class UserController {
 
       return internalServerError({ message: err.message }).send(res);
     }
-  };
+  }
 
-  public static getAll = async (req: Request, res: Response) => {
+  public static async getAll(req: Request, res: Response) {
     const userRepository = await getConnection().getRepository(User);
     const users = await userRepository.find();
     return res.json(users);
-  };
+  }
 
-  public static get = async (req, res) => {
+  public static async get(req: Request, res: Response) {
     const userRepository = await getConnection().getRepository(User);
 
     if (!req.query.email)
@@ -78,7 +78,9 @@ class UserController {
         message: 'Invalid email.',
       }).send(res);
 
-    const user = await userRepository.findOne({ email: req.query.email });
+    const email: string = req.query.email as string;
+
+    const user = await userRepository.findOne({ email });
 
     if (!user)
       return notFound({
@@ -88,9 +90,9 @@ class UserController {
     delete user.password;
 
     return res.json(user);
-  };
+  }
 
-  public static auth = async (req, res) => {
+  public static async auth(req: Request, res: Response) {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -128,9 +130,9 @@ class UserController {
     return unprocessableEntity({
       message: 'Invalid username or password.',
     }).send(res);
-  };
+  }
 
-  public static update = async (req, res) => {
+  public static async update(req: Request, res: Response) {
     const userRepository = await getConnection().getRepository(User);
 
     const userIDisEmpty = req.body.id === undefined || req.body.id === '';
@@ -202,9 +204,9 @@ class UserController {
 
       return internalServerError({ message: err.message }).send(res);
     }
-  };
+  }
 
-  public static delete = async (req, res) => {
+  public static async delete(req: Request, res: Response) {
     try {
       const userDecoded = decode(req.headers.authorization);
       const userRepository = getConnection().getRepository(User);
@@ -219,7 +221,7 @@ class UserController {
         message: 'Invalid token or user already deleted.',
       }).send(res);
     }
-  };
+  }
 }
 
 export default UserController;
