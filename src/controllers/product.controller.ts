@@ -141,17 +141,12 @@ class ProductController {
   public static delete = async (req: Request, res: Response) => {
     const productRepository = ProductController.getRespository();
 
-    const product = await productRepository.findOne(Number(req.params.id));
-
-    if (!product) {
-      return notFound({
-        message: `Product ${req.params.id} not found.`,
-      }).send(res);
-    }
-
     try {
-      await productRepository.remove(product);
-      return res.status(200).json({ message: 'Product deleted.' });
+      await productRepository.delete({ id: req.params.id });
+
+      return res
+        .status(200)
+        .json({ message: `Product with ID ${req.params.id} deleted.` });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
