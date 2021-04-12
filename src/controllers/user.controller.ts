@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 // import jwt_decode from 'jwt-decode'
 import { Request, Response } from 'express';
 import { getConnection } from 'typeorm';
+import decode from 'jwt-decode';
 
 import jwtConfig from '../config/jwt.config';
 
@@ -108,7 +109,14 @@ class UserController {
       }).send(res);
 
     if (CryptHelper.checkPassword(password, user.password)) {
-      let payload = { id: user.id, name: user.firstName, email: user.email };
+      let payload = {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        username: user.username,
+      };
+
       let token = jwt.sign(payload, jwtConfig.secretOrKey, {
         expiresIn: 10000000,
       });
