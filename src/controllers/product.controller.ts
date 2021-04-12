@@ -7,6 +7,8 @@ import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
+import { getMessage } from '../helpers/messages';
+import productMessages from '../messages/product.messages';
 
 class ProductController {
   private static getRespository() {
@@ -37,18 +39,21 @@ class ProductController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: 'Invalid data.',
+        message: getMessage(productMessages.invalidData),
         errors: validation.validationErrors,
       }).send(res);
     }
 
     try {
       await productRepository.save(product);
-      return res.status(201).json({ message: 'Product created', product });
+      return res.status(201).json({
+        message: getMessage(productMessages.created, product),
+        product,
+      });
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
-          message: 'This code is already in use.',
+          message: getMessage(productMessages.alreadyExists),
         }).send(res);
       }
 
@@ -63,7 +68,9 @@ class ProductController {
 
     if (!product) {
       return notFound({
-        message: `Product with ID ${req.params.id} not found.`,
+        message: getMessage(productMessages.searchByIDNotFound, {
+          id: req.params.id,
+        }),
       }).send(res);
     }
 
@@ -93,7 +100,9 @@ class ProductController {
 
     if (!product) {
       return notFound({
-        message: `Product with ID ${req.body.id} not found.`,
+        message: getMessage(productMessages.searchByIDNotFound, {
+          id: req.body.id,
+        }),
       }).send(res);
     }
 
@@ -119,18 +128,23 @@ class ProductController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: 'Invalid data.',
+        message: getMessage(productMessages.invalidData),
         errors: validation.validationErrors,
       }).send(res);
     }
 
     try {
       await productRepository.save(product);
-      return res.status(200).json({ message: 'Product updated', product });
+      return res
+        .status(200)
+        .json({
+          message: getMessage(productMessages.updated, product),
+          product,
+        });
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
-          message: 'This code is already in use.',
+          message: getMessage(productMessages.alreadyExists),
         }).send(res);
       }
 
@@ -146,7 +160,9 @@ class ProductController {
 
       return res
         .status(200)
-        .json({ message: `Product with ID ${req.params.id} deleted.` });
+        .json({
+          message: getMessage(productMessages.deleted, { id: req.params.id }),
+        });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
