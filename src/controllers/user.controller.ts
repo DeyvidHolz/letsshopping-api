@@ -14,6 +14,8 @@ import UserValidator from '../validators/user.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
+import userMessages from '../messages/user.messages';
+import { getMessage } from '../helpers/messages';
 
 class UserController {
   public static async create(req: Request, res: Response) {
@@ -38,7 +40,7 @@ class UserController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: 'Invalid data.',
+        message: getMessage(userMessages.invalidData, user),
         errors: validation.validationErrors,
       }).send(res);
     }
@@ -50,12 +52,16 @@ class UserController {
 
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: 'User created.', user });
+
+        return res.status(201).json({
+          message: getMessage(userMessages.created, user),
+          user,
+        });
       }
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
-          message: 'This username is already in use.',
+          message: getMessage(userMessages.alreadyExists, user),
           errors: validation.validationErrors,
         }).send(res);
       }
@@ -75,7 +81,7 @@ class UserController {
 
     if (!req.query.email)
       return unprocessableEntity({
-        message: 'Invalid email.',
+        message: getMessage(userMessages.invalidEmail),
       }).send(res);
 
     const email: string = req.query.email as string;
@@ -84,7 +90,9 @@ class UserController {
 
     if (!user)
       return notFound({
-        message: `User with email ${req.query.email} not found.`,
+        message: getMessage(userMessages.searchByEmailNotFound, {
+          email: req.query.email,
+        }),
       }).send(res);
 
     delete user.password;
@@ -97,7 +105,7 @@ class UserController {
 
     if (!username || !password) {
       return unprocessableEntity({
-        message: 'Invalid username or password.',
+        message: getMessage(userMessages.invalidCredentials),
       }).send(res);
     }
 
@@ -107,7 +115,7 @@ class UserController {
 
     if (!user)
       return unprocessableEntity({
-        message: 'Invalid username or password.',
+        message: getMessage(userMessages.invalidCredentials),
       }).send(res);
 
     if (CryptHelper.checkPassword(password, user.password)) {
@@ -128,7 +136,7 @@ class UserController {
     }
 
     return unprocessableEntity({
-      message: 'Invalid username or password.',
+      message: getMessage(userMessages.invalidCredentials),
     }).send(res);
   }
 
@@ -147,7 +155,9 @@ class UserController {
 
     if (!user) {
       return notFound({
-        message: `User with ID ${req.body.id} not found.`,
+        message: getMessage(userMessages.searchByIDNotFound, {
+          id: req.body.id,
+        }),
       }).send(res);
     }
 
@@ -162,7 +172,7 @@ class UserController {
 
     if (!CryptHelper.checkPassword(req.body.currentPassword, user.password)) {
       return unprocessableEntity({
-        message: 'Password incorrect.',
+        message: getMessage(userMessages.invalidPassword),
       }).send(res);
     }
 
@@ -184,7 +194,7 @@ class UserController {
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
-        message: 'Invalid data.',
+        message: getMessage(userMessages.invalidData),
         errors: validation.validationErrors,
       }).send(res);
     }
@@ -192,12 +202,14 @@ class UserController {
     try {
       if (user.id) {
         delete user.password;
-        return res.status(201).json({ message: 'User updated.', user });
+        return res
+          .status(200)
+          .json({ message: getMessage(userMessages.updated, user), user });
       }
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
-          message: 'This username is already in use.',
+          message: getMessage(userMessages.alreadyExists, user),
           errors: validation.validationErrors,
         }).send(res);
       }
@@ -215,10 +227,12 @@ class UserController {
         username: userDecoded['username'],
       });
 
-      return res.status(200).json({ message: 'User deleted.' });
+      return res
+        .status(200)
+        .json({ message: getMessage(userMessages.deleted) });
     } catch (err) {
       return unprocessableEntity({
-        message: 'Invalid token or user already deleted.',
+        message: getMessage(userMessages.alreadyDeleted),
       }).send(res);
     }
   }
