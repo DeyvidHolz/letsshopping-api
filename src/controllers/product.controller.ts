@@ -93,7 +93,10 @@ class ProductController {
   public static async getAll(req: Request, res: Response) {
     const products = await getConnection()
       .getRepository(Product)
-      .find({ relations: ['categories'], order: { id: 'DESC' } });
+      .find({
+        relations: ['categories', 'options', 'options.values'],
+        order: { id: 'DESC' },
+      });
 
     return res.status(200).json(products);
   }

@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  OneToMany,
   JoinTable,
 } from 'typeorm';
 import { Category } from './Category';
+import { ProductOption } from './ProductOption';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -44,4 +46,8 @@ export class Product {
   @ManyToMany(() => Category, (category) => category.products)
   @JoinTable()
   categories: Category[];
+
+  @OneToMany(() => ProductOption, (option) => option.product)
+  @JoinTable()
+  options: ProductOption[];
 }
