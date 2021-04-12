@@ -41,7 +41,7 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToMany(() => Category /*, category => category.products*/)
+  @ManyToMany(() => Category, (category) => category.products)
   @JoinTable()
   categories: Category[];
 }
