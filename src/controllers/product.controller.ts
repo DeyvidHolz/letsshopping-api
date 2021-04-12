@@ -9,6 +9,9 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
+import { option } from '../types/entities/productOptionIn.types';
+import { ProductOption } from '../entity/ProductOption';
+import { ProductOptionValue } from '../entity/ProductOptionValue';
 
 class ProductController {
   private static getRespository() {
@@ -28,11 +31,9 @@ class ProductController {
     product.stock = req.body.stock;
 
     if (req.body.categories) {
-      const categoryRepository = getConnection().getRepository(Category);
-      const categories = await categoryRepository.findByIds(
-        req.body.categories,
-      );
-      product.categories = categories;
+      product.categories = <any>[
+        ...req.body.categories.map((id: number) => ({ id })),
+      ];
     }
 
     const validation = new ProductValidator(product);
@@ -46,6 +47,46 @@ class ProductController {
 
     try {
       await productRepository.save(product);
+
+      // @TODO: refactore that. Too many queries.
+      if (req.body.options) {
+        const optionRepository = getConnection().getRepository(ProductOption);
+        const optionValueRepository = getConnection().getRepository(
+          ProductOptionValue,
+        );
+
+        const optionsToCreate = req.body.options
+          .map((option) => {
+            if (typeof option !== 'object') return;
+            return option;
+          })
+          .filter((option: any) => option !== undefined);
+
+        optionsToCreate.forEach(async (opt: any) => {
+          const option = new ProductOption();
+          option.name = opt.name;
+          option.product = product;
+          await optionRepository.save(option);
+
+          const optionValues: ProductOptionValue[] = new Array<ProductOptionValue>();
+
+          opt.values.forEach((value: any) => {
+            const optionValue = new ProductOptionValue();
+            optionValue.isActive = value.isActive;
+            optionValue.mainImage = value.mainImage;
+            optionValue.option = option;
+            optionValue.price = value.price;
+            optionValue.stock = value.stock;
+            optionValue.value = value.value;
+            optionValues.push(optionValue);
+          });
+
+          await optionValueRepository.save(optionValues);
+          option.values = optionValues;
+          await optionRepository.save(option);
+        });
+      }
+
       return res.status(201).json({
         message: getMessage(productMessages.created, product),
         product,
@@ -69,13 +110,11 @@ class ProductController {
       // If it's NaN then it's a product code.
       product = await productRespository.findOne({
         where: { code: req.params.id },
-        relations: ['categories'],
       });
     } else {
       // Else, it can be an ID or a numeric Code
       product = await productRespository.findOne({
         where: [{ id: req.params.id }, { code: req.params.id }],
-        relations: ['categories'],
       });
     }
 
@@ -94,7 +133,6 @@ class ProductController {
     const products = await getConnection()
       .getRepository(Product)
       .find({
-        relations: ['categories', 'options', 'options.values'],
         order: { id: 'DESC' },
       });
 
