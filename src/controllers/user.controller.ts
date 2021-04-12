@@ -15,7 +15,7 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import userMessages from '../messages/user.messages';
-import { getMessage } from '../helpers/messages';
+import { getMessage } from '../helpers/messages.helper';
 
 class UserController {
   public static async create(req: Request, res: Response) {

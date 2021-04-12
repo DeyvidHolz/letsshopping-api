@@ -7,7 +7,7 @@ import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { getMessage } from '../helpers/messages';
+import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
 
 class ProductController {
