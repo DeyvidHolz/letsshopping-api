@@ -43,11 +43,11 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToMany(() => Category, (category) => category.products)
+  @ManyToMany(() => Category, (category) => category.products, { eager: true })
   @JoinTable()
   categories: Category[];
 
-  @OneToMany(() => ProductOption, (option) => option.product)
+  @OneToMany(() => ProductOption, (option) => option.product, { eager: true })
   @JoinTable()
   options: ProductOption[];
 }
