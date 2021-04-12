@@ -62,9 +62,22 @@ class ProductController {
   }
 
   public static async get(req: Request, res: Response) {
-    const product = await getConnection()
-      .getRepository(Product)
-      .findOne(Number(req.params.id), { relations: ['categories'] });
+    const productRespository = getConnection().getRepository(Product);
+    let product: Product | null = null;
+
+    if (isNaN(Number(req.params.id))) {
+      // If it's NaN then it's a product code.
+      product = await productRespository.findOne({
+        where: { code: req.params.id },
+        relations: ['categories'],
+      });
+    } else {
+      // Else, it can be an ID or a numeric Code
+      product = await productRespository.findOne({
+        where: [{ id: req.params.id }, { code: req.params.id }],
+        relations: ['categories'],
+      });
+    }
 
     if (!product) {
       return notFound({
@@ -135,12 +148,10 @@ class ProductController {
 
     try {
       await productRepository.save(product);
-      return res
-        .status(200)
-        .json({
-          message: getMessage(productMessages.updated, product),
-          product,
-        });
+      return res.status(200).json({
+        message: getMessage(productMessages.updated, product),
+        product,
+      });
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
@@ -158,11 +169,9 @@ class ProductController {
     try {
       await productRepository.delete({ id: req.params.id });
 
-      return res
-        .status(200)
-        .json({
-          message: getMessage(productMessages.deleted, { id: req.params.id }),
-        });
+      return res.status(200).json({
+        message: getMessage(productMessages.deleted, { id: req.params.id }),
+      });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
