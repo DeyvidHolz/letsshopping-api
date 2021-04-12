@@ -204,7 +204,22 @@ class UserController {
     }
   };
 
-  public static delete = async (req, res) => {};
+  public static delete = async (req, res) => {
+    try {
+      const userDecoded = decode(req.headers.authorization);
+      const userRepository = getConnection().getRepository(User);
+
+      await userRepository.delete({
+        username: userDecoded['username'],
+      });
+
+      return res.status(200).json({ message: 'User deleted.' });
+    } catch (err) {
+      return unprocessableEntity({
+        message: 'Invalid token or user already deleted.',
+      }).send(res);
+    }
+  };
 }
 
 export default UserController;
