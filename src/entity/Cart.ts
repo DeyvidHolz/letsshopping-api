@@ -29,6 +29,8 @@ export class Cart {
   @JoinTable()
   products: Product[];
 
-  @OneToOne(() => User, (user) => user.cart)
+  @OneToOne(() => User, (user) => user.cart, {
+    cascade: true,
+  })
   user: User;
 }
