@@ -9,7 +9,9 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Category } from './Category';
+import { ProductImage } from './ProductImage';
 import { ProductOption } from './ProductOption';
+import { ProductReview } from './ProductReview';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -43,11 +45,31 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToMany(() => Category, (category) => category.products, { eager: true })
+  @ManyToMany(() => Category, (category) => category.products, {
+    eager: true,
+    cascade: true,
+  })
   @JoinTable()
   categories: Category[];
 
-  @OneToMany(() => ProductOption, (option) => option.product, { eager: true })
+  @OneToMany(() => ProductImage, (image) => image.product, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  images: ProductImage[];
+
+  @OneToMany(() => ProductOption, (option) => option.product, {
+    eager: true,
+    cascade: true,
+  })
   @JoinTable()
   options: ProductOption[];
+
+  @OneToMany(() => ProductReview, (review) => review.product, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  reviews: ProductReview[];
 }

@@ -9,9 +9,9 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
-import { option } from '../types/entities/productOptionIn.types';
 import { ProductOption } from '../entity/ProductOption';
 import { ProductOptionValue } from '../entity/ProductOptionValue';
+import { ProductImage } from '../entity/ProductImage';
 
 class ProductController {
   private static getRespository() {
@@ -21,20 +21,12 @@ class ProductController {
   public static async create(req: Request, res: Response) {
     const productRepository = ProductController.getRespository();
 
-    const product = new Product();
-    product.code = req.body.code;
-    product.name = req.body.name;
-    product.shortDescription = req.body.shortDescription;
-    product.description = req.body.description;
-    product.mainImage = req.body.mainImage;
-    product.isActive = req.body.isActive;
-    product.stock = req.body.stock;
+    if (req.body.categories)
+      req.body.categories = req.body.categories.map((categoryId) => ({
+        id: categoryId,
+      }));
 
-    if (req.body.categories) {
-      product.categories = <any>[
-        ...req.body.categories.map((id: number) => ({ id })),
-      ];
-    }
+    const product = productRepository.create(req.body as Product);
 
     const validation = new ProductValidator(product);
 
@@ -47,45 +39,6 @@ class ProductController {
 
     try {
       await productRepository.save(product);
-
-      // @TODO: refactore that. Too many queries.
-      if (req.body.options) {
-        const optionRepository = getConnection().getRepository(ProductOption);
-        const optionValueRepository = getConnection().getRepository(
-          ProductOptionValue,
-        );
-
-        const optionsToCreate = req.body.options
-          .map((option) => {
-            if (typeof option !== 'object') return;
-            return option;
-          })
-          .filter((option: any) => option !== undefined);
-
-        optionsToCreate.forEach(async (opt: any) => {
-          const option = new ProductOption();
-          option.name = opt.name;
-          option.product = product;
-          await optionRepository.save(option);
-
-          const optionValues: ProductOptionValue[] = new Array<ProductOptionValue>();
-
-          opt.values.forEach((value: any) => {
-            const optionValue = new ProductOptionValue();
-            optionValue.isActive = value.isActive;
-            optionValue.mainImage = value.mainImage;
-            optionValue.option = option;
-            optionValue.price = value.price;
-            optionValue.stock = value.stock;
-            optionValue.value = value.value;
-            optionValues.push(optionValue);
-          });
-
-          await optionValueRepository.save(optionValues);
-          option.values = optionValues;
-          await optionRepository.save(option);
-        });
-      }
 
       return res.status(201).json({
         message: getMessage(productMessages.created, product),
@@ -142,41 +95,12 @@ class ProductController {
   public static async update(req: Request, res: Response) {
     const productRepository = ProductController.getRespository();
 
-    const productIDisEmpty = req.body.id === undefined || req.body.id === '';
+    if (req.body.categories)
+      req.body.categories = req.body.categories.map((categoryId) => ({
+        id: categoryId,
+      }));
 
-    if (productIDisEmpty) {
-      return unprocessableEntity({
-        message: "Field 'id' is required.",
-      }).send(res);
-    }
-
-    const product = await productRepository.findOne(Number(req.body.id));
-
-    if (!product) {
-      return notFound({
-        message: getMessage(productMessages.searchByIDNotFound, {
-          id: req.body.id,
-        }),
-      }).send(res);
-    }
-
-    product.code = req.body.code ?? product.code;
-    product.name = req.body.name ?? product.name;
-    product.shortDescription =
-      req.body.shortDescription ?? product.shortDescription;
-    product.description = req.body.description ?? product.description;
-    product.mainImage = req.body.mainImage ?? product.mainImage;
-    product.isActive = req.body.isActive ?? product.isActive;
-    product.stock =
-      req.body.stock === 0 || req.body.stock ? req.body.stock : product.stock;
-
-    if (req.body.categories) {
-      const categoryRepository = getConnection().getRepository(Category);
-      const categories = await categoryRepository.findByIds(
-        req.body.categories,
-      );
-      product.categories = categories;
-    }
+    const product = productRepository.create(req.body as Product);
 
     const validation = new ProductValidator(product);
 
@@ -189,8 +113,9 @@ class ProductController {
 
     try {
       await productRepository.save(product);
+
       return res.status(200).json({
-        message: getMessage(productMessages.updated, product),
+        message: getMessage(productMessages.update, product),
         product,
       });
     } catch (err) {

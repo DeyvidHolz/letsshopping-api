@@ -29,6 +29,9 @@ export class ProductOption {
   @JoinTable()
   product: Product;
 
-  @OneToMany(() => ProductOptionValue, (value) => value.option, { eager: true })
+  @OneToMany(() => ProductOptionValue, (value) => value.option, {
+    eager: true,
+    cascade: true,
+  })
   values: ProductOptionValue[];
 }
