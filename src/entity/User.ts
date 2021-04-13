@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToMany,
+  OneToMany,
   JoinTable,
 } from 'typeorm';
+import { Address } from './Address';
 import { Notification } from './Notification';
 
 @Entity({ name: 'users' })
@@ -37,6 +39,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: string;
+
+  @OneToMany(() => Address, (address) => address.users, {
+    cascade: true,
+  })
+  @JoinTable()
+  addresses: Address[];
 
   @ManyToMany(() => Notification, (notification) => notification.users, {
     eager: true,
