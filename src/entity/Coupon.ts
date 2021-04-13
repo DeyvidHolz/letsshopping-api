@@ -37,6 +37,9 @@ export class Coupon {
   @Column({ default: 0 })
   isActive: boolean;
 
+  @Column({ nullable: true })
+  ruleMinPrice: number;
+
   @CreateDateColumn()
   createdAt: string;
 
