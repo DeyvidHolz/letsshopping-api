@@ -13,6 +13,7 @@ import {
 import { Address } from './Address';
 import { Cart } from './Cart';
 import { Notification } from './Notification';
+import { Order } from './Order';
 
 @Entity({ name: 'users' })
 export class User {
@@ -52,6 +53,12 @@ export class User {
   @OneToOne(() => Cart, (cart) => cart.user)
   @JoinColumn()
   cart: Cart;
+
+  @OneToMany(() => Order, (order) => order.user, {
+    cascade: true,
+  })
+  @JoinTable()
+  orders: Order[];
 
   @ManyToMany(() => Notification, (notification) => notification.users, {
     cascade: true,
