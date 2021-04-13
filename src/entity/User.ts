@@ -7,8 +7,11 @@ import {
   ManyToMany,
   OneToMany,
   JoinTable,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { Address } from './Address';
+import { Cart } from './Cart';
 import { Notification } from './Notification';
 
 @Entity({ name: 'users' })
@@ -46,8 +49,11 @@ export class User {
   @JoinTable()
   addresses: Address[];
 
+  @OneToOne(() => Cart, (cart) => cart.user)
+  @JoinColumn()
+  cart: Cart;
+
   @ManyToMany(() => Notification, (notification) => notification.users, {
-    eager: true,
     cascade: true,
   })
   @JoinTable()

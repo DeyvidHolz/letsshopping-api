@@ -7,7 +7,9 @@ import {
   ManyToMany,
   OneToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
+import { Cart } from './Cart';
 import { Category } from './Category';
 import { ProductImage } from './ProductImage';
 import { ProductOption } from './ProductOption';
@@ -72,4 +74,8 @@ export class Product {
   })
   @JoinTable()
   reviews: ProductReview[];
+
+  @ManyToOne(() => Cart, (cart) => cart.products)
+  @JoinTable()
+  cart: Cart;
 }
