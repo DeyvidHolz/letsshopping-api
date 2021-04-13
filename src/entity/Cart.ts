@@ -7,7 +7,9 @@ import {
   JoinTable,
   OneToMany,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Coupon } from './Coupon';
 import { Product } from './Product';
 import { User } from './User';
 
@@ -33,4 +35,11 @@ export class Cart {
     cascade: true,
   })
   user: User;
+
+  @OneToOne(() => Coupon, (coupon) => coupon.cart, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  coupon: Coupon;
 }
