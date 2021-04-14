@@ -6,8 +6,12 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinTable,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
-import { Product } from './Product';
+import { OrderEvent } from './OrderEvent';
+import { OrderAddress } from './OrderAddress';
+import { OrderItem } from './OrderItem';
 import { User } from './User';
 
 @Entity({ name: 'orders' })
@@ -39,4 +43,24 @@ export class Order {
   @ManyToOne(() => User, (user) => user.orders)
   @JoinTable()
   user: User;
+
+  @OneToOne(() => OrderAddress, (orderAddress) => orderAddress.order, {
+    eager: true,
+    cascade: true,
+  })
+  orderAddress: OrderAddress;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  items: OrderItem[];
+
+  @OneToMany(() => OrderEvent, (orderEvent) => orderEvent.order, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinTable()
+  events: OrderEvent[];
 }
