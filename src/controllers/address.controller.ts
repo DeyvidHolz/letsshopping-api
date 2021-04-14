@@ -33,7 +33,7 @@ class AddressController {
     } catch (err) {
       return unauthorized({
         message: 'Invalid authentication token.',
-      });
+      }).send(res);
     }
 
     address.user = user;
@@ -45,7 +45,7 @@ class AddressController {
       console.log(err);
       return internalServerError({
         message: 'An error occurred.',
-      });
+      }).send(res);
     }
   }
 
@@ -63,7 +63,7 @@ class AddressController {
     } catch (err) {
       return unauthorized({
         message: 'Invalid authentication token.',
-      });
+      }).send(res);
     }
 
     const addresses = await addressRepository.find({ user: { id: user.id } });
@@ -79,7 +79,7 @@ class AddressController {
     if (!req.body.id) {
       return unprocessableEntity({
         message: 'Invalid address ID.',
-      });
+      }).send(res);
     }
 
     try {
@@ -87,19 +87,19 @@ class AddressController {
     } catch (err) {
       return unauthorized({
         message: 'Invalid authentication token.',
-      });
+      }).send(res);
     }
 
     address.user = user;
 
     try {
       await addressRepository.save(address);
-      return res.status(201).json({ message: 'Address created.', address });
+      return res.status(201).json({ message: 'Address updated.', address });
     } catch (err) {
       console.log(err);
       return internalServerError({
         message: 'An error occurred.',
-      });
+      }).send(res);
     }
   }
 
@@ -112,7 +112,7 @@ class AddressController {
       console.log(err);
       return internalServerError({
         message: 'An error occurred.',
-      });
+      }).send(res);
     }
   }
 }
