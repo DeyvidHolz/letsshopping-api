@@ -15,7 +15,7 @@ export class ShopPhone {
   id: number;
 
   @Column()
-  number: string;
+  value: string;
 
   @CreateDateColumn()
   createdAt: string;
