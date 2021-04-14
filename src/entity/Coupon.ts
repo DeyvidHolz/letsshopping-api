@@ -13,7 +13,7 @@ export class Coupon {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 6 })
   code: string;
 
   @Column()
@@ -34,7 +34,7 @@ export class Coupon {
   @Column({ default: -1 })
   maxUsers: number;
 
-  @Column({ default: 0 })
+  @Column({ default: false })
   isActive: boolean;
 
   @Column({ nullable: true })
