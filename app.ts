@@ -13,9 +13,11 @@ import productRoutes from './src/routes/product.routes';
 import categoryRoutes from './src/routes/category.routes';
 import addressRoutes from './src/routes/address.routes';
 import couponRoutes from './src/routes/coupon.routes';
+import shopInfoRoutes from './src/routes/shopInfo.routes';
 
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
+import { ShopInfo } from './src/entity/ShopInfo';
 
 createConnection().then((connection) => {
   class Server {
@@ -26,6 +28,7 @@ createConnection().then((connection) => {
       this.config();
       this.passportConfig();
       this.routerConfig();
+      this.createShop();
     }
 
     private config() {
@@ -63,12 +66,24 @@ createConnection().then((connection) => {
     }
 
     private routerConfig() {
+      this.app.use('/api/admin/info', shopInfoRoutes);
       this.app.use('/', homeRoutes);
       this.app.use('/api/users', userRoutes);
       this.app.use('/api/products', productRoutes);
       this.app.use('/api/categories', categoryRoutes);
       this.app.use('/api/addresses', addressRoutes);
       this.app.use('/api/coupons', couponRoutes);
+    }
+
+    private async createShop() {
+      const shopInfoRepository = connection.getRepository(ShopInfo);
+
+      if (!(await shopInfoRepository.findOne(1))) {
+        const shopInfo = new ShopInfo();
+        shopInfo.name = "Let's Shopping!";
+
+        await shopInfoRepository.save(shopInfo);
+      }
     }
 
     public start = (port: number) => {
