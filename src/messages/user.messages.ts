@@ -8,7 +8,7 @@ const userMessages: messages = {
   invalidEmail: 'Invalid email.',
   invalidCredentials: 'Invalid username or password.',
   invalidPassword: 'Password incorrect.',
-  alreadyExists: 'This username is already in use.',
+  alreadyExists: 'This username or email is already in use.',
   alreadyDeleted: 'Invalid token or user already deleted.',
 
   searchByEmailNotFound: {
