@@ -18,7 +18,7 @@ export class ProductReview {
   @Column()
   title: string;
 
-  @Column({ width: 1 })
+  @Column({ width: 1, type: 'decimal', precision: 2, scale: 1 })
   rating: number;
 
   @Column({ nullable: true })
