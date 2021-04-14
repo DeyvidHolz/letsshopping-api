@@ -12,6 +12,7 @@ import userRoutes from './src/routes/user.routes';
 import productRoutes from './src/routes/product.routes';
 import categoryRoutes from './src/routes/category.routes';
 import addressRoutes from './src/routes/address.routes';
+import couponRoutes from './src/routes/coupon.routes';
 
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
@@ -67,6 +68,7 @@ createConnection().then((connection) => {
       this.app.use('/api/products', productRoutes);
       this.app.use('/api/categories', categoryRoutes);
       this.app.use('/api/addresses', addressRoutes);
+      this.app.use('/api/coupons', couponRoutes);
     }
 
     public start = (port: number) => {
