@@ -14,8 +14,8 @@ router.get(
 );
 
 router.get('/:id', AuthMiddleware, CategoryController.get);
+router.delete('/:id', AuthMiddleware, CategoryController.delete);
 router.post('/', AuthMiddleware, CategoryController.create);
 router.put('/', AuthMiddleware, CategoryController.update);
-router.delete('/:id', AuthMiddleware, CategoryController.delete);
 
 export default router;
