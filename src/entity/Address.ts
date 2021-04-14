@@ -40,5 +40,5 @@ export class Address {
 
   @ManyToOne(() => User, (user) => user.addresses)
   @JoinTable()
-  users: User[];
+  user: User;
 }

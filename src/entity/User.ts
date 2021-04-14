@@ -44,7 +44,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Address, (address) => address.users, {
+  @OneToMany(() => Address, (address) => address.user, {
     cascade: true,
   })
   @JoinTable()
