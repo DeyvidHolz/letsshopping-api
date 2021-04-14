@@ -118,7 +118,7 @@ class UserController {
         message: getMessage(userMessages.invalidCredentials),
       }).send(res);
 
-    if (CryptHelper.checkPassword(password, user.password)) {
+    if (CryptHelper.checkPassword(password)) {
       let payload = {
         id: user.id,
         firstName: user.firstName,
@@ -170,7 +170,7 @@ class UserController {
       }).send(res);
     }
 
-    if (!CryptHelper.checkPassword(req.body.currentPassword, user.password)) {
+    if (!CryptHelper.checkPassword(req.body.currentPassword)) {
       return unprocessableEntity({
         message: getMessage(userMessages.invalidPassword),
       }).send(res);
