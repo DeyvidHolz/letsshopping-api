@@ -77,9 +77,15 @@ class CategoryController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const categories = await CategoryController.getRespository().find({
-      order: { id: 'DESC' },
-    });
+    const includeProducts: boolean =
+      req.query['include-products'] === 'true' ? true : false;
+
+    const categories: Category[] = await CategoryController.getRespository().find(
+      {
+        order: { id: 'DESC' },
+        relations: includeProducts ? ['products'] : [],
+      },
+    );
 
     return res.status(200).json(categories);
   }
