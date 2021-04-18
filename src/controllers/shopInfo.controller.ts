@@ -34,10 +34,9 @@ class ShopInfoController {
     const shopInfo = await shopInfoRepository.findOne(1);
 
     if (!shopInfo) {
-      // @TODO: create shop info and query again.
-      return notFound({
-        message: 'Shop info not found.',
-      }).send(res);
+      const newShopInfo = new ShopInfo();
+      newShopInfo.name = process.env.SHOP_NAME;
+      await shopInfoRepository.save(shopInfo);
     }
 
     return res.status(200).json(shopInfo);

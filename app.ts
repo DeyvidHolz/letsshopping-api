@@ -82,7 +82,7 @@ createConnection().then((connection) => {
 
       if (!(await shopInfoRepository.findOne(1))) {
         const shopInfo = new ShopInfo();
-        shopInfo.name = "Let's Shopping!";
+        shopInfo.name = process.env.SHOP_NAME;
 
         await shopInfoRepository.save(shopInfo);
       }
