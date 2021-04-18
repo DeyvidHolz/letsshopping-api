@@ -1,4 +1,4 @@
-import { getConnection } from 'typeorm';
+import { getConnection, Like, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import { Product } from '../entity/Product';
@@ -86,6 +86,33 @@ class CategoryController {
         relations: includeProducts ? ['products'] : [],
       },
     );
+
+    return res.status(200).json(categories);
+  }
+
+  public static async searchByName(req: Request, res: Response) {
+    const includeProducts: boolean =
+      req.query['include-products'] === 'true' ? true : false;
+
+    if (!req.query.name)
+      return unprocessableEntity({ message: 'Invalid search criteria.' }).send(
+        res,
+      );
+
+    const categories: Category[] = await CategoryController.getRespository().find(
+      {
+        where: {
+          name: Raw(
+            (alias) => `LOWER(${alias}) Like LOWER('%${req.query.name}%')`,
+          ),
+        },
+        order: { id: 'DESC' },
+        relations: includeProducts ? ['products'] : [],
+      },
+    );
+
+    if (!categories.length)
+      return notFound({ message: 'No categories found.' }).send(res);
 
     return res.status(200).json(categories);
   }

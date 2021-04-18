@@ -6,6 +6,7 @@ import AuthMiddleware from '../middlewares/auth.middleware';
 const router = express.Router();
 
 router.get('/all', AuthMiddleware, CategoryController.getAll);
+router.get('/search', AuthMiddleware, CategoryController.searchByName);
 
 router.get(
   '/:id/products',

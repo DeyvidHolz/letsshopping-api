@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 // import jwt_decode from 'jwt-decode'
 import { Request, Response } from 'express';
-import { getConnection } from 'typeorm';
+import { getConnection, Raw } from 'typeorm';
 import decode from 'jwt-decode';
 
 import jwtConfig from '../config/jwt.config';
@@ -18,6 +18,10 @@ import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
 
 class UserController {
+  private static getRespository() {
+    return getConnection().getRepository(User);
+  }
+
   public static async create(req: Request, res: Response) {
     const data = {
       username: req.body.username,
@@ -45,14 +49,12 @@ class UserController {
       }).send(res);
     }
 
-    const userRepository = await getConnection().getRepository(User);
+    const userRepository = await UserController.getRespository();
 
     try {
       await userRepository.save(user);
 
       if (user.id) {
-        delete user.password;
-
         return res.status(201).json({
           message: getMessage(userMessages.created, user),
           user,
@@ -71,13 +73,13 @@ class UserController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const userRepository = await getConnection().getRepository(User);
+    const userRepository = await UserController.getRespository();
     const users = await userRepository.find();
     return res.json(users);
   }
 
   public static async get(req: Request, res: Response) {
-    const userRepository = await getConnection().getRepository(User);
+    const userRepository = await UserController.getRespository();
 
     if (!req.query.email)
       return unprocessableEntity({
@@ -95,8 +97,6 @@ class UserController {
         }),
       }).send(res);
 
-    delete user.password;
-
     return res.json(user);
   }
 
@@ -109,7 +109,7 @@ class UserController {
       }).send(res);
     }
 
-    const userRepository = await getConnection().getRepository(User);
+    const userRepository = await UserController.getRespository();
 
     let user = await userRepository.findOne({ username });
 
@@ -131,7 +131,6 @@ class UserController {
         expiresIn: 10000000,
       });
 
-      delete user.password;
       return res.json({ message: token, user });
     }
 
@@ -141,7 +140,7 @@ class UserController {
   }
 
   public static async update(req: Request, res: Response) {
-    const userRepository = await getConnection().getRepository(User);
+    const userRepository = await UserController.getRespository();
 
     const userIDisEmpty = req.body.id === undefined || req.body.id === '';
 
@@ -201,7 +200,6 @@ class UserController {
 
     try {
       if (user.id) {
-        delete user.password;
         return res
           .status(200)
           .json({ message: getMessage(userMessages.updated, user), user });
@@ -221,7 +219,7 @@ class UserController {
   public static async delete(req: Request, res: Response) {
     try {
       const userDecoded = decode(req.headers.authorization);
-      const userRepository = getConnection().getRepository(User);
+      const userRepository = UserController.getRespository();
 
       await userRepository.delete({
         username: userDecoded['username'],
@@ -235,6 +233,57 @@ class UserController {
         message: getMessage(userMessages.alreadyDeleted),
       }).send(res);
     }
+  }
+
+  public static async search(req: Request, res: Response) {
+    if (!req.query.firstName && req.query.name)
+      req.query.firstName = req.query.name;
+
+    const noSearchCriteria: boolean =
+      !req.query.firstName &&
+      !req.query.firstName &&
+      !req.query.email &&
+      !req.query.by;
+
+    if (noSearchCriteria)
+      return unprocessableEntity({ message: 'Invalid search criteria.' }).send(
+        res,
+      );
+
+    const users: User[] = await UserController.getRespository().find({
+      where: [
+        {
+          firstName: Raw(
+            (alias) =>
+              `LOWER(${alias}) Like LOWER('%${
+                req.query.by ?? req.query.firstName
+              }%')`,
+          ),
+        },
+        {
+          lastName: Raw(
+            (alias) =>
+              `LOWER(${alias}) Like LOWER('%${
+                req.query.by ?? req.query.lastName
+              }%')`,
+          ),
+        },
+        {
+          email: Raw(
+            (alias) =>
+              `LOWER(${alias}) Like LOWER('%${
+                req.query.by ?? req.query.email
+              }%')`,
+          ),
+        },
+      ],
+      order: { id: 'DESC' },
+    });
+
+    if (!users.length)
+      return notFound({ message: 'No users found.' }).send(res);
+
+    return res.status(200).json(users);
   }
 }
 

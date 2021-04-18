@@ -1,4 +1,4 @@
-import { getConnection } from 'typeorm';
+import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import { Product } from '../entity/Product';
@@ -141,6 +141,27 @@ class ProductController {
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);
     }
+  }
+
+  public static async searchByName(req: Request, res: Response) {
+    if (!req.query.name)
+      return unprocessableEntity({ message: 'Invalid search criteria.' }).send(
+        res,
+      );
+
+    const products: Product[] = await ProductController.getRespository().find({
+      where: {
+        name: Raw(
+          (alias) => `LOWER(${alias}) Like LOWER('%${req.query.name}%')`,
+        ),
+      },
+      order: { id: 'DESC' },
+    });
+
+    if (!products.length)
+      return notFound({ message: 'No products found.' }).send(res);
+
+    return res.status(200).json(products);
   }
 }
 

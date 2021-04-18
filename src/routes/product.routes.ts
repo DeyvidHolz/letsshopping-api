@@ -6,6 +6,7 @@ import AuthMiddleware from '../middlewares/auth.middleware';
 const router = express.Router();
 
 router.get('/all', AuthMiddleware, ProductController.getAll);
+router.get('/search', AuthMiddleware, ProductController.searchByName);
 router.get('/:id', AuthMiddleware, ProductController.get);
 router.delete('/:id', AuthMiddleware, ProductController.delete);
 router.post('/', AuthMiddleware, ProductController.create);
