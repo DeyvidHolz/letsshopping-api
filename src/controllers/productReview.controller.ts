@@ -28,16 +28,6 @@ class ProductReviewController {
       req.body as ProductReview,
     );
 
-    // let user: User;
-
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   }).send(res);
-    // }
-
     try {
       await productReviewRepository.save(productReview);
       return res
@@ -70,17 +60,6 @@ class ProductReviewController {
   public static async getAll(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRespository();
 
-    // @TODO: remove and put to a function (helper)
-    // let user: User;
-
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   });
-    // }
-
     const productReviews = await productReviewRepository.find({
       relations: ['product'],
     });
@@ -98,15 +77,6 @@ class ProductReviewController {
         message: 'Invalid review ID.',
       }).send(res);
     }
-
-    // let user: User;
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   });
-    // }
 
     try {
       await productReviewRepository.save(productReview);

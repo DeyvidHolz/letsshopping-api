@@ -17,16 +17,6 @@ class CouponController {
     const couponRepository = CouponController.getRespository();
     const coupon = couponRepository.create(req.body as Coupon);
 
-    // let user: User;
-
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   }).send(res);
-    // }
-
     try {
       await couponRepository.save(coupon);
       return res.status(201).json({ message: 'Coupon created.', coupon });
@@ -61,17 +51,6 @@ class CouponController {
   public static async getAll(req: Request, res: Response) {
     const couponRepository = CouponController.getRespository();
 
-    // @TODO: remove and put to a function (helper)
-    // let user: User;
-
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   });
-    // }
-
     const coupon = await couponRepository.find();
     return res.status(200).json(coupon);
   }
@@ -85,15 +64,6 @@ class CouponController {
         message: 'Invalid address ID.',
       }).send(res);
     }
-
-    // let user: User;
-    // try {
-    //   user = decode(req.headers.authorization) as User;
-    // } catch (err) {
-    //   return unauthorized({
-    //     message: 'Invalid authentication token.',
-    //   });
-    // }
 
     try {
       await couponRepository.save(coupon);

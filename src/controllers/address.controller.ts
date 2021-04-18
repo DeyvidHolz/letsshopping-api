@@ -16,6 +16,7 @@ import { ProductImage } from '../entity/ProductImage';
 import { Address } from '../entity/Address';
 import { User } from '../entity/User';
 import unauthorized from '../errors/http/unauthorized';
+import { getUserData } from '../helpers/auth.helper';
 
 class AddressController {
   private static getRespository() {
@@ -26,11 +27,9 @@ class AddressController {
     const addressRepository = AddressController.getRespository();
     const address = addressRepository.create(req.body as Address);
 
-    let user: User;
+    let user: User | null = getUserData(req.headers.authorization);
 
-    try {
-      user = decode(req.headers.authorization) as User;
-    } catch (err) {
+    if (!user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
@@ -56,11 +55,9 @@ class AddressController {
   public static async getAll(req: Request, res: Response) {
     const addressRepository = AddressController.getRespository();
 
-    let user: User;
+    let user: User | null = getUserData(req.headers.authorization);
 
-    try {
-      user = decode(req.headers.authorization) as User;
-    } catch (err) {
+    if (!user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
@@ -74,17 +71,15 @@ class AddressController {
     const addressRepository = AddressController.getRespository();
     const address = addressRepository.create(req.body as Address);
 
-    let user: User;
-
     if (!req.body.id) {
       return unprocessableEntity({
         message: 'Invalid address ID.',
       }).send(res);
     }
 
-    try {
-      user = decode(req.headers.authorization) as User;
-    } catch (err) {
+    let user: User | null = getUserData(req.headers.authorization);
+
+    if (!user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
