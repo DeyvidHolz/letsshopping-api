@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/all', AuthMiddleware, AddressController.getAll);
 router.delete('/:id', AddressController.delete);
-// router.get('/', AuthMiddleware, AddressController.get);
+router.get('/:id', AuthMiddleware, AddressController.get);
 router.post('/', AddressController.create);
 router.put('/', AuthMiddleware, AddressController.update);
 

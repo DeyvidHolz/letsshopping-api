@@ -50,6 +50,24 @@ class AddressController {
 
   public static async get(req: Request, res: Response) {
     const addressRepository = AddressController.getRespository();
+
+    let user: User | null = getUserData(req.headers.authorization);
+
+    if (!user) {
+      return unauthorized({
+        message: 'Invalid authentication token.',
+      }).send(res);
+    }
+
+    const addressId: number = (req.params.id as unknown) as number;
+    const address = await addressRepository.findOne({
+      id: addressId,
+      user: { id: user.id },
+    });
+
+    if (!address) return notFound({ message: 'Address not found' }).send(res);
+
+    return res.status(200).json(address);
   }
 
   public static async getAll(req: Request, res: Response) {
