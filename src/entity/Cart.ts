@@ -27,18 +27,21 @@ export class Cart {
   @OneToMany(() => Product, (product) => product.cart, {
     eager: true,
     cascade: true,
+    persistence: false,
   })
   @JoinTable()
   products: Product[];
 
   @OneToOne(() => User, (user) => user.cart, {
     cascade: true,
+    persistence: false,
   })
   user: User;
 
   @OneToOne(() => Coupon, (coupon) => coupon.cart, {
     eager: true,
     cascade: true,
+    persistence: false,
   })
   @JoinColumn()
   coupon: Coupon;

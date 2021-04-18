@@ -71,6 +71,7 @@ export class Product {
   @OneToMany(() => ProductReview, (review) => review.product, {
     eager: true,
     cascade: true,
+    persistence: false,
   })
   @JoinTable()
   reviews: ProductReview[];

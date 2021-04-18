@@ -62,6 +62,7 @@ export class User {
 
   @ManyToMany(() => Notification, (notification) => notification.users, {
     cascade: true,
+    persistence: false,
   })
   @JoinTable()
   notifications: Notification[];
