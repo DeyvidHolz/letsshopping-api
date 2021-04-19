@@ -33,9 +33,9 @@ export class Cart {
   products: Product[];
 
   @OneToOne(() => User, (user) => user.cart, {
-    cascade: true,
     persistence: false,
   })
+  @JoinColumn()
   user: User;
 
   @OneToOne(() => Coupon, (coupon) => coupon.cart, {
