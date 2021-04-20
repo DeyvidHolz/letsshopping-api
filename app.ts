@@ -15,6 +15,7 @@ import categoryRoutes from './src/routes/category.routes';
 import addressRoutes from './src/routes/address.routes';
 import couponRoutes from './src/routes/coupon.routes';
 import shopInfoRoutes from './src/routes/shopInfo.routes';
+import cartRoutes from './src/routes/cart.routes';
 
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
@@ -75,6 +76,7 @@ createConnection().then((connection) => {
       this.app.use('/api/categories', categoryRoutes);
       this.app.use('/api/addresses', addressRoutes);
       this.app.use('/api/coupons', couponRoutes);
+      this.app.use('/api/carts', cartRoutes);
     }
 
     private async createShop() {

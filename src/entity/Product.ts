@@ -10,6 +10,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Cart } from './Cart';
+import { CartProduct } from './CartProduct';
 import { Category } from './Category';
 import { ProductImage } from './ProductImage';
 import { ProductOption } from './ProductOption';
@@ -40,6 +41,9 @@ export class Product {
 
   @Column({ default: 0 })
   stock: number;
+
+  @Column({ type: 'int' })
+  price: number;
 
   @CreateDateColumn()
   createdAt: string;
@@ -76,7 +80,10 @@ export class Product {
   @JoinTable()
   reviews: ProductReview[];
 
-  @ManyToOne(() => Cart, (cart) => cart.products)
-  @JoinTable()
-  cart: Cart;
+  // @ManyToMany(() => Cart, (cart) => cart.products)
+  // @JoinTable()
+  // carts: Cart[];
+
+  @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
+  cartProducts: CartProduct[];
 }

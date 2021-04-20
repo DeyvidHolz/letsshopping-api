@@ -1,12 +1,10 @@
 import decode from 'jwt-decode';
 
-import { User } from '../entity/User';
-
-const getUserData = (authorizationHeader: string): User | null => {
-  let user: User;
+const getUserData = (authorizationHeader: string) => {
+  let user = null;
 
   try {
-    user = decode(authorizationHeader) as User;
+    user = decode(authorizationHeader);
     return user;
   } catch (err) {
     return null;

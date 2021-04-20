@@ -16,6 +16,7 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
+import { Cart } from '../entity/Cart';
 
 class UserController {
   private static getRespository() {
@@ -55,6 +56,8 @@ class UserController {
       await userRepository.save(user);
 
       if (user.id) {
+        delete user.password;
+
         return res.status(201).json({
           message: getMessage(userMessages.created, user),
           user,
@@ -111,12 +114,30 @@ class UserController {
 
     const userRepository = await UserController.getRespository();
 
-    let user = await userRepository.findOne({ username });
+    let user = await userRepository.findOne({
+      where: { username },
+      relations: ['cart'],
+    });
 
     if (!user)
       return unprocessableEntity({
         message: getMessage(userMessages.invalidCredentials),
       }).send(res);
+
+    // Checking if user doesn't have a cart and create one
+    if (!user.cart) {
+      const cart = new Cart();
+      cart.user = user;
+      await getConnection().getRepository(Cart).save(cart);
+
+      user.cart = cart;
+      await userRepository.save(user);
+
+      user = await userRepository.findOne({
+        where: { username },
+        relations: ['cart'],
+      });
+    }
 
     if (CryptHelper.checkPassword(password)) {
       let payload = {
@@ -125,6 +146,7 @@ class UserController {
         lastName: user.lastName,
         email: user.email,
         username: user.username,
+        cart_id: user.cart.id,
       };
 
       let token = jwt.sign(payload, jwtConfig.secretOrKey, {

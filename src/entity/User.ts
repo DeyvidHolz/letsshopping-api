@@ -50,7 +50,10 @@ export class User {
   @JoinTable()
   addresses: Address[];
 
-  @OneToOne(() => Cart, (cart) => cart.user)
+  @OneToOne(() => Cart, (cart) => cart.user, {
+    cascade: true,
+    persistence: false,
+  })
   @JoinColumn()
   cart: Cart;
 

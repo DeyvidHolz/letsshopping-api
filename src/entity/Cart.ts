@@ -8,7 +8,14 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  ManyToMany,
+  AfterLoad,
+  AfterInsert,
+  AfterUpdate,
+  BeforeUpdate,
 } from 'typeorm';
+import { calculateTotal } from '../helpers/cart.helper';
+import { CartProduct } from './CartProduct';
 import { Coupon } from './Coupon';
 import { Product } from './Product';
 import { User } from './User';
@@ -18,19 +25,31 @@ export class Cart {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'int', default: 0 })
+  total: number;
+
+  @Column({ type: 'int', default: 0 })
+  subtotal: number;
+
   @CreateDateColumn()
   createdAt: string;
 
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Product, (product) => product.cart, {
+  // @ManyToMany(() => Product, (product) => product.carts, {
+  //   eager: true,
+  //   cascade: true,
+  //   // persistence: false,
+  // })
+  // @JoinTable()
+  // products: Product[];
+
+  @OneToMany(() => CartProduct, (cartProduct) => cartProduct.cart, {
     eager: true,
-    cascade: true,
-    persistence: false,
+    // cascade: true,
   })
-  @JoinTable()
-  products: Product[];
+  cartProducts: CartProduct[];
 
   @OneToOne(() => User, (user) => user.cart, {
     persistence: false,
