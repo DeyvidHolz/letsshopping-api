@@ -40,8 +40,6 @@ export class Order {
   @Column({ comment: '0: CREDIT_CARD' })
   paymentMethod: number;
 
-  // @todo: delivery object + relation
-
   @CreateDateColumn()
   createdAt: string;
 
@@ -63,7 +61,7 @@ export class Order {
     eager: true,
     cascade: true,
   })
-  deliveryAddress: OrderAddress;
+  shippingAddress: OrderAddress;
 
   @ManyToMany(() => Product, (product) => product.orders, {
     eager: true,

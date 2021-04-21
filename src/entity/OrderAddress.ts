@@ -39,7 +39,7 @@ export class OrderAddress {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToMany(() => Order, (order) => order.deliveryAddress)
+  @OneToMany(() => Order, (order) => order.shippingAddress)
   @JoinColumn()
   orders: Order[];
 }

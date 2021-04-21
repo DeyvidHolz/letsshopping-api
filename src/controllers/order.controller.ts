@@ -30,9 +30,9 @@ class OrderController {
 
     const userData = getUserData(req.headers.authorization);
 
-    if (!req.body.deliveryAddressId)
+    if (!req.body.shippingAddressId)
       return unprocessableEntity({
-        message: 'Delivery address ID is required.',
+        message: 'Shipping address ID is required.',
       }).send(res);
 
     const user = await userRepository.findOne(userData.id, {
@@ -40,15 +40,15 @@ class OrderController {
     });
 
     const userSentAddress = await addressRepository.findOne({
-      where: { id: req.body.deliveryAddressId, user: { id: userData.id } },
+      where: { id: req.body.shippingAddressId, user: { id: userData.id } },
     });
 
     if (!userSentAddress)
       return unprocessableEntity({
-        message: 'Delivery address is required.',
+        message: 'Shipping address is required.',
       }).send(res);
 
-    const deliveryAddress = orderAddressRepository.create(userSentAddress);
+    const shippingAddress = orderAddressRepository.create(userSentAddress);
 
     const cart = await cartRepository.findOne({
       where: { user: { id: userData.id } },
@@ -67,7 +67,7 @@ class OrderController {
     order.items = [...cart.cartProducts.map((cp) => cp.product)];
     order.user = user;
     order.address = user.addresses.find((a) => a.isMain);
-    order.deliveryAddress = deliveryAddress;
+    order.shippingAddress = shippingAddress;
 
     // @TODO: calculate freight fee
     order.freightValue = 15;
@@ -80,7 +80,7 @@ class OrderController {
 
     if (!order.address)
       return unprocessableEntity({
-        message: 'Delivery address is required.',
+        message: 'Shipping address is required.',
       }).send(res);
 
     await orderRepository.save(order, { reload: true });
