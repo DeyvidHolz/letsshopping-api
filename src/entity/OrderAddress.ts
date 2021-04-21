@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Order } from './Order';
 
@@ -38,7 +39,7 @@ export class OrderAddress {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @OneToOne(() => Order, (order) => order.deliveryAddress)
+  @OneToMany(() => Order, (order) => order.deliveryAddress)
   @JoinColumn()
-  order: Order;
+  orders: Order[];
 }

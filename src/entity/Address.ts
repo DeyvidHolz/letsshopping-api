@@ -48,7 +48,7 @@ export class Address {
   @JoinTable()
   user: User;
 
-  @OneToOne(() => Order, (order) => order.address)
+  @ManyToOne(() => Order, (order) => order.address)
   @JoinColumn()
-  order: Order;
+  orders: Order[];
 }

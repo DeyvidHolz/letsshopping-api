@@ -52,14 +52,14 @@ export class Order {
   @JoinTable()
   user: User;
 
-  @OneToOne(() => Address, (address) => address.order, {
+  @ManyToOne(() => Address, (address) => address.orders, {
     eager: true,
     cascade: true,
   })
   @JoinColumn()
   address: Address;
 
-  @OneToOne(() => OrderAddress, (orderAddress) => orderAddress.order, {
+  @ManyToOne(() => OrderAddress, (orderAddress) => orderAddress.orders, {
     eager: true,
     cascade: true,
   })
