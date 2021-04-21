@@ -12,6 +12,7 @@ import {
 import { Cart } from './Cart';
 import { CartProduct } from './CartProduct';
 import { Category } from './Category';
+import { Order } from './Order';
 import { ProductImage } from './ProductImage';
 import { ProductOption } from './ProductOption';
 import { ProductReview } from './ProductReview';
@@ -80,9 +81,9 @@ export class Product {
   @JoinTable()
   reviews: ProductReview[];
 
-  // @ManyToMany(() => Cart, (cart) => cart.products)
-  // @JoinTable()
-  // carts: Cart[];
+  @ManyToMany(() => Order, (order) => order.items)
+  @JoinTable()
+  orders: Order[];
 
   @OneToMany(() => CartProduct, (cartProduct) => cartProduct.product)
   cartProducts: CartProduct[];
