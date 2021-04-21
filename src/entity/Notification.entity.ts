@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { User } from './User';
+import { User } from './User.entity';
 
 @Entity({ name: 'notifications' })
 export class Notification {

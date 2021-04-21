@@ -1,6 +1,6 @@
 import validator from 'validator';
 
-import { User } from '../entity/User';
+import { User } from '../entity/User.entity';
 import { validation, validationMessages, Validator } from './validator';
 
 export default class UserValidator extends Validator {

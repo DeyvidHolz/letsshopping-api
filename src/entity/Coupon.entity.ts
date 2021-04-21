@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToOne,
 } from 'typeorm';
-import { Cart } from './Cart';
+import { Cart } from './Cart.entity';
 
 @Entity({ name: 'coupons' })
 export class Coupon {

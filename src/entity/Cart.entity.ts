@@ -15,10 +15,10 @@ import {
   BeforeUpdate,
 } from 'typeorm';
 import { calculateTotal } from '../helpers/cart.helper';
-import { CartProduct } from './CartProduct';
-import { Coupon } from './Coupon';
-import { Product } from './Product';
-import { User } from './User';
+import { CartProduct } from './CartProduct.entity';
+import { Coupon } from './Coupon.entity';
+import { Product } from './Product.entity';
+import { User } from './User.entity';
 
 @Entity({ name: 'carts' })
 export class Cart {

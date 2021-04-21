@@ -1,17 +1,17 @@
 import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import { Product } from '../entity/Product';
-import { Category } from '../entity/Category';
+import { Product } from '../entity/Product.entity';
+import { Category } from '../entity/Category.entity';
 import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
-import { ProductOption } from '../entity/ProductOption';
-import { ProductOptionValue } from '../entity/ProductOptionValue';
-import { ProductImage } from '../entity/ProductImage';
+import { ProductOption } from '../entity/ProductOption.entity';
+import { ProductOptionValue } from '../entity/ProductOptionValue.entity';
+import { ProductImage } from '../entity/ProductImage.entity';
 
 class ProductController {
   private static getRepository() {

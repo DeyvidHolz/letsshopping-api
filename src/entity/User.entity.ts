@@ -10,10 +10,10 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { Address } from './Address';
-import { Cart } from './Cart';
-import { Notification } from './Notification';
-import { Order } from './Order';
+import { Address } from './Address.entity';
+import { Cart } from './Cart.entity';
+import { Notification } from './Notification.entity';
+import { Order } from './Order.entity';
 
 @Entity({ name: 'users' })
 export class User {

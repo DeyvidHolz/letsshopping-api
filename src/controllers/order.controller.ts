@@ -6,14 +6,14 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon';
-import { Order } from '../entity/Order';
+import { Coupon } from '../entity/Coupon.entity';
+import { Order } from '../entity/Order.entity';
 import { getUserData } from '../helpers/auth.helper';
-import { Cart } from '../entity/Cart';
-import { User } from '../entity/User';
-import { OrderAddress } from '../entity/OrderAddress';
-import { Address } from '../entity/Address';
-import { CartProduct } from '../entity/CartProduct';
+import { Cart } from '../entity/Cart.entity';
+import { User } from '../entity/User.entity';
+import { OrderAddress } from '../entity/OrderAddress.entity';
+import { Address } from '../entity/Address.entity';
+import { CartProduct } from '../entity/CartProduct.entity';
 
 class OrderController {
   private static getRepository() {

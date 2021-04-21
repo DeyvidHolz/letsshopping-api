@@ -7,21 +7,15 @@ import {
   ManyToOne,
   JoinTable,
 } from 'typeorm';
-import { Shipping } from './Shipping';
+import { ShopInfo } from './ShopInfo.entity';
 
-@Entity({ name: 'shipping_events' })
-export class ShippingEvent {
+@Entity({ name: 'shop_phones' })
+export class ShopPhone {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
-
-  @Column()
-  description: string;
-
-  @Column({ type: 'date' })
-  date: string;
+  value: string;
 
   @CreateDateColumn()
   createdAt: string;
@@ -29,7 +23,7 @@ export class ShippingEvent {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Shipping, (shipping) => shipping.events)
+  @ManyToOne(() => ShopInfo, (shopInfo) => shopInfo.phones)
   @JoinTable()
-  shipping: Shipping;
+  shopInfo: ShopInfo;
 }

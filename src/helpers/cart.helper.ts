@@ -1,4 +1,4 @@
-import { Cart } from '../entity/Cart';
+import { Cart } from '../entity/Cart.entity';
 
 const calculateTotal = (cart: Cart) => {
   let total = 0;

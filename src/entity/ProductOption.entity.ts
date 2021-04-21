@@ -8,8 +8,8 @@ import {
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Product } from './Product';
-import { ProductOptionValue } from './ProductOptionValue';
+import { Product } from './Product.entity';
+import { ProductOptionValue } from './ProductOptionValue.entity';
 
 @Entity({ name: 'product_options' })
 export class ProductOption {

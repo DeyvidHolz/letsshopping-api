@@ -11,12 +11,12 @@ import {
   ManyToMany,
   JoinColumn,
 } from 'typeorm';
-import { OrderEvent } from './OrderEvent';
-import { OrderAddress } from './OrderAddress';
-import { User } from './User';
-import { Product } from './Product';
-import { Address } from './Address';
-import { Shipping } from './Shipping';
+import { OrderEvent } from './OrderEvent.entity';
+import { OrderAddress } from './OrderAddress.entity';
+import { User } from './User.entity';
+import { Product } from './Product.entity';
+import { Address } from './Address.entity';
+import { Shipping } from './Shipping.entity';
 
 @Entity({ name: 'orders' })
 export class Order {

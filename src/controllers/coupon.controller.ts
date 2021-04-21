@@ -6,7 +6,7 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon';
+import { Coupon } from '../entity/Coupon.entity';
 
 class CouponController {
   private static getRepository() {

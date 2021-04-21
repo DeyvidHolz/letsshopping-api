@@ -16,8 +16,8 @@ import {
   AfterUpdate,
 } from 'typeorm';
 import { calculateTotal } from '../helpers/cart.helper';
-import { Cart } from './Cart';
-import { Product } from './Product';
+import { Cart } from './Cart.entity';
+import { Product } from './Product.entity';
 
 @Entity({ name: 'cart_product' })
 export class CartProduct {

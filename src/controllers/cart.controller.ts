@@ -6,12 +6,12 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon';
-import { Cart } from '../entity/Cart';
-import { User } from '../entity/User';
+import { Coupon } from '../entity/Coupon.entity';
+import { Cart } from '../entity/Cart.entity';
+import { User } from '../entity/User.entity';
 import { getUserData } from '../helpers/auth.helper';
-import { Product } from '../entity/Product';
-import { CartProduct } from '../entity/CartProduct';
+import { Product } from '../entity/Product.entity';
+import { CartProduct } from '../entity/CartProduct.entity';
 import { calculateTotal } from '../helpers/cart.helper';
 
 class CartController {

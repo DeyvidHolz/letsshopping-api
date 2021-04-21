@@ -4,21 +4,16 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  JoinTable,
-  ManyToOne,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { Order } from './Order';
-import { User } from './User';
+import { Order } from './Order.entity';
 
-@Entity({ name: 'addresses' })
-export class Address {
+@Entity({ name: 'order_addresses' })
+export class OrderAddress {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ default: false })
-  isMain: boolean;
 
   @Column()
   country: string;
@@ -44,11 +39,7 @@ export class Address {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => User, (user) => user.addresses)
-  @JoinTable()
-  user: User;
-
-  @ManyToOne(() => Order, (order) => order.address)
+  @OneToMany(() => Order, (order) => order.shippingAddress)
   @JoinColumn()
   orders: Order[];
 }

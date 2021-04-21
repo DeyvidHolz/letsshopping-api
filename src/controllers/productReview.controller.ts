@@ -6,7 +6,7 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
-import { ProductReview } from '../entity/ProductReview';
+import { ProductReview } from '../entity/ProductReview.entity';
 
 class ProductReviewController {
   private static getRepository() {

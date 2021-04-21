@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Product } from './Product';
+import { Product } from './Product.entity';
 
 @Entity({ name: 'categories' })
 export class Category {

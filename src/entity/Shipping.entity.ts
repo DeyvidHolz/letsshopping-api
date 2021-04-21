@@ -9,8 +9,8 @@ import {
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Order } from './Order';
-import { ShippingEvent } from './ShippingEvent';
+import { Order } from './Order.entity';
+import { ShippingEvent } from './ShippingEvent.entity';
 
 @Entity({ name: 'shippings' })
 export class Shipping {

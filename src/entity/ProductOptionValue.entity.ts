@@ -8,7 +8,7 @@ import {
   ManyToOne,
   JoinTable,
 } from 'typeorm';
-import { ProductOption } from './ProductOption';
+import { ProductOption } from './ProductOption.entity';
 
 @Entity({ name: 'product_option_values' })
 export class ProductOptionValue {

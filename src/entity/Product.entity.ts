@@ -9,13 +9,13 @@ import {
   JoinTable,
   ManyToOne,
 } from 'typeorm';
-import { Cart } from './Cart';
-import { CartProduct } from './CartProduct';
-import { Category } from './Category';
-import { Order } from './Order';
-import { ProductImage } from './ProductImage';
-import { ProductOption } from './ProductOption';
-import { ProductReview } from './ProductReview';
+import { Cart } from './Cart.entity';
+import { CartProduct } from './CartProduct.entity';
+import { Category } from './Category.entity';
+import { Order } from './Order.entity';
+import { ProductImage } from './ProductImage.entity';
+import { ProductOption } from './ProductOption.entity';
+import { ProductReview } from './ProductReview.entity';
 
 @Entity({ name: 'products' })
 export class Product {

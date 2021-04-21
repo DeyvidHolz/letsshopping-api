@@ -3,7 +3,7 @@ import express, { Application, Router } from 'express';
 import bodyParser from 'body-parser';
 
 import { createConnection, getConnection } from 'typeorm';
-import { User } from './src/entity/User';
+import { User } from './src/entity/User.entity';
 
 import jwtConfig from './src/config/jwt.config';
 
@@ -21,7 +21,7 @@ import shippingRoutes from './src/routes/shipping.routes';
 
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
-import { ShopInfo } from './src/entity/ShopInfo';
+import { ShopInfo } from './src/entity/ShopInfo.entity';
 
 createConnection().then((connection) => {
   class Server {

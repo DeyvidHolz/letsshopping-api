@@ -7,10 +7,10 @@ import {
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { ShopEmail } from './ShopEmail';
-import { ShopPhone } from './ShopPhone';
+import { ShopEmail } from './ShopEmail.entity';
+import { ShopPhone } from './ShopPhone.entity';
 
-import { ShopSocial } from './ShopSocial';
+import { ShopSocial } from './ShopSocial.entity';
 
 @Entity({ name: 'shop_info' })
 export class ShopInfo {

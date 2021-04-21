@@ -8,18 +8,15 @@ import {
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Product } from './Product';
+import { Product } from './Product.entity';
 
-@Entity({ name: 'product_reviews' })
-export class ProductReview {
+@Entity({ name: 'product_images' })
+export class ProductImage {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
-  title: string;
-
-  @Column({ width: 1, type: 'decimal', precision: 2, scale: 1 })
-  rating: number;
+  src: string;
 
   @Column({ nullable: true })
   description: string;
@@ -30,7 +27,7 @@ export class ProductReview {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Product, (product) => product.reviews)
+  @ManyToOne(() => Product, (product) => product.images)
   @JoinTable()
   product: Product;
 }

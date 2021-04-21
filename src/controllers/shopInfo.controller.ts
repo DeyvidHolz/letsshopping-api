@@ -6,8 +6,8 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon';
-import { ShopInfo } from '../entity/ShopInfo';
+import { Coupon } from '../entity/Coupon.entity';
+import { ShopInfo } from '../entity/ShopInfo.entity';
 
 class ShopInfoController {
   private static getRepository() {

@@ -5,21 +5,17 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Product } from './Product';
+import { ShopInfo } from './ShopInfo.entity';
 
-@Entity({ name: 'product_images' })
-export class ProductImage {
+@Entity({ name: 'shop_emails' })
+export class ShopEmail {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
-  src: string;
-
-  @Column({ nullable: true })
-  description: string;
+  value: string;
 
   @CreateDateColumn()
   createdAt: string;
@@ -27,7 +23,7 @@ export class ProductImage {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Product, (product) => product.images)
+  @ManyToOne(() => ShopInfo, (shopInfo) => shopInfo.emails)
   @JoinTable()
-  product: Product;
+  shopInfo: ShopInfo;
 }
