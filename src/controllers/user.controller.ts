@@ -19,7 +19,7 @@ import { getMessage } from '../helpers/messages.helper';
 import { Cart } from '../entity/Cart';
 
 class UserController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(User);
   }
 
@@ -50,7 +50,7 @@ class UserController {
       }).send(res);
     }
 
-    const userRepository = await UserController.getRespository();
+    const userRepository = await UserController.getRepository();
 
     try {
       await userRepository.save(user);
@@ -76,13 +76,13 @@ class UserController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const userRepository = await UserController.getRespository();
+    const userRepository = await UserController.getRepository();
     const users = await userRepository.find();
     return res.json(users);
   }
 
   public static async get(req: Request, res: Response) {
-    const userRepository = await UserController.getRespository();
+    const userRepository = await UserController.getRepository();
 
     if (!req.query.email)
       return unprocessableEntity({
@@ -112,7 +112,7 @@ class UserController {
       }).send(res);
     }
 
-    const userRepository = await UserController.getRespository();
+    const userRepository = await UserController.getRepository();
 
     let user = await userRepository.findOne({
       where: { username },
@@ -162,7 +162,7 @@ class UserController {
   }
 
   public static async update(req: Request, res: Response) {
-    const userRepository = await UserController.getRespository();
+    const userRepository = await UserController.getRepository();
 
     const userIDisEmpty = req.body.id === undefined || req.body.id === '';
 
@@ -241,7 +241,7 @@ class UserController {
   public static async delete(req: Request, res: Response) {
     try {
       const userDecoded = decode(req.headers.authorization);
-      const userRepository = UserController.getRespository();
+      const userRepository = UserController.getRepository();
 
       await userRepository.delete({
         username: userDecoded['username'],
@@ -272,7 +272,7 @@ class UserController {
         res,
       );
 
-    const users: User[] = await UserController.getRespository().find({
+    const users: User[] = await UserController.getRepository().find({
       where: [
         {
           firstName: Raw(

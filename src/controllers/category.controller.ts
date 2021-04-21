@@ -11,12 +11,12 @@ import { getMessage } from '../helpers/messages.helper';
 import categoryMessages from '../messages/category.messages';
 
 class CategoryController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Category);
   }
 
   public static async create(req: Request, res: Response) {
-    const categoryRepository = CategoryController.getRespository();
+    const categoryRepository = CategoryController.getRepository();
 
     const category = new Category();
     category.name = req.body.name;
@@ -44,7 +44,7 @@ class CategoryController {
   }
 
   public static async get(req: Request, res: Response) {
-    const category = await CategoryController.getRespository().findOne(
+    const category = await CategoryController.getRepository().findOne(
       Number(req.params.id),
     );
 
@@ -60,7 +60,7 @@ class CategoryController {
   }
 
   public static async getProductsByCategory(req: Request, res: Response) {
-    const category = await CategoryController.getRespository().findOne(
+    const category = await CategoryController.getRepository().findOne(
       Number(req.params.id),
       { relations: ['products'] },
     );
@@ -80,7 +80,7 @@ class CategoryController {
     const includeProducts: boolean =
       req.query['include-products'] === 'true' ? true : false;
 
-    const categories: Category[] = await CategoryController.getRespository().find(
+    const categories: Category[] = await CategoryController.getRepository().find(
       {
         order: { id: 'DESC' },
         relations: includeProducts ? ['products'] : [],
@@ -99,7 +99,7 @@ class CategoryController {
         res,
       );
 
-    const categories: Category[] = await CategoryController.getRespository().find(
+    const categories: Category[] = await CategoryController.getRepository().find(
       {
         where: {
           name: Raw(
@@ -118,7 +118,7 @@ class CategoryController {
   }
 
   public static async update(req: Request, res: Response) {
-    const categoryRepository = CategoryController.getRespository();
+    const categoryRepository = CategoryController.getRepository();
 
     const categoryIDisEmpty = req.body.id === undefined || req.body.id === '';
 
@@ -164,7 +164,7 @@ class CategoryController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const categoryRepository = CategoryController.getRespository();
+    const categoryRepository = CategoryController.getRepository();
 
     try {
       const id = Number(req.params.id);

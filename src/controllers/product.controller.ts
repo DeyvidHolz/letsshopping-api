@@ -14,12 +14,12 @@ import { ProductOptionValue } from '../entity/ProductOptionValue';
 import { ProductImage } from '../entity/ProductImage';
 
 class ProductController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Product);
   }
 
   public static async create(req: Request, res: Response) {
-    const productRepository = ProductController.getRespository();
+    const productRepository = ProductController.getRepository();
 
     if (req.body.categories)
       req.body.categories = req.body.categories.map((categoryId) => ({
@@ -93,7 +93,7 @@ class ProductController {
   }
 
   public static async update(req: Request, res: Response) {
-    const productRepository = ProductController.getRespository();
+    const productRepository = ProductController.getRepository();
 
     if (req.body.categories)
       req.body.categories = req.body.categories.map((categoryId) => ({
@@ -130,7 +130,7 @@ class ProductController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const productRepository = ProductController.getRespository();
+    const productRepository = ProductController.getRepository();
 
     try {
       await productRepository.delete({ id: req.params.id });
@@ -149,7 +149,7 @@ class ProductController {
         res,
       );
 
-    const products: Product[] = await ProductController.getRespository().find({
+    const products: Product[] = await ProductController.getRepository().find({
       where: {
         name: Raw(
           (alias) => `LOWER(${alias}) Like LOWER('%${req.query.name}%')`,

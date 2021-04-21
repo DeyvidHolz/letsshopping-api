@@ -10,12 +10,12 @@ import { Coupon } from '../entity/Coupon';
 import { ShopInfo } from '../entity/ShopInfo';
 
 class ShopInfoController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(ShopInfo);
   }
 
   public static async create(req: Request, res: Response) {
-    const shopInfoRepository = ShopInfoController.getRespository();
+    const shopInfoRepository = ShopInfoController.getRepository();
     const shopInfo = shopInfoRepository.create(req.body as ShopInfo);
 
     try {
@@ -30,7 +30,7 @@ class ShopInfoController {
   }
 
   public static async get(req: Request, res: Response) {
-    const shopInfoRepository = ShopInfoController.getRespository();
+    const shopInfoRepository = ShopInfoController.getRepository();
     const shopInfo = await shopInfoRepository.findOne(1);
 
     if (!shopInfo) {
@@ -43,7 +43,7 @@ class ShopInfoController {
   }
 
   public static async update(req: Request, res: Response) {
-    const shopInfoRepository = ShopInfoController.getRespository();
+    const shopInfoRepository = ShopInfoController.getRepository();
     req.body.id = 1;
     const shopInfo = shopInfoRepository.create(req.body as ShopInfo);
 

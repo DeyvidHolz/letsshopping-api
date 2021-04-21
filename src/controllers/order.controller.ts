@@ -16,12 +16,12 @@ import { Address } from '../entity/Address';
 import { CartProduct } from '../entity/CartProduct';
 
 class OrderController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Order);
   }
 
   public static async create(req: Request, res: Response) {
-    const orderRepository = OrderController.getRespository();
+    const orderRepository = OrderController.getRepository();
     const cartRepository = getConnection().getRepository(Cart);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userRepository = getConnection().getRepository(User);
@@ -97,7 +97,7 @@ class OrderController {
   }
 
   public static async get(req: Request, res: Response) {
-    const orderRepository = OrderController.getRespository();
+    const orderRepository = OrderController.getRepository();
     const userData = getUserData(req.headers.authorization);
 
     const order = await orderRepository.findOne({
@@ -114,7 +114,7 @@ class OrderController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const orderRepository = OrderController.getRespository();
+    const orderRepository = OrderController.getRepository();
     const userData = getUserData(req.headers.authorization);
 
     const orders = await orderRepository.find({

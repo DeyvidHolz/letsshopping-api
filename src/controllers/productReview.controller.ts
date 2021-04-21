@@ -9,12 +9,12 @@ import unauthorized from '../errors/http/unauthorized';
 import { ProductReview } from '../entity/ProductReview';
 
 class ProductReviewController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(ProductReview);
   }
 
   public static async create(req: Request, res: Response) {
-    const productReviewRepository = ProductReviewController.getRespository();
+    const productReviewRepository = ProductReviewController.getRepository();
 
     if (!req.body.product_id) {
       return unprocessableEntity({
@@ -43,7 +43,7 @@ class ProductReviewController {
   }
 
   public static async get(req: Request, res: Response) {
-    const productReviewRepository = ProductReviewController.getRespository();
+    const productReviewRepository = ProductReviewController.getRepository();
     const productReview = await productReviewRepository.findOne(req.params.id, {
       relations: ['product'],
     });
@@ -58,7 +58,7 @@ class ProductReviewController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const productReviewRepository = ProductReviewController.getRespository();
+    const productReviewRepository = ProductReviewController.getRepository();
 
     const productReviews = await productReviewRepository.find({
       relations: ['product'],
@@ -67,7 +67,7 @@ class ProductReviewController {
   }
 
   public static async update(req: Request, res: Response) {
-    const productReviewRepository = ProductReviewController.getRespository();
+    const productReviewRepository = ProductReviewController.getRepository();
     const productReview = productReviewRepository.create(
       req.body as ProductReview,
     );
@@ -93,7 +93,7 @@ class ProductReviewController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const productReviewRepository = ProductReviewController.getRespository();
+    const productReviewRepository = ProductReviewController.getRepository();
     try {
       await productReviewRepository.delete(req.params.id);
       return res.status(200).json({ message: 'Review deleted.' });

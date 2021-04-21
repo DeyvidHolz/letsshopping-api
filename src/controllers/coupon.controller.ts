@@ -9,12 +9,12 @@ import unauthorized from '../errors/http/unauthorized';
 import { Coupon } from '../entity/Coupon';
 
 class CouponController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Coupon);
   }
 
   public static async create(req: Request, res: Response) {
-    const couponRepository = CouponController.getRespository();
+    const couponRepository = CouponController.getRepository();
     const coupon = couponRepository.create(req.body as Coupon);
 
     try {
@@ -36,7 +36,7 @@ class CouponController {
   }
 
   public static async get(req: Request, res: Response) {
-    const couponRepository = CouponController.getRespository();
+    const couponRepository = CouponController.getRepository();
     const coupon = await couponRepository.findOne(req.params.id);
 
     if (!coupon) {
@@ -49,14 +49,14 @@ class CouponController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const couponRepository = CouponController.getRespository();
+    const couponRepository = CouponController.getRepository();
 
     const coupon = await couponRepository.find();
     return res.status(200).json(coupon);
   }
 
   public static async update(req: Request, res: Response) {
-    const couponRepository = CouponController.getRespository();
+    const couponRepository = CouponController.getRepository();
     const coupon = couponRepository.create(req.body as Coupon);
 
     if (!req.body.id) {
@@ -84,7 +84,7 @@ class CouponController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const couponRepository = CouponController.getRespository();
+    const couponRepository = CouponController.getRepository();
     try {
       await couponRepository.delete(req.params.id);
       return res.status(200).json({ message: 'Coupon deleted.' });

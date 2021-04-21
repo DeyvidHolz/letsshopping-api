@@ -19,12 +19,12 @@ import unauthorized from '../errors/http/unauthorized';
 import { getUserData } from '../helpers/auth.helper';
 
 class AddressController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Address);
   }
 
   public static async create(req: Request, res: Response) {
-    const addressRepository = AddressController.getRespository();
+    const addressRepository = AddressController.getRepository();
     const address = addressRepository.create(req.body as Address);
 
     let user: User | null = getUserData(req.headers.authorization);
@@ -85,7 +85,7 @@ class AddressController {
   }
 
   public static async get(req: Request, res: Response) {
-    const addressRepository = AddressController.getRespository();
+    const addressRepository = AddressController.getRepository();
 
     let user: User | null = getUserData(req.headers.authorization);
 
@@ -107,7 +107,7 @@ class AddressController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const addressRepository = AddressController.getRespository();
+    const addressRepository = AddressController.getRepository();
 
     let user: User | null = getUserData(req.headers.authorization);
 
@@ -127,7 +127,7 @@ class AddressController {
   }
 
   public static async update(req: Request, res: Response) {
-    const addressRepository = AddressController.getRespository();
+    const addressRepository = AddressController.getRepository();
     const address = addressRepository.create(req.body as Address);
 
     if (!req.body.id) {
@@ -215,7 +215,7 @@ class AddressController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const addressRepository = AddressController.getRespository();
+    const addressRepository = AddressController.getRepository();
     const address = await addressRepository.findOne(req.params.id);
 
     /**

@@ -15,12 +15,12 @@ import { CartProduct } from '../entity/CartProduct';
 import { calculateTotal } from '../helpers/cart.helper';
 
 class CartController {
-  private static getRespository() {
+  private static getRepository() {
     return getConnection().getRepository(Cart);
   }
 
   public static async get(req: Request, res: Response) {
-    const cartRepository = CartController.getRespository();
+    const cartRepository = CartController.getRepository();
     const userData = getUserData(req.headers.authorization);
 
     const cart = await cartRepository.findOne({
@@ -31,7 +31,7 @@ class CartController {
   }
 
   public static async addProduct(req: Request, res: Response) {
-    const cartRepository = CartController.getRespository();
+    const cartRepository = CartController.getRepository();
     const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
@@ -68,7 +68,7 @@ class CartController {
   }
 
   public static async removeProduct(req: Request, res: Response) {
-    const cartRepository = CartController.getRespository();
+    const cartRepository = CartController.getRepository();
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
     const productId: string = req.body.id;
@@ -92,7 +92,7 @@ class CartController {
   }
 
   public static async updateProduct(req: Request, res: Response) {
-    const cartRepository = CartController.getRespository();
+    const cartRepository = CartController.getRepository();
     const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
@@ -138,7 +138,7 @@ class CartController {
   }
 
   public static async clearCart(req: Request, res: Response) {
-    const cartRepository = CartController.getRespository();
+    const cartRepository = CartController.getRepository();
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
     const cart = await cartRepository.findOne({ user: { id: userData.id } });
