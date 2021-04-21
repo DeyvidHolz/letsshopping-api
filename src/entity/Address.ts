@@ -6,13 +6,19 @@ import {
   UpdateDateColumn,
   JoinTable,
   ManyToOne,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Order } from './Order';
 import { User } from './User';
 
 @Entity({ name: 'addresses' })
 export class Address {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ default: false })
+  isMain: boolean;
 
   @Column()
   country: string;
@@ -41,4 +47,8 @@ export class Address {
   @ManyToOne(() => User, (user) => user.addresses)
   @JoinTable()
   user: User;
+
+  @OneToOne(() => Order, (order) => order.address)
+  @JoinColumn()
+  order: Order;
 }

@@ -8,11 +8,14 @@ import {
   JoinTable,
   OneToOne,
   OneToMany,
+  ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { OrderEvent } from './OrderEvent';
 import { OrderAddress } from './OrderAddress';
-import { OrderItem } from './OrderItem';
 import { User } from './User';
+import { Product } from './Product';
+import { Address } from './Address';
 
 @Entity({ name: 'orders' })
 export class Order {
@@ -21,6 +24,9 @@ export class Order {
 
   @Column()
   totalValue: number;
+
+  @Column()
+  subtotal: number;
 
   @Column()
   freightValue: number;
@@ -34,6 +40,8 @@ export class Order {
   @Column({ comment: '0: CREDIT_CARD' })
   paymentMethod: number;
 
+  // @todo: delivery object + relation
+
   @CreateDateColumn()
   createdAt: string;
 
@@ -44,18 +52,25 @@ export class Order {
   @JoinTable()
   user: User;
 
+  @OneToOne(() => Address, (address) => address.order, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  address: Address;
+
   @OneToOne(() => OrderAddress, (orderAddress) => orderAddress.order, {
     eager: true,
     cascade: true,
   })
-  orderAddress: OrderAddress;
+  deliveryAddress: OrderAddress;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, {
+  @ManyToMany(() => Product, (product) => product.orders, {
     eager: true,
     cascade: true,
   })
   @JoinTable()
-  items: OrderItem[];
+  items: Product[];
 
   @OneToMany(() => OrderEvent, (orderEvent) => orderEvent.order, {
     eager: true,

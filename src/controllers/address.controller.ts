@@ -1,4 +1,4 @@
-import { getConnection } from 'typeorm';
+import { getConnection, Not } from 'typeorm';
 import { Request, Response } from 'express';
 import decode from 'jwt-decode';
 
@@ -38,7 +38,43 @@ class AddressController {
     address.user = user;
 
     try {
+      const addresses = await addressRepository.find({
+        where: { isMain: true },
+      });
+
+      /**
+       * Checking for duplicated zipcodes.
+       */
+      const addressWithSameZipCode = await addresses.find(
+        (a) => a.zipcode === address.zipcode,
+      );
+
+      if (addressWithSameZipCode) {
+        return unprocessableEntity({
+          message: "There's another address with this zipcode.",
+        }).send(res);
+      }
+
+      if (!addresses.length) {
+        /**
+         * This is the first address registered by the user. So it should be the main address.
+         */
+        address.isMain = true;
+      } else {
+        /**
+         * The new address should be the main one. So we need to set isMain false
+         * for all the others addresses.
+         */
+        addressRepository.save([
+          ...addresses.map((a) => {
+            a.isMain = false;
+            return a;
+          }),
+        ]);
+      }
+
       await addressRepository.save(address);
+
       return res.status(201).json({ message: 'Address created.', address });
     } catch (err) {
       console.log(err);
@@ -81,7 +117,10 @@ class AddressController {
       }).send(res);
     }
 
-    const addresses = await addressRepository.find({ user: { id: user.id } });
+    const addresses = await addressRepository.find({
+      user: { id: user.id },
+      order: { id: 'DESC' },
+    });
     return res.status(200).json(addresses);
   }
 
@@ -105,6 +144,63 @@ class AddressController {
 
     address.user = user;
 
+    const addresses = await addressRepository.find({
+      where: { id: Not(address.id) },
+      order: { id: 'DESC' },
+    });
+
+    /**
+     * Checking for duplicated zipcodes.
+     */
+    const addressWithSameZipCode = await addresses.find(
+      (a) => a.zipcode === address.zipcode,
+    );
+
+    if (addressWithSameZipCode) {
+      return unprocessableEntity({
+        message: "There's another address with this zipcode.",
+      }).send(res);
+    }
+
+    if (address.isMain) {
+      /**
+       * The address which is being updated should be the only main adress.
+       * Checking in order to keep that.
+       */
+      addressRepository.save([
+        ...addresses.map((a) => {
+          a.isMain = false;
+          return a;
+        }),
+      ]);
+    } else {
+      /**
+       * Not a main address. This address may is a Main adress
+       * being updated to a non-main address.
+       *
+       * Checking for another main address.
+       */
+      if (addresses.length) {
+        /**
+         * Checking if there's a main address.
+         * If not, then setting the last one (before this) as a main address.
+         */
+        const mainAddress = addresses.find((a) => a.isMain);
+        if (!mainAddress) {
+          const newMainAddress = addresses[0];
+          newMainAddress.isMain = true;
+
+          await addressRepository.save(newMainAddress);
+        }
+      } else {
+        /**
+         * There's no other addresses on database.
+         * This address should be a main address (forced).
+         */
+        address.isMain = true;
+      }
+    }
+
     try {
       await addressRepository.save(address);
       return res.status(201).json({ message: 'Address updated.', address });
@@ -118,6 +214,27 @@ class AddressController {
 
   public static async delete(req: Request, res: Response) {
     const addressRepository = AddressController.getRespository();
+    const address = await addressRepository.findOne(req.params.id);
+
+    /**
+     * If the main address is being deleted, we should set a new one
+     * as main address.
+     */
+    if (address && address.isMain) {
+      const addresses = await addressRepository.find({
+        where: { id: Not(req.params.id) },
+        order: {
+          id: 'DESC',
+        },
+      });
+
+      if (addresses.length) {
+        const newMainAddress = addresses[0];
+        newMainAddress.isMain = true;
+        await addressRepository.save(newMainAddress);
+      }
+    }
+
     try {
       await addressRepository.delete(req.params.id);
       return res.status(200).json({ message: 'Address deleted.' });
