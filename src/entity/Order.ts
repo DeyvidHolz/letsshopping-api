@@ -16,6 +16,7 @@ import { OrderAddress } from './OrderAddress';
 import { User } from './User';
 import { Product } from './Product';
 import { Address } from './Address';
+import { Shipping } from './Shipping';
 
 @Entity({ name: 'orders' })
 export class Order {
@@ -76,4 +77,11 @@ export class Order {
   })
   @JoinTable()
   events: OrderEvent[];
+
+  @OneToOne(() => Shipping, (shipping) => shipping.order, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  shipping: Shipping;
 }
