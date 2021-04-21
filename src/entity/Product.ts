@@ -74,7 +74,6 @@ export class Product {
   options: ProductOption[];
 
   @OneToMany(() => ProductReview, (review) => review.product, {
-    eager: true,
     cascade: true,
     persistence: false,
   })
