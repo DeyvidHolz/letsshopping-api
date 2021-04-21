@@ -46,6 +46,15 @@ export class Product {
   @Column({ type: 'int' })
   price: number;
 
+  @Column({ nullable: true })
+  weight: number;
+
+  @Column({ nullable: true })
+  width: number;
+
+  @Column({ nullable: true })
+  height: number;
+
   @CreateDateColumn()
   createdAt: string;
 
