@@ -118,7 +118,9 @@ class AddressController {
     }
 
     const addresses = await addressRepository.find({
-      user: { id: user.id },
+      where: {
+        user: { id: user.id },
+      },
       order: { id: 'DESC' },
     });
     return res.status(200).json(addresses);
