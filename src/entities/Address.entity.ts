@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   JoinTable,
   ManyToOne,
-  OneToOne,
   JoinColumn,
 } from 'typeorm';
 import { Order } from './Order.entity';
@@ -20,11 +19,11 @@ export class Address {
   @Column({ default: false })
   isMain: boolean;
 
-  @Column()
+  @Column({ default: process.env.DEFAULT_ADDRESS_COUNTRY ?? 'CAD' })
   country: string;
 
   @Column()
-  zipcode: string;
+  zipCode: string;
 
   @Column()
   state: string;

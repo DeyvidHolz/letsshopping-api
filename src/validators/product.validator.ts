@@ -1,38 +1,26 @@
 import { Product } from '../entities/Product.entity';
-import { validation, validationMessages, Validator } from './validator';
+import productValidationRegex from './validationRegex/product.validationRegex';
+
+import {
+  validation,
+  validationMessages,
+  Validator,
+  validationRegex,
+} from './validator';
 
 export default class ProductValidator extends Validator {
-  public product: Product;
+  public data: Product;
   public validationErrors: validationMessages[] | null = null;
+
+  protected validationRegex: validationRegex[] = productValidationRegex;
 
   constructor(product: Product) {
     super();
-    this.product = product;
+    this.data = product;
   }
 
   public validate(): validation {
-    this.validationErrors = [];
-
-    if (this.product.code.length !== 6) {
-      this.validationErrors.push({
-        field: 'code',
-        message: 'The product code must have 6 characters.',
-      });
-    }
-
-    if (!this.product.code.match(/[A-Za-z0-9]+/g)) {
-      this.validationErrors.push({
-        field: 'code',
-        message: 'Invalid product code.',
-      });
-    }
-
-    if (!this.product.name.match(/[A-Za-z0-9]+/g)) {
-      this.validationErrors.push({
-        field: 'name',
-        message: 'Invalid product name.',
-      });
-    }
+    super.validate();
 
     return {
       hasErrors: !!this.validationErrors.length,

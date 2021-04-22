@@ -1,27 +1,26 @@
 import { Category } from '../entities/Category.entity';
-import { validation, validationMessages, Validator } from './validator';
+import categoryValidationRegex from './validationRegex/category.validationRegex';
+
+import {
+  validation,
+  validationMessages,
+  Validator,
+  validationRegex,
+} from './validator';
 
 export default class CategoryValidator extends Validator {
-  public category: Category;
+  public data: Category;
   public validationErrors: validationMessages[] | null = null;
+
+  protected validationRegex: validationRegex[] = categoryValidationRegex;
 
   constructor(category: Category) {
     super();
-    this.category = category;
+    this.data = category;
   }
 
   public validate(): validation {
-    this.validationErrors = [];
-
-    if (
-      !this.category.name.match(/[A-Za-z0-9 ]+/g) ||
-      this.category.name === ''
-    ) {
-      this.validationErrors.push({
-        field: 'name',
-        message: 'Invalid category name.',
-      });
-    }
+    super.validate();
 
     return {
       hasErrors: !!this.validationErrors.length,

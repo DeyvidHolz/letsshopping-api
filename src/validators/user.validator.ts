@@ -1,59 +1,36 @@
 import validator from 'validator';
-
 import { User } from '../entities/User.entity';
-import { validation, validationMessages, Validator } from './validator';
+import userValidationRegex from './validationRegex/user.validationRegex';
+
+import {
+  validation,
+  validationMessages,
+  Validator,
+  validationRegex,
+} from './validator';
 
 export default class UserValidator extends Validator {
-  public user: User;
-  public validationErrors: validationMessages[];
+  public data: User;
+  public validationErrors: validationMessages[] | null = null;
+
+  protected validationRegex: validationRegex[] = userValidationRegex;
 
   constructor(user: User) {
     super();
-    this.user = user;
+    this.data = user;
   }
 
   public validate(): validation {
-    this.validationErrors = [];
+    super.validate();
 
-    if (!this.user.username.match(/^[\w\.]+$/)) {
-      this.validationErrors.push({
-        field: 'username',
-        message: 'Invalid username.',
-      });
-    }
+    if (!validator.isEmail(this.data.email))
+      this.addError('email', 'Invalid email.');
 
-    if (!(this.user.password.length > 5 && this.user.password.length < 100)) {
-      this.validationErrors.push({
-        field: 'passwrd',
-        message: 'Invalid password.',
-        tip: 'Password length must be between 6-99 characters.',
-      });
-    }
-
-    if (!this.user.firstName.match(/^[A-Za-z]+$/)) {
-      this.validationErrors.push({
-        field: 'firstName',
-        message: 'Invalid first name.',
-      });
-    }
-
-    if (!this.user.lastName.match(/^[A-Za-z ]+$/)) {
-      this.validationErrors.push({
-        field: 'lastName',
-        message: 'Invalid last name.',
-      });
-    }
-
-    if (!validator.isEmail(this.user.email)) {
-      this.validationErrors.push({ field: 'email', message: 'Invalid email.' });
-    }
-
-    if (!validator.isDate(this.user.birthDate)) {
-      this.validationErrors.push({
-        field: 'birthDate',
-        message: 'Invalid birth date.',
-        tip: 'Birth date format must be YYYY-MM-DD.',
-      });
+    if (!validator.isDate(this.data.birthDate)) {
+      this.addError(
+        'email',
+        'Invalid birth date. The date format should be YYYY-MM-DD.',
+      );
     }
 
     return {

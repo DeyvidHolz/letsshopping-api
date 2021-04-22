@@ -1,6 +1,6 @@
 type createAddressPayload = {
   country: string;
-  zipcode: string;
+  zipCode: string;
   state: string;
   neighbourhood: string;
   street: string;
@@ -11,7 +11,7 @@ type createAddressPayload = {
 type updateAddressPayload = {
   id: number;
   country: string;
-  zipcode: string;
+  zipCode: string;
   state: string;
   neighbourhood: string;
   street: string;

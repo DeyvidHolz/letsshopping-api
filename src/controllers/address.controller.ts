@@ -22,7 +22,7 @@ class AddressController {
     const addressRepository = AddressController.getRepository();
     const data: createAddressPayload = {
       country: req.body.country,
-      zipcode: req.body.zipcode,
+      zipCode: req.body.zipCode,
       state: req.body.state,
       neighbourhood: req.body.neighbourhood,
       street: req.body.street,
@@ -48,15 +48,15 @@ class AddressController {
       });
 
       /**
-       * Checking for duplicated zipcodes.
+       * Checking for duplicated zipCodes.
        */
-      const addressWithSameZipCode = await addresses.find(
-        (a) => a.zipcode === address.zipcode,
+      const addressWithSamezipCode = await addresses.find(
+        (a) => a.zipCode === address.zipCode,
       );
 
-      if (addressWithSameZipCode) {
+      if (addressWithSamezipCode) {
         return unprocessableEntity({
-          message: "There's another address with this zipcode.",
+          message: "There's another address with this zipCode.",
         }).send(res);
       }
 
@@ -137,7 +137,7 @@ class AddressController {
     const data: updateAddressPayload = {
       id: req.body.id,
       country: req.body.country,
-      zipcode: req.body.zipcode,
+      zipCode: req.body.zipCode,
       state: req.body.state,
       neighbourhood: req.body.neighbourhood,
       street: req.body.street,
@@ -169,15 +169,15 @@ class AddressController {
     });
 
     /**
-     * Checking for duplicated zipcodes.
+     * Checking for duplicated zipCodes.
      */
-    const addressWithSameZipCode = await addresses.find(
-      (a) => a.zipcode === address.zipcode,
+    const addressWithSamezipCode = await addresses.find(
+      (a) => a.zipCode === address.zipCode,
     );
 
-    if (addressWithSameZipCode) {
+    if (addressWithSamezipCode) {
       return unprocessableEntity({
-        message: "There's another address with this zipcode.",
+        message: "There's another address with this zipCode.",
       }).send(res);
     }
 

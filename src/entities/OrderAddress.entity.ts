@@ -19,7 +19,7 @@ export class OrderAddress {
   country: string;
 
   @Column()
-  zipcode: string;
+  zipCode: string;
 
   @Column()
   state: string;
