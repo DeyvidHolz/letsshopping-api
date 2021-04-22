@@ -1,12 +1,14 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
 import { Coupon } from '../entity/Coupon.entity';
+import {
+  createCouponPayload,
+  updateCouponPayload,
+} from '../types/controllers/coupon.types';
 
 class CouponController {
   private static getRepository() {
@@ -15,7 +17,19 @@ class CouponController {
 
   public static async create(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const coupon = couponRepository.create(req.body as Coupon);
+    const data: createCouponPayload = {
+      code: req.body.code,
+      name: req.body.name,
+      description: req.body.description,
+      discountType: req.body.discountType,
+      discountAmount: req.body.discountAmount,
+      maxUsesPerUser: req.body.maxUsesPerUser,
+      maxUsers: req.body.maxUsers,
+      isActive: req.body.isActive,
+      ruleMinPrice: req.body.ruleMinPrice,
+    };
+
+    const coupon = couponRepository.create(data as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -57,13 +71,27 @@ class CouponController {
 
   public static async update(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const coupon = couponRepository.create(req.body as Coupon);
 
     if (!req.body.id) {
       return unprocessableEntity({
         message: 'Invalid address ID.',
       }).send(res);
     }
+
+    const data: updateCouponPayload = {
+      id: req.body.id,
+      code: req.body.code,
+      name: req.body.name,
+      description: req.body.description,
+      discountType: req.body.discountType,
+      discountAmount: req.body.discountAmount,
+      maxUsesPerUser: req.body.maxUsesPerUser,
+      maxUsers: req.body.maxUsers,
+      isActive: req.body.isActive,
+      ruleMinPrice: req.body.ruleMinPrice,
+    };
+
+    const coupon = couponRepository.create(data as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -85,6 +113,7 @@ class CouponController {
 
   public static async delete(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
+
     try {
       await couponRepository.delete(req.params.id);
       return res.status(200).json({ message: 'Coupon deleted.' });

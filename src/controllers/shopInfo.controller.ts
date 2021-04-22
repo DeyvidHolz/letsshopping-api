@@ -1,13 +1,12 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
-import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon.entity';
 import { ShopInfo } from '../entity/ShopInfo.entity';
+import {
+  createShopInfoPayload,
+  updateShopInfoPayload,
+} from '../types/controllers/shopInfo.types';
 
 class ShopInfoController {
   private static getRepository() {
@@ -16,7 +15,15 @@ class ShopInfoController {
 
   public static async create(req: Request, res: Response) {
     const shopInfoRepository = ShopInfoController.getRepository();
-    const shopInfo = shopInfoRepository.create(req.body as ShopInfo);
+
+    const data: createShopInfoPayload = {
+      name: req.body.name,
+      phones: req.body.phones,
+      emails: req.body.emails,
+      socials: req.body.socials,
+    };
+
+    const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
 
     try {
       await shopInfoRepository.save(shopInfo);
@@ -45,7 +52,16 @@ class ShopInfoController {
   public static async update(req: Request, res: Response) {
     const shopInfoRepository = ShopInfoController.getRepository();
     req.body.id = 1;
-    const shopInfo = shopInfoRepository.create(req.body as ShopInfo);
+
+    const data: updateShopInfoPayload = {
+      id: req.body.id,
+      name: req.body.name,
+      phones: req.body.phones,
+      emails: req.body.emails,
+      socials: req.body.socials,
+    };
+
+    const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
 
     try {
       await shopInfoRepository.save(shopInfo);

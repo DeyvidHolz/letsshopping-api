@@ -1,22 +1,17 @@
 import { getConnection, Not } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
-import { Product } from '../entity/Product.entity';
-import { Category } from '../entity/Category.entity';
-import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { getMessage } from '../helpers/messages.helper';
-import productMessages from '../messages/product.messages';
-import { ProductOption } from '../entity/ProductOption.entity';
-import { ProductOptionValue } from '../entity/ProductOptionValue.entity';
-import { ProductImage } from '../entity/ProductImage.entity';
 import { Address } from '../entity/Address.entity';
 import { User } from '../entity/User.entity';
 import unauthorized from '../errors/http/unauthorized';
 import { getUserData } from '../helpers/auth.helper';
+import {
+  createAddressPayload,
+  updateAddressPayload,
+} from '../types/controllers/address.types';
 
 class AddressController {
   private static getRepository() {
@@ -25,7 +20,17 @@ class AddressController {
 
   public static async create(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const address = addressRepository.create(req.body as Address);
+    const data: createAddressPayload = {
+      country: req.body.country,
+      zipcode: req.body.zipcode,
+      state: req.body.state,
+      neighbourhood: req.body.neighbourhood,
+      street: req.body.street,
+      number: req.body.number,
+      isMain: req.body.isMain,
+    };
+
+    const address = addressRepository.create(data as Address);
 
     let user: User | null = getUserData(req.headers.authorization);
 
@@ -128,7 +133,19 @@ class AddressController {
 
   public static async update(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const address = addressRepository.create(req.body as Address);
+
+    const data: updateAddressPayload = {
+      id: req.body.id,
+      country: req.body.country,
+      zipcode: req.body.zipcode,
+      state: req.body.state,
+      neighbourhood: req.body.neighbourhood,
+      street: req.body.street,
+      number: req.body.number,
+      isMain: req.body.isMain,
+    };
+
+    const address = addressRepository.create(data as Address);
 
     if (!req.body.id) {
       return unprocessableEntity({

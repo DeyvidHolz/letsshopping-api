@@ -1,12 +1,14 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
 import { ProductReview } from '../entity/ProductReview.entity';
+import {
+  createProductReviewPayload,
+  updateProductReviewPayload,
+} from '../types/controllers/productReview.types';
 
 class ProductReviewController {
   private static getRepository() {
@@ -24,9 +26,14 @@ class ProductReviewController {
 
     req.body.product = { id: req.body.product_id };
 
-    const productReview = productReviewRepository.create(
-      req.body as ProductReview,
-    );
+    const data: createProductReviewPayload = {
+      title: req.body.title,
+      rating: req.body.rating,
+      description: req.body.description,
+      product: req.body.product,
+    };
+
+    const productReview = productReviewRepository.create(data as ProductReview);
 
     try {
       await productReviewRepository.save(productReview);
@@ -68,8 +75,19 @@ class ProductReviewController {
 
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+
+    req.body.product = { id: req.body.product_id };
+
+    const data: updateProductReviewPayload = {
+      id: req.body.id,
+      title: req.body.title,
+      rating: req.body.rating,
+      description: req.body.description,
+      product: req.body.product,
+    };
+
     const productReview = productReviewRepository.create(
-      req.body as ProductReview,
+      (data as unknown) as ProductReview,
     );
 
     if (!req.body.id) {

@@ -2,16 +2,16 @@ import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import { Product } from '../entity/Product.entity';
-import { Category } from '../entity/Category.entity';
 import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
-import { ProductOption } from '../entity/ProductOption.entity';
-import { ProductOptionValue } from '../entity/ProductOptionValue.entity';
-import { ProductImage } from '../entity/ProductImage.entity';
+import {
+  createProductPayload,
+  updateProductPayload,
+} from '../types/controllers/product.types';
 
 class ProductController {
   private static getRepository() {
@@ -26,7 +26,24 @@ class ProductController {
         id: categoryId,
       }));
 
-    const product = productRepository.create(req.body as Product);
+    const data: createProductPayload = {
+      code: req.body.code,
+      name: req.body.name,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+      mainImage: req.body.mainImage,
+      isActive: req.body.isActive,
+      stock: req.body.stock,
+      price: req.body.price,
+      weight: req.body.weight,
+      width: req.body.width,
+      height: req.body.height,
+      categories: req.body.categories,
+      images: req.body.images,
+      options: req.body.options,
+    };
+
+    const product = productRepository.create((data as unknown) as Product);
 
     const validation = new ProductValidator(product);
 
@@ -100,7 +117,25 @@ class ProductController {
         id: categoryId,
       }));
 
-    const product = productRepository.create(req.body as Product);
+    const data: updateProductPayload = {
+      id: req.body.id,
+      code: req.body.code,
+      name: req.body.name,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+      mainImage: req.body.mainImage,
+      isActive: req.body.isActive,
+      stock: req.body.stock,
+      price: req.body.price,
+      weight: req.body.weight,
+      width: req.body.width,
+      height: req.body.height,
+      categories: req.body.categories,
+      images: req.body.images,
+      options: req.body.options,
+    };
+
+    const product = productRepository.create((data as unknown) as Product);
 
     const validation = new ProductValidator(product);
 

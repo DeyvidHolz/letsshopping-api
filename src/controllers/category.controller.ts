@@ -1,7 +1,6 @@
-import { getConnection, Like, Raw } from 'typeorm';
+import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import { Product } from '../entity/Product.entity';
 import { Category } from '../entity/Category.entity';
 import CategoryValidator from '../validators/category.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
@@ -9,6 +8,10 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import categoryMessages from '../messages/category.messages';
+import {
+  createCategoryPayload,
+  updateCategoryPayload,
+} from '../types/controllers/category.types';
 
 class CategoryController {
   private static getRepository() {
@@ -18,10 +21,13 @@ class CategoryController {
   public static async create(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
 
-    const category = new Category();
-    category.name = req.body.name;
-    category.shortDescription = req.body.shortDescription ?? null;
-    category.description = req.body.description ?? null;
+    const data: createCategoryPayload = {
+      name: req.body.name,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+    };
+
+    const category = categoryRepository.create((data as unknown) as Category);
 
     const validation = new CategoryValidator(category);
 
@@ -119,7 +125,6 @@ class CategoryController {
 
   public static async update(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-
     const categoryIDisEmpty = req.body.id === undefined || req.body.id === '';
 
     if (categoryIDisEmpty) {
@@ -128,7 +133,14 @@ class CategoryController {
       }).send(res);
     }
 
-    const category = await categoryRepository.findOne(Number(req.body.id));
+    const data: updateCategoryPayload = {
+      id: req.body.id,
+      name: req.body.name,
+      shortDescription: req.body.shortDescription,
+      description: req.body.description,
+    };
+
+    const category = await categoryRepository.create(data as Category);
 
     if (!category) {
       return notFound({
@@ -137,11 +149,6 @@ class CategoryController {
         }),
       }).send(res);
     }
-
-    category.name = req.body.name ?? category.name;
-    category.shortDescription =
-      req.body.shortDescription ?? category.shortDescription;
-    category.description = req.body.description ?? category.description;
 
     const validation = new CategoryValidator(category);
 

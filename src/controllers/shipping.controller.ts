@@ -1,20 +1,14 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entity/Coupon.entity';
 import { Order } from '../entity/Order.entity';
-import { getUserData } from '../helpers/auth.helper';
-import { Cart } from '../entity/Cart.entity';
-import { User } from '../entity/User.entity';
-import { OrderAddress } from '../entity/OrderAddress.entity';
-import { Address } from '../entity/Address.entity';
-import { CartProduct } from '../entity/CartProduct.entity';
 import { Shipping } from '../entity/Shipping.entity';
+import {
+  createShippingPayload,
+  updateShippingPayload,
+} from '../types/controllers/shipping.types';
 
 class ShippingController {
   private static getRepository() {
@@ -37,9 +31,15 @@ class ShippingController {
         res,
       );
 
-    const shippingOrder = { ...req.body, order: { id: req.body.orderId } };
+    req.body.orderId = { id: req.body.orderId };
 
-    const shipping = shippingRepository.create(shippingOrder as Shipping);
+    const data: createShippingPayload = {
+      order: req.body.orderId,
+      status: req.body.status,
+      events: req.body.events,
+    };
+
+    const shipping = shippingRepository.create((data as unknown) as Shipping);
     order.shipping = shipping;
 
     await orderRepository.save(order);
@@ -66,7 +66,15 @@ class ShippingController {
         message: `Shipping with ID ${req.body.id} not found.`,
       }).send(res);
 
-    const updatedShipping = shippingRepository.create(req.body as Shipping);
+    const data: updateShippingPayload = {
+      id: req.body.id,
+      status: req.body.status,
+      events: req.body.events,
+    };
+
+    const updatedShipping = shippingRepository.create(
+      (data as unknown) as Shipping,
+    );
     await shippingRepository.save(updatedShipping);
 
     return res
