@@ -2,7 +2,7 @@ import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
 
 import internalServerError from '../errors/http/internalServer.error';
-import { ShopInfo } from '../entity/ShopInfo.entity';
+import { ShopInfo } from '../entities/ShopInfo.entity';
 import {
   createShopInfoPayload,
   updateShopInfoPayload,

@@ -6,7 +6,7 @@ import decode from 'jwt-decode';
 
 import jwtConfig from '../config/jwt.config';
 
-import { User } from '../entity/User.entity';
+import { User } from '../entities/User.entity';
 
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
@@ -16,7 +16,7 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
-import { Cart } from '../entity/Cart.entity';
+import { Cart } from '../entities/Cart.entity';
 
 class UserController {
   private static getRepository() {

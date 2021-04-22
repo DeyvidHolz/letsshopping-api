@@ -1,7 +1,7 @@
 import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
-import { Category } from '../entity/Category.entity';
+import { Category } from '../entities/Category.entity';
 import CategoryValidator from '../validators/category.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';

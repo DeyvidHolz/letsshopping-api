@@ -4,8 +4,8 @@ import { Request, Response } from 'express';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { Address } from '../entity/Address.entity';
-import { User } from '../entity/User.entity';
+import { Address } from '../entities/Address.entity';
+import { User } from '../entities/User.entity';
 import unauthorized from '../errors/http/unauthorized';
 import { getUserData } from '../helpers/auth.helper';
 import {

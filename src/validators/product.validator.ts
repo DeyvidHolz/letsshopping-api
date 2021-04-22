@@ -1,4 +1,4 @@
-import { Product } from '../entity/Product.entity';
+import { Product } from '../entities/Product.entity';
 import { validation, validationMessages, Validator } from './validator';
 
 export default class ProductValidator extends Validator {

@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { ProductReview } from '../entity/ProductReview.entity';
+import { ProductReview } from '../entities/ProductReview.entity';
 import {
   createProductReviewPayload,
   updateProductReviewPayload,

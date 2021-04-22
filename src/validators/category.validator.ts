@@ -1,4 +1,4 @@
-import { Category } from '../entity/Category.entity';
+import { Category } from '../entities/Category.entity';
 import { validation, validationMessages, Validator } from './validator';
 
 export default class CategoryValidator extends Validator {

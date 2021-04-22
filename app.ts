@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import express, { Application, Router } from 'express';
+import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 
-import { createConnection, getConnection } from 'typeorm';
-import { User } from './src/entity/User.entity';
+import { createConnection } from 'typeorm';
+import { User } from './src/entities/User.entity';
 
 import jwtConfig from './src/config/jwt.config';
 
@@ -21,7 +21,7 @@ import shippingRoutes from './src/routes/shipping.routes';
 
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
-import { ShopInfo } from './src/entity/ShopInfo.entity';
+import { ShopInfo } from './src/entities/ShopInfo.entity';
 
 createConnection().then((connection) => {
   class Server {
