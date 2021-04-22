@@ -12,6 +12,7 @@ import {
   createProductPayload,
   updateProductPayload,
 } from '../types/controllers/product.types';
+import { ProductOptionValue } from '../entities/ProductOptionValue.entity';
 
 class ProductController {
   private static getRepository() {
@@ -44,6 +45,20 @@ class ProductController {
     };
 
     const product = productRepository.create((data as unknown) as Product);
+
+    if (product.options && product.options.length) {
+      product.stock = 0;
+
+      product.options.forEach((option) => {
+        if (option.values && option.values.length) {
+          const productOptionStock = option.values.reduce((value1, value2) => {
+            return { ...value1, stock: value1.stock + value2.stock };
+          });
+
+          product.stock += productOptionStock.stock;
+        }
+      });
+    }
 
     const validation = new ProductValidator(product);
 
@@ -136,6 +151,20 @@ class ProductController {
     };
 
     const product = productRepository.create((data as unknown) as Product);
+
+    if (product.options && product.options.length) {
+      product.stock = 0;
+
+      product.options.forEach((option) => {
+        if (option.values && option.values.length) {
+          const productOptionStock = option.values.reduce((value1, value2) => {
+            return { ...value1, stock: value1.stock + value2.stock };
+          });
+
+          product.stock += productOptionStock.stock;
+        }
+      });
+    }
 
     const validation = new ProductValidator(product);
 
