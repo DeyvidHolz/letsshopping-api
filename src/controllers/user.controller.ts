@@ -36,8 +36,8 @@ class UserController {
     const user = new User();
     user.firstName = StringHelper.uppercaseFirst(data.firstName);
     user.lastName = StringHelper.uppercaseFirst(data.lastName);
+    user.password = data.password;
     user.username = data.username;
-    user.password = CryptHelper.encryptPassword(data.password);
     user.email = data.email;
     user.birthDate = data.birthDate;
 
@@ -49,6 +49,8 @@ class UserController {
         errors: validation.validationErrors,
       }).send(res);
     }
+
+    user.password = CryptHelper.encryptPassword(data.password);
 
     const userRepository = await UserController.getRepository();
 
@@ -207,7 +209,7 @@ class UserController {
 
     user.firstName = StringHelper.uppercaseFirst(data.firstName);
     user.lastName = StringHelper.uppercaseFirst(data.lastName);
-    user.password = CryptHelper.encryptPassword(data.password);
+    user.password = data.password;
     user.email = data.email;
     user.birthDate = data.birthDate;
 
@@ -219,6 +221,8 @@ class UserController {
         errors: validation.validationErrors,
       }).send(res);
     }
+
+    user.password = CryptHelper.encryptPassword(data.password);
 
     try {
       if (user.id) {
