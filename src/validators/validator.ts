@@ -17,6 +17,7 @@ type validationRegexArray = {
 type validationRegex = {
   field: string;
   regex?: string;
+  required?: boolean;
   message?: string;
   validations?: validationRegexArray[];
 };
@@ -27,40 +28,56 @@ abstract class Validator {
   protected validationRegex: validationRegex[];
 
   public validate(): validation {
-    let childClass = this.child();
-
     this.validationErrors = [];
 
-    if (childClass) {
-      this.validationRegex.forEach((validationRegex: validationRegex) => {
-        if (Array.isArray(validationRegex.validations)) {
-          const value = childClass.data[validationRegex.field];
-          validationRegex.validations.forEach((v) => {
-            const regex = new RegExp(v.regex);
-
-            if (!value.match(regex)) {
+    this.validationRegex.forEach((validationRegex: validationRegex) => {
+      if (Array.isArray(validationRegex.validations)) {
+        const value = this.data[validationRegex.field] ?? '';
+        validationRegex.validations.forEach((v) => {
+          if (validationRegex.required) {
+            if (value === '' || value === null || value === undefined) {
               this.addError(
                 validationRegex.field,
-                v.message ??
-                  validationRegex.message ??
-                  `Invalid value for ${validationRegex.field}.`,
+                validationRegex.message ??
+                  `The field ${validationRegex.field} is required.`,
               );
             }
-          });
-        } else {
-          const value = childClass.data[validationRegex.field];
-          const regex = new RegExp(validationRegex.regex);
+          }
 
-          if (!value.match(regex)) {
+          const regex = new RegExp(v.regex);
+
+          if (!String(value).match(regex)) {
             this.addError(
               validationRegex.field,
-              validationRegex.message ??
+              v.message ??
+                validationRegex.message ??
                 `Invalid value for ${validationRegex.field}.`,
             );
           }
+        });
+      } else {
+        const value = this.data[validationRegex.field] ?? '';
+        const regex = new RegExp(validationRegex.regex);
+
+        if (validationRegex.required) {
+          if (value === '' || value === null || value === undefined) {
+            this.addError(
+              validationRegex.field,
+              validationRegex.message ??
+                `The field ${validationRegex.field} is required.`,
+            );
+          }
         }
-      });
-    }
+
+        if (!String(value).match(regex)) {
+          this.addError(
+            validationRegex.field,
+            validationRegex.message ??
+              `Invalid value for ${validationRegex.field}.`,
+          );
+        }
+      }
+    });
 
     return {
       hasErrors: !!this.validationErrors.length,
@@ -83,10 +100,6 @@ abstract class Validator {
       message,
     });
 
-    return this;
-  }
-
-  public child() {
     return this;
   }
 }
