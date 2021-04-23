@@ -12,6 +12,8 @@ import {
   createAddressPayload,
   updateAddressPayload,
 } from '../types/controllers/address.types';
+import AddressValidator from '../validators/address.validator';
+import { getMessage } from '../helpers/messages.helper';
 
 class AddressController {
   private static getRepository() {
@@ -41,6 +43,15 @@ class AddressController {
     }
 
     address.user = user;
+
+    const validation = new AddressValidator(address);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
 
     try {
       const addresses = await addressRepository.find({

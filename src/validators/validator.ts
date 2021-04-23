@@ -90,8 +90,8 @@ abstract class Validator {
     return !!this.validationErrors.length;
   }
 
-  public first(): validationMessages | null {
-    return this.validationErrors ? this.validationErrors[0] : null;
+  public first(): string | null {
+    return this.validationErrors ? this.validationErrors[0].message : null;
   }
 
   public addError(fieldName: string, message: string = 'Invalid value'): this {

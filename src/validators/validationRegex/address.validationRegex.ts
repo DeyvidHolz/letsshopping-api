@@ -1,15 +1,13 @@
+import dotenv from 'dotenv';
+
 import { validationRegex } from '../validator';
 
-const userValidationRegex: validationRegex[] = [
+dotenv.config();
+
+const addressValidationRegex: validationRegex[] = [
   {
     field: 'zipCode',
-    validations: [
-      { regex: `^[0-9]${process.env.COUNTRY_ZIP_CODE_LENGTH}$` },
-      {
-        regex: '^.{4,255}$',
-        message: 'The username must have 4 to 255 characters.',
-      },
-    ],
+    validations: [{ regex: `^[0-9]{${process.env.COUNTRY_ZIP_CODE_LENGTH}}$` }],
   },
   {
     field: 'state',
@@ -45,4 +43,4 @@ const userValidationRegex: validationRegex[] = [
   },
 ];
 
-export default userValidationRegex;
+export default addressValidationRegex;
