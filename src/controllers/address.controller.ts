@@ -14,6 +14,7 @@ import {
 } from '../types/controllers/address.types';
 import AddressValidator from '../validators/address.validator';
 import { getMessage } from '../helpers/messages.helper';
+import addressMessages from '../messages/address.messages';
 
 class AddressController {
   private static getRepository() {
@@ -91,7 +92,10 @@ class AddressController {
 
       await addressRepository.save(address);
 
-      return res.status(201).json({ message: 'Address created.', address });
+      return res.status(201).json({
+        message: getMessage(addressMessages.created, address),
+        address,
+      });
     } catch (err) {
       console.log(err);
       return internalServerError({
@@ -158,9 +162,18 @@ class AddressController {
 
     const address = addressRepository.create(data as Address);
 
+    const validation = new AddressValidator(address);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     if (!req.body.id) {
       return unprocessableEntity({
-        message: 'Invalid address ID.',
+        message: getMessage(addressMessages.invalidId, address),
       }).send(res);
     }
 
@@ -188,7 +201,7 @@ class AddressController {
 
     if (addressWithSamezipCode) {
       return unprocessableEntity({
-        message: "There's another address with this zipCode.",
+        message: getMessage(addressMessages.duplicatedZipCode, address),
       }).send(res);
     }
 
@@ -233,7 +246,10 @@ class AddressController {
 
     try {
       await addressRepository.save(address);
-      return res.status(201).json({ message: 'Address updated.', address });
+      return res.status(201).json({
+        message: getMessage(addressMessages.created, address),
+        address,
+      });
     } catch (err) {
       console.log(err);
       return internalServerError({
@@ -267,7 +283,9 @@ class AddressController {
 
     try {
       await addressRepository.delete(req.params.id);
-      return res.status(200).json({ message: 'Address deleted.' });
+      return res
+        .status(200)
+        .json({ message: getMessage(addressMessages.indeletedvalidId) });
     } catch (err) {
       console.log(err);
       return internalServerError({

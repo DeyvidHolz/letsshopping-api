@@ -14,6 +14,8 @@ import { User } from '../entities/User.entity';
 import { OrderAddress } from '../entities/OrderAddress.entity';
 import { Address } from '../entities/Address.entity';
 import { CartProduct } from '../entities/CartProduct.entity';
+import { getMessage } from '../helpers/messages.helper';
+import orderMessages from '../messages/order.messages';
 
 class OrderController {
   private static getRepository() {
@@ -32,7 +34,7 @@ class OrderController {
 
     if (!req.body.shippingAddressId)
       return unprocessableEntity({
-        message: 'Shipping address ID is required.',
+        message: getMessage(orderMessages.invalidShippingAddress),
       }).send(res);
 
     const user = await userRepository.findOne(userData.id, {
@@ -45,7 +47,7 @@ class OrderController {
 
     if (!userSentAddress)
       return unprocessableEntity({
-        message: 'Shipping address is required.',
+        message: getMessage(orderMessages.shippingAddressNotFound),
       }).send(res);
 
     const shippingAddress = orderAddressRepository.create(userSentAddress);
@@ -56,7 +58,7 @@ class OrderController {
 
     if (!cart.cartProducts.length) {
       return unprocessableEntity({
-        message: 'You cannot create an order without items in your cart.',
+        message: getMessage(orderMessages.noItemsInCart, cart),
       }).send(res);
     }
 
@@ -80,7 +82,7 @@ class OrderController {
 
     if (!order.address)
       return unprocessableEntity({
-        message: 'Shipping address is required.',
+        message: getMessage(orderMessages.addressRequired),
       }).send(res);
 
     await orderRepository.save(order, { reload: true });
@@ -93,7 +95,7 @@ class OrderController {
 
     return res
       .status(201)
-      .json({ message: 'Order created successfully.', order });
+      .json({ message: getMessage(orderMessages.created), order });
   }
 
   public static async get(req: Request, res: Response) {
@@ -106,7 +108,7 @@ class OrderController {
 
     if (!order) {
       return notFound({
-        message: 'Order not found.',
+        message: getMessage(orderMessages.notFound),
       }).send(res);
     }
 

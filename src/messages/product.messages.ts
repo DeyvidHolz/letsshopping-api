@@ -10,6 +10,7 @@ const productMessages: messages = {
   },
 
   invalidData: 'Invalid data.',
+  invalidSearchCriteria: 'Invalid search criteria.',
   alreadyExists: 'This code is already in use.',
   alreadyDeleted: 'Invalid token or product already deleted.',
 

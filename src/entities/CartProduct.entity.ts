@@ -24,7 +24,7 @@ export class CartProduct {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 0 })
+  @Column({ nullable: true })
   cartId?: number;
 
   @Column()

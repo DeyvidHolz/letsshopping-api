@@ -12,7 +12,6 @@ import {
   createProductPayload,
   updateProductPayload,
 } from '../types/controllers/product.types';
-import { ProductOptionValue } from '../entities/ProductOptionValue.entity';
 
 class ProductController {
   private static getRepository() {
@@ -209,9 +208,9 @@ class ProductController {
 
   public static async searchByName(req: Request, res: Response) {
     if (!req.query.name)
-      return unprocessableEntity({ message: 'Invalid search criteria.' }).send(
-        res,
-      );
+      return unprocessableEntity({
+        message: getMessage(productMessages.invalidSearchCriteria),
+      }).send(res);
 
     const products: Product[] = await ProductController.getRepository().find({
       where: {
@@ -223,7 +222,9 @@ class ProductController {
     });
 
     if (!products.length)
-      return notFound({ message: 'No products found.' }).send(res);
+      return notFound({
+        message: getMessage(productMessages.noProductsFound),
+      }).send(res);
 
     return res.status(200).json(products);
   }

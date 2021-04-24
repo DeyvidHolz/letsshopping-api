@@ -1,18 +1,15 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entities/Coupon.entity';
 import { Cart } from '../entities/Cart.entity';
-import { User } from '../entities/User.entity';
 import { getUserData } from '../helpers/auth.helper';
 import { Product } from '../entities/Product.entity';
 import { CartProduct } from '../entities/CartProduct.entity';
 import { calculateTotal } from '../helpers/cart.helper';
+import { getMessage } from '../helpers/messages.helper';
+import cartMessages from '../messages/cart.messages';
 
 class CartController {
   private static getRepository() {
@@ -64,7 +61,12 @@ class CartController {
     cart.total = calculateTotal(cart);
 
     await cartRepository.save(cart);
-    return res.json(await cartRepository.findOne({ id: cart.id }));
+    const updatedCart = await cartRepository.findOne({ id: cart.id });
+
+    return res.json({
+      message: getMessage(cartMessages.productAdded),
+      cart: updatedCart,
+    });
   }
 
   public static async removeProduct(req: Request, res: Response) {
@@ -88,7 +90,12 @@ class CartController {
     cart.total = calculateTotal(cart);
     await cartRepository.save(cart);
 
-    return res.json(await cartRepository.findOne({ id: cart.id }));
+    const updatedCart = await cartRepository.findOne({ id: cart.id });
+
+    return res.json({
+      message: getMessage(cartMessages.productRemoved),
+      cart: updatedCart,
+    });
   }
 
   public static async updateProduct(req: Request, res: Response) {
@@ -134,7 +141,10 @@ class CartController {
     cart.total = calculateTotal(cart);
     await cartRepository.save(cart);
 
-    return res.json(cart);
+    return res.json({
+      message: getMessage(cartMessages.productUpdated),
+      cart,
+    });
   }
 
   public static async clearCart(req: Request, res: Response) {
@@ -151,7 +161,10 @@ class CartController {
     cart.cartProducts = [];
     await cartRepository.save(cart);
 
-    return res.json(cart);
+    return res.json({
+      message: getMessage(cartMessages.cartCleared),
+      cart,
+    });
   }
 }
 

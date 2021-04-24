@@ -1,6 +1,6 @@
 import { messages } from '../types/messages/message.types';
 
-const productMessages: messages = {
+const categoryMessages: messages = {
   created: 'Category created.',
   updated: 'Category updated.',
 
@@ -17,4 +17,4 @@ const productMessages: messages = {
   },
 };
 
-export default productMessages;
+export default categoryMessages;

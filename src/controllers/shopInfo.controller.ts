@@ -7,6 +7,8 @@ import {
   createShopInfoPayload,
   updateShopInfoPayload,
 } from '../types/controllers/shopInfo.types';
+import { getMessage } from '../helpers/messages.helper';
+import shopInfoMessages from '../messages/shopInfo.messages';
 
 class ShopInfoController {
   private static getRepository() {
@@ -27,7 +29,12 @@ class ShopInfoController {
 
     try {
       await shopInfoRepository.save(shopInfo);
-      return res.status(201).json({ message: 'Shop info created.', shopInfo });
+      return res
+        .status(201)
+        .json({
+          message: getMessage(shopInfoMessages.created, shopInfo),
+          shopInfo,
+        });
     } catch (err) {
       console.log(err);
       return internalServerError({
@@ -65,7 +72,12 @@ class ShopInfoController {
 
     try {
       await shopInfoRepository.save(shopInfo);
-      return res.status(201).json({ message: 'Shop info updated.', shopInfo });
+      return res
+        .status(201)
+        .json({
+          message: getMessage(shopInfoMessages.updated, shopInfo),
+          shopInfo,
+        });
     } catch (err) {
       console.log(err);
 

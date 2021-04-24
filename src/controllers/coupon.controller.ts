@@ -9,6 +9,8 @@ import {
   createCouponPayload,
   updateCouponPayload,
 } from '../types/controllers/coupon.types';
+import { getMessage } from '../helpers/messages.helper';
+import couponMessages from '../messages/coupon.messages';
 
 class CouponController {
   private static getRepository() {
@@ -33,7 +35,9 @@ class CouponController {
 
     try {
       await couponRepository.save(coupon);
-      return res.status(201).json({ message: 'Coupon created.', coupon });
+      return res
+        .status(201)
+        .json({ message: getMessage(couponMessages.created, coupon), coupon });
     } catch (err) {
       console.log(err);
 
@@ -55,7 +59,7 @@ class CouponController {
 
     if (!coupon) {
       return notFound({
-        message: 'Coupon not found.',
+        message: getMessage(couponMessages.notFound, { id: req.params.id }),
       }).send(res);
     }
 
@@ -74,7 +78,7 @@ class CouponController {
 
     if (!req.body.id) {
       return unprocessableEntity({
-        message: 'Invalid address ID.',
+        message: getMessage(couponMessages.invalidId, { id: req.body.id }),
       }).send(res);
     }
 
@@ -95,13 +99,15 @@ class CouponController {
 
     try {
       await couponRepository.save(coupon);
-      return res.status(201).json({ message: 'Coupon updated.', coupon });
+      return res
+        .status(201)
+        .json({ message: getMessage(couponMessages.updated, coupon), coupon });
     } catch (err) {
       console.log(err);
 
       if (err.code === '23505') {
         return unprocessableEntity({
-          message: 'This coupon code is already in use.',
+          message: getMessage(couponMessages.duplicatedCode, coupon),
         }).send(res);
       }
 
@@ -116,7 +122,9 @@ class CouponController {
 
     try {
       await couponRepository.delete(req.params.id);
-      return res.status(200).json({ message: 'Coupon deleted.' });
+      return res
+        .status(200)
+        .json({ message: getMessage(couponMessages.deleted) });
     } catch (err) {
       console.log(err);
       return internalServerError({

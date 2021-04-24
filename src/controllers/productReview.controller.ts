@@ -9,6 +9,8 @@ import {
   createProductReviewPayload,
   updateProductReviewPayload,
 } from '../types/controllers/productReview.types';
+import { getMessage } from '../helpers/messages.helper';
+import productReviewMessages from '../messages/productReview.messages';
 
 class ProductReviewController {
   private static getRepository() {
@@ -20,7 +22,7 @@ class ProductReviewController {
 
     if (!req.body.product_id) {
       return unprocessableEntity({
-        message: 'Invalid product ID.',
+        message: getMessage(productReviewMessages.productNotFound),
       }).send(res);
     }
 
@@ -37,9 +39,10 @@ class ProductReviewController {
 
     try {
       await productReviewRepository.save(productReview);
-      return res
-        .status(201)
-        .json({ message: 'Review created.', productReview });
+      return res.status(201).json({
+        message: getMessage(productReviewMessages.created),
+        productReview,
+      });
     } catch (err) {
       console.log(err);
 
@@ -57,7 +60,7 @@ class ProductReviewController {
 
     if (!productReview) {
       return notFound({
-        message: 'Review not found.',
+        message: getMessage(productReviewMessages.notFound),
       }).send(res);
     }
 
@@ -92,7 +95,7 @@ class ProductReviewController {
 
     if (!req.body.id) {
       return unprocessableEntity({
-        message: 'Invalid review ID.',
+        message: getMessage(productReviewMessages.invalidId),
       }).send(res);
     }
 
@@ -100,7 +103,10 @@ class ProductReviewController {
       await productReviewRepository.save(productReview);
       return res
         .status(201)
-        .json({ message: 'Review updated.', productReview });
+        .json({
+          message: getMessage(productReviewMessages.updated),
+          productReview,
+        });
     } catch (err) {
       console.log(err);
 
@@ -114,7 +120,9 @@ class ProductReviewController {
     const productReviewRepository = ProductReviewController.getRepository();
     try {
       await productReviewRepository.delete(req.params.id);
-      return res.status(200).json({ message: 'Review deleted.' });
+      return res
+        .status(200)
+        .json({ message: getMessage(productReviewMessages.deleted) });
     } catch (err) {
       console.log(err);
       return internalServerError({

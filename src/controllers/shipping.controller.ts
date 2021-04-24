@@ -9,6 +9,8 @@ import {
   createShippingPayload,
   updateShippingPayload,
 } from '../types/controllers/shipping.types';
+import { getMessage } from '../helpers/messages.helper';
+import shippingMessages from '../messages/shipping.messages';
 
 class ShippingController {
   private static getRepository() {
@@ -21,15 +23,17 @@ class ShippingController {
 
     if (!req.body.orderId)
       return unprocessableEntity({
-        message: 'Field orderId is required.',
+        message: getMessage(shippingMessages.invalidOrderId),
       }).send(res);
 
     const order = await orderRepository.findOne(req.body.orderId);
 
     if (!order)
-      return notFound({ message: `Order with ID ${order.id} not found.` }).send(
-        res,
-      );
+      return notFound({
+        message: getMessage(shippingMessages.orderNotFound, {
+          id: req.body.orderId,
+        }),
+      }).send(res);
 
     req.body.orderId = { id: req.body.orderId };
 
@@ -48,7 +52,10 @@ class ShippingController {
 
     return res
       .status(201)
-      .json({ message: 'Shipping created successfully.', shipping });
+      .json({
+        message: getMessage(shippingMessages.created, shipping),
+        shipping,
+      });
   }
 
   public static async update(req: Request, res: Response) {
@@ -56,14 +63,16 @@ class ShippingController {
 
     if (!req.body.id)
       return unprocessableEntity({
-        message: 'Field id is required.',
+        message: getMessage(shippingMessages.invalidId),
       }).send(res);
 
     const shipping = await shippingRepository.findOne(req.body.id);
 
     if (!shipping)
       return notFound({
-        message: `Shipping with ID ${req.body.id} not found.`,
+        message: getMessage(shippingMessages.searchByIDNotFound, {
+          id: req.body.id,
+        }),
       }).send(res);
 
     const data: updateShippingPayload = {
@@ -79,7 +88,10 @@ class ShippingController {
 
     return res
       .status(201)
-      .json({ message: 'Shipping updated.', shipping: updatedShipping });
+      .json({
+        message: getMessage(shippingMessages.updated, updatedShipping),
+        shipping: updatedShipping,
+      });
   }
 }
 
