@@ -33,6 +33,10 @@ abstract class Validator {
     this.validationRegex.forEach((validationRegex: validationRegex) => {
       if (Array.isArray(validationRegex.validations)) {
         const value = this.data[validationRegex.field] ?? '';
+        validationRegex.required =
+          validationRegex.required === undefined
+            ? true
+            : validationRegex.required;
         validationRegex.validations.forEach((v) => {
           if (validationRegex.required) {
             if (value === '' || value === null || value === undefined) {
@@ -58,6 +62,11 @@ abstract class Validator {
       } else {
         const value = this.data[validationRegex.field] ?? '';
         const regex = new RegExp(validationRegex.regex);
+
+        validationRegex.required =
+          validationRegex.required === undefined
+            ? true
+            : validationRegex.required;
 
         if (validationRegex.required) {
           if (value === '' || value === null || value === undefined) {

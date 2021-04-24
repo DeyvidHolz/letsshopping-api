@@ -53,20 +53,22 @@ const productValidationRegex: validationRegex[] = [
 
   {
     field: 'price',
-    validations: [{ regex: '^([0-9])*(.[0-9]*)?$' }],
+    validations: [{ regex: '^[0-9]+$' }],
   },
   {
     field: 'weight',
-    required: true,
-    validations: [{ regex: '^([0-9])*(.[0-9]*)?$' }],
+    required: false,
+    validations: [{ regex: '^[0-9]+$' }],
   },
   {
     field: 'width',
-    validations: [{ regex: '^([0-9])*(.[0-9]*)?$' }],
+    required: false,
+    validations: [{ regex: '^[0-9]+$' }],
   },
   {
     field: 'height',
-    validations: [{ regex: '^([0-9])*(.[0-9]*)?$' }],
+    required: false,
+    validations: [{ regex: '^[0-9]+$' }],
   },
 ];
 

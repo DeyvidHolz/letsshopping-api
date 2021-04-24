@@ -38,7 +38,7 @@ export class Order {
   })
   status: number;
 
-  @Column({ comment: '0: CREDIT_CARD' })
+  @Column({ comment: '0: CREDIT_CARD', default: 0 })
   paymentMethod: number;
 
   @CreateDateColumn()
