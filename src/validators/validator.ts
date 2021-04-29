@@ -37,6 +37,7 @@ abstract class Validator {
           validationRegex.required === undefined
             ? true
             : validationRegex.required;
+
         validationRegex.validations.forEach((v) => {
           if (validationRegex.required) {
             if (value === '' || value === null || value === undefined) {
@@ -46,17 +47,17 @@ abstract class Validator {
                   `The field ${validationRegex.field} is required.`,
               );
             }
-          }
 
-          const regex = new RegExp(v.regex);
+            const regex = new RegExp(v.regex);
 
-          if (!String(value).match(regex)) {
-            this.addError(
-              validationRegex.field,
-              v.message ??
-                validationRegex.message ??
-                `Invalid value for ${validationRegex.field}.`,
-            );
+            if (!String(value).match(regex)) {
+              this.addError(
+                validationRegex.field,
+                v.message ??
+                  validationRegex.message ??
+                  `Invalid value for ${validationRegex.field}.`,
+              );
+            }
           }
         });
       } else {
@@ -76,14 +77,14 @@ abstract class Validator {
                 `The field ${validationRegex.field} is required.`,
             );
           }
-        }
 
-        if (!String(value).match(regex)) {
-          this.addError(
-            validationRegex.field,
-            validationRegex.message ??
-              `Invalid value for ${validationRegex.field}.`,
-          );
+          if (!String(value).match(regex)) {
+            this.addError(
+              validationRegex.field,
+              validationRegex.message ??
+                `Invalid value for ${validationRegex.field}.`,
+            );
+          }
         }
       }
     });
