@@ -11,6 +11,7 @@ import {
 } from '../types/controllers/shipping.types';
 import { getMessage } from '../helpers/messages.helper';
 import shippingMessages from '../messages/shipping.messages';
+import ShippingValidator from '../validators/shipping.validator';
 
 class ShippingController {
   private static getRepository() {
@@ -46,16 +47,23 @@ class ShippingController {
     const shipping = shippingRepository.create((data as unknown) as Shipping);
     order.shipping = shipping;
 
+    const validation = new ShippingValidator(shipping);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     await orderRepository.save(order);
 
     delete shipping.order;
 
-    return res
-      .status(201)
-      .json({
-        message: getMessage(shippingMessages.created, shipping),
-        shipping,
-      });
+    return res.status(201).json({
+      message: getMessage(shippingMessages.created, shipping),
+      shipping,
+    });
   }
 
   public static async update(req: Request, res: Response) {
@@ -84,14 +92,22 @@ class ShippingController {
     const updatedShipping = shippingRepository.create(
       (data as unknown) as Shipping,
     );
+
+    const validation = new ShippingValidator(shipping);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     await shippingRepository.save(updatedShipping);
 
-    return res
-      .status(201)
-      .json({
-        message: getMessage(shippingMessages.updated, updatedShipping),
-        shipping: updatedShipping,
-      });
+    return res.status(201).json({
+      message: getMessage(shippingMessages.updated, updatedShipping),
+      shipping: updatedShipping,
+    });
   }
 }
 

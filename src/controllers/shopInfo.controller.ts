@@ -9,6 +9,8 @@ import {
 } from '../types/controllers/shopInfo.types';
 import { getMessage } from '../helpers/messages.helper';
 import shopInfoMessages from '../messages/shopInfo.messages';
+import ShopInfoValidator from '../validators/shopInfo.validator';
+import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 
 class ShopInfoController {
   private static getRepository() {
@@ -27,14 +29,21 @@ class ShopInfoController {
 
     const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
 
+    const validation = new ShopInfoValidator(shopInfo);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     try {
       await shopInfoRepository.save(shopInfo);
-      return res
-        .status(201)
-        .json({
-          message: getMessage(shopInfoMessages.created, shopInfo),
-          shopInfo,
-        });
+      return res.status(201).json({
+        message: getMessage(shopInfoMessages.created, shopInfo),
+        shopInfo,
+      });
     } catch (err) {
       console.log(err);
       return internalServerError({
@@ -70,14 +79,21 @@ class ShopInfoController {
 
     const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
 
+    const validation = new ShopInfoValidator(shopInfo);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     try {
       await shopInfoRepository.save(shopInfo);
-      return res
-        .status(201)
-        .json({
-          message: getMessage(shopInfoMessages.updated, shopInfo),
-          shopInfo,
-        });
+      return res.status(201).json({
+        message: getMessage(shopInfoMessages.updated, shopInfo),
+        shopInfo,
+      });
     } catch (err) {
       console.log(err);
 

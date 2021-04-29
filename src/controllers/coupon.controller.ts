@@ -11,6 +11,7 @@ import {
 } from '../types/controllers/coupon.types';
 import { getMessage } from '../helpers/messages.helper';
 import couponMessages from '../messages/coupon.messages';
+import CouponValidator from '../validators/coupon.validator';
 
 class CouponController {
   private static getRepository() {
@@ -32,6 +33,15 @@ class CouponController {
     };
 
     const coupon = couponRepository.create(data as Coupon);
+
+    const validation = new CouponValidator(coupon);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
 
     try {
       await couponRepository.save(coupon);
@@ -96,6 +106,15 @@ class CouponController {
     };
 
     const coupon = couponRepository.create(data as Coupon);
+
+    const validation = new CouponValidator(coupon);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
 
     try {
       await couponRepository.save(coupon);

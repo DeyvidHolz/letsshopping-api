@@ -18,7 +18,7 @@ export class ProductOptionValue {
   @Column()
   value: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: 0 })
   price: number;
 
   @Column({ nullable: true })

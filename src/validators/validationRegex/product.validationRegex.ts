@@ -56,6 +56,11 @@ const productValidationRegex: validationRegex[] = [
     validations: [{ regex: '^[0-9]+$' }],
   },
   {
+    field: 'stock',
+    required: false,
+    validations: [{ regex: '^[0-9]+$' }],
+  },
+  {
     field: 'weight',
     required: false,
     validations: [{ regex: '^[0-9]+$' }],

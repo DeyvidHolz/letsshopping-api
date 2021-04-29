@@ -16,6 +16,7 @@ import { Address } from '../entities/Address.entity';
 import { CartProduct } from '../entities/CartProduct.entity';
 import { getMessage } from '../helpers/messages.helper';
 import orderMessages from '../messages/order.messages';
+import OrderValidator from '../validators/order.validator';
 
 class OrderController {
   private static getRepository() {
@@ -84,6 +85,15 @@ class OrderController {
       return unprocessableEntity({
         message: getMessage(orderMessages.addressRequired),
       }).send(res);
+
+    const validation = new OrderValidator(order);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
 
     await orderRepository.save(order, { reload: true });
     await cartProductRepository.remove(cart.cartProducts);

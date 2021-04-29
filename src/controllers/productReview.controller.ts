@@ -11,6 +11,7 @@ import {
 } from '../types/controllers/productReview.types';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/productReview.messages';
+import ProductReviewValidator from '../validators/productReview.validator';
 
 class ProductReviewController {
   private static getRepository() {
@@ -36,6 +37,15 @@ class ProductReviewController {
     };
 
     const productReview = productReviewRepository.create(data as ProductReview);
+
+    const validation = new ProductReviewValidator(productReview);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
 
     try {
       await productReviewRepository.save(productReview);
@@ -93,6 +103,15 @@ class ProductReviewController {
       (data as unknown) as ProductReview,
     );
 
+    const validation = new ProductReviewValidator(productReview);
+
+    if (validation.hasErrors()) {
+      return unprocessableEntity({
+        message: validation.first(),
+        errors: validation.validationErrors,
+      }).send(res);
+    }
+
     if (!req.body.id) {
       return unprocessableEntity({
         message: getMessage(productReviewMessages.invalidId),
@@ -101,12 +120,10 @@ class ProductReviewController {
 
     try {
       await productReviewRepository.save(productReview);
-      return res
-        .status(201)
-        .json({
-          message: getMessage(productReviewMessages.updated),
-          productReview,
-        });
+      return res.status(201).json({
+        message: getMessage(productReviewMessages.updated),
+        productReview,
+      });
     } catch (err) {
       console.log(err);
 
