@@ -118,6 +118,18 @@ class UserController {
 
     let user = await userRepository.findOne({
       where: { username },
+      select: [
+        'id',
+        'username',
+        'password',
+        'firstName',
+        'lastName',
+        'email',
+        'birthDate',
+        'createdAt',
+        'updatedAt',
+        'cart',
+      ],
       relations: ['cart'],
     });
 
@@ -141,7 +153,7 @@ class UserController {
       });
     }
 
-    if (CryptHelper.checkPassword(password)) {
+    if (CryptHelper.checkPassword(password, user.password)) {
       let payload = {
         id: user.id,
         firstName: user.firstName,
@@ -155,7 +167,7 @@ class UserController {
         expiresIn: 10000000,
       });
 
-      return res.json({ message: token, user });
+      return res.json({ token, user });
     }
 
     return unprocessableEntity({
@@ -193,7 +205,7 @@ class UserController {
       }).send(res);
     }
 
-    if (!CryptHelper.checkPassword(req.body.currentPassword)) {
+    if (!CryptHelper.checkPassword(req.body.currentPassword, user.password)) {
       return unprocessableEntity({
         message: getMessage(userMessages.invalidPassword),
       }).send(res);

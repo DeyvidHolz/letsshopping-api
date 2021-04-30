@@ -7,9 +7,8 @@ const encryptPassword = (password: string) => {
   return encryptedPassword;
 };
 
-const checkPassword = (password: string) => {
-  const hash = encryptPassword(password);
-  return bcrypt.compareSync(password, hash);
+const checkPassword = (password: string, hashed: string) => {
+  return bcrypt.compareSync(password, hashed);
 };
 
 export default { encryptPassword, checkPassword };
