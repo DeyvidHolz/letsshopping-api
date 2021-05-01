@@ -55,12 +55,9 @@ class UserController {
     }
 
     // Setting user default permission group
-    console.log('def', process.env.DEFAULT_PERMISSION_GROUP);
     const defaultPermissionGroup = await getConnection()
       .getRepository(PermissionGroup)
       .findOne({ where: { name: process.env.DEFAULT_PERMISSION_GROUP } });
-
-    console.log('gp', defaultPermissionGroup);
 
     user.permissionGroup = defaultPermissionGroup;
 
@@ -92,8 +89,19 @@ class UserController {
   }
 
   public static async getAll(req: Request, res: Response) {
-    const userRepository = await UserController.getRepository();
-    const users = await userRepository.find({ order: { createdAt: 'DESC' } });
+    const users = await UserController.getRepository().find({
+      select: [
+        'firstName',
+        'lastName',
+        'email',
+        'birthDate',
+        'createdAt',
+        'updatedAt',
+      ],
+      order: { createdAt: 'DESC' },
+      relations: ['permissionGroup'],
+    });
+
     return res.json(users);
   }
 
@@ -116,6 +124,7 @@ class UserController {
         }),
       }).send(res);
 
+    delete user.password;
     return res.json(user);
   }
 
