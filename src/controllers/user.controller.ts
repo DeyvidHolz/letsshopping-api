@@ -168,7 +168,7 @@ class UserController {
       };
 
       let token = jwt.sign(payload, jwtConfig.secretOrKey, {
-        expiresIn: 10000000,
+        expiresIn: jwtConfig.expiration,
       });
 
       delete user.password;
