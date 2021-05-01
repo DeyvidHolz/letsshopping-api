@@ -79,7 +79,7 @@ class UserController {
 
   public static async getAll(req: Request, res: Response) {
     const userRepository = await UserController.getRepository();
-    const users = await userRepository.find();
+    const users = await userRepository.find({ order: { createdAt: 'DESC' } });
     return res.json(users);
   }
 
