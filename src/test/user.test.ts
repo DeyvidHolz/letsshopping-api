@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 import { User } from '../entities/User.entity';
@@ -70,6 +70,27 @@ describe('User controller tests', () => {
     expect(res.status).toBe(200);
     expect(res.data.user.firstName).toBe(newfirstName);
     expect(res.data.user).not.toHaveProperty('password');
+  });
+
+  it('Should not create users with same username/email', (done) => {
+    const createUserPayload = {
+      username,
+      password,
+      firstName: 'User',
+      lastName: 'Test',
+      email,
+      birthDate: '1999-12-09',
+    };
+
+    axios
+      .post(`${URL}/users`, createUserPayload)
+      .then(() => {
+        throw new Error('Should not create users with same username/email');
+      })
+      .catch((err: AxiosError) => {
+        expect(err.response.status).toBe(422);
+        done();
+      });
   });
 
   it('Should delete user', async () => {
