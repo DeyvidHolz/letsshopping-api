@@ -68,23 +68,24 @@ class ShippingController {
 
   public static async update(req: Request, res: Response) {
     const shippingRepository = getConnection().getRepository(Shipping);
+    const shippingId: number = Number(req.params.id);
 
-    if (!req.body.id)
+    if (!shippingId)
       return unprocessableEntity({
         message: getMessage(shippingMessages.invalidId),
       }).send(res);
 
-    const shipping = await shippingRepository.findOne(req.body.id);
+    const shipping = await shippingRepository.findOne(shippingId);
 
     if (!shipping)
       return notFound({
         message: getMessage(shippingMessages.searchByIDNotFound, {
-          id: req.body.id,
+          id: shippingId,
         }),
       }).send(res);
 
     const data: updateShippingPayload = {
-      id: req.body.id,
+      id: shippingId,
       status: req.body.status,
       events: req.body.events,
     };

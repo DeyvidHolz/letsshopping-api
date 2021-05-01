@@ -125,7 +125,8 @@ class CategoryController {
 
   public static async update(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-    const categoryIDisEmpty = req.body.id === undefined || req.body.id === '';
+    const categoryIDisEmpty =
+      req.params.id === undefined || req.params.id === '';
 
     if (categoryIDisEmpty) {
       return unprocessableEntity({
@@ -134,7 +135,7 @@ class CategoryController {
     }
 
     const data: updateCategoryPayload = {
-      id: req.body.id,
+      id: Number(req.params.id),
       name: req.body.name,
       shortDescription: req.body.shortDescription,
       description: req.body.description,

@@ -64,21 +64,22 @@ class PermissionGroupController {
 
   public static async update(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
+    const permissionGroupName: string = req.params.name;
 
-    if (!req.body.id) {
+    if (!permissionGroupName) {
       return unprocessableEntity({
         message: getMessage(permissionGroupMessages.invalidId, {
-          id: req.body.id,
+          name: permissionGroupName,
         }),
       }).send(res);
     }
 
     const data: updatePermissionGroupPayload = {
-      id: req.body.id,
-      name: req.body.name,
+      name: permissionGroupName,
       level: req.body.level,
     };
 
+    // @todo: find by name then update
     const permissionGroup = permissionGroupRepository.create(
       data as PermissionGroup,
     );

@@ -4,7 +4,6 @@ type createPermissionGroupPayload = {
 };
 
 type updatePermissionGroupPayload = {
-  id: number;
   name: string;
   level: number;
 };

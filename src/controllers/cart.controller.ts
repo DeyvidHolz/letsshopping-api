@@ -32,20 +32,25 @@ class CartController {
     const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
-    const productId: string = req.body.id;
+
+    const productId: number = Number(req.params.id);
+    const quantityConverted = Number(req.body.quantity);
+    const productQuantity: number = isNaN(quantityConverted)
+      ? 1
+      : quantityConverted;
 
     const cart = await cartRepository.findOne({
       where: { user: { id: userData.id } },
     });
 
     const currentCartProduct = cart.cartProducts.find((cp) => {
-      return cp.product.id === productId;
+      return Number(cp.product.id) === productId;
     });
 
     // @TODO: check stock -> req.body.quantity
 
     if (currentCartProduct) {
-      currentCartProduct.quantity += 1;
+      currentCartProduct.quantity += productQuantity;
       cartProductRepository.save(currentCartProduct);
     } else {
       const product = await productRepository.findOne(productId);
@@ -73,14 +78,15 @@ class CartController {
     const cartRepository = CartController.getRepository();
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
-    const productId: string = req.body.id;
+
+    const productId: number = Number(req.params.id);
 
     const cart = await cartRepository.findOne({
       where: { user: { id: userData.id } },
     });
 
     const currentCartProduct = cart.cartProducts.find(
-      (cp) => cp.product.id === productId,
+      (cp) => Number(cp.product.id) === productId,
     );
 
     if (currentCartProduct) {
@@ -103,7 +109,9 @@ class CartController {
     const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
-    const productId: string = req.body.id;
+
+    const productId: number = Number(req.params.id);
+    const productQuantity = Number(req.body.quantity);
 
     const cart = await cartRepository.findOne({
       where: { user: { id: userData.id } },
@@ -112,7 +120,7 @@ class CartController {
     let index = null;
     const currentCartProduct = cart.cartProducts.find((cp, i) => {
       index = i;
-      return cp.product.id === productId;
+      return Number(cp.product.id) === productId;
     });
 
     // @TODO: check stock -> req.body.quantity
@@ -123,7 +131,7 @@ class CartController {
       );
     }
 
-    if (req.body.quantity < 1)
+    if (isNaN(productQuantity) || productQuantity < 1)
       return unprocessableEntity({ message: 'Invalid quantity.' }).send(res);
 
     if (!currentCartProduct) {

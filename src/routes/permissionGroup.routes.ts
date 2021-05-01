@@ -28,7 +28,7 @@ router.post(
 );
 
 router.put(
-  '/',
+  '/:name',
   AuthMiddleware,
   AdminMiddleware,
   PermissionGroupController.update,

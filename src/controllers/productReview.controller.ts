@@ -89,14 +89,16 @@ class ProductReviewController {
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
 
-    req.body.product = { id: req.body.product_id };
+    const productReviewId: number = Number(req.params.id);
+
+    // req.body.product = { id: req.body.product_id };
 
     const data: updateProductReviewPayload = {
-      id: req.body.id,
+      id: productReviewId,
       title: req.body.title,
       rating: req.body.rating,
       description: req.body.description,
-      product: req.body.product,
+      // product: req.body.product,
     };
 
     const productReview = productReviewRepository.create(
@@ -112,7 +114,7 @@ class ProductReviewController {
       }).send(res);
     }
 
-    if (!req.body.id) {
+    if (!productReviewId) {
       return unprocessableEntity({
         message: getMessage(productReviewMessages.invalidId),
       }).send(res);

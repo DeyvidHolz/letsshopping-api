@@ -6,6 +6,6 @@ import AuthMiddleware from '../middlewares/auth.middleware';
 const router = express.Router();
 
 router.post('/', AuthMiddleware, ShippingController.create);
-router.put('/', AuthMiddleware, ShippingController.update);
+router.put('/:id', AuthMiddleware, ShippingController.update);
 
 export default router;

@@ -132,7 +132,7 @@ class ProductController {
       }));
 
     const data: updateProductPayload = {
-      id: req.body.id,
+      id: Number(req.params.id),
       code: req.body.code,
       name: req.body.name,
       shortDescription: req.body.shortDescription,

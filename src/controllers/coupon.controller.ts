@@ -85,15 +85,16 @@ class CouponController {
 
   public static async update(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
+    const couponId: number = Number(req.params.id);
 
-    if (!req.body.id) {
+    if (!couponId) {
       return unprocessableEntity({
-        message: getMessage(couponMessages.invalidId, { id: req.body.id }),
+        message: getMessage(couponMessages.invalidId, { id: couponId }),
       }).send(res);
     }
 
     const data: updateCouponPayload = {
-      id: req.body.id,
+      id: couponId,
       code: req.body.code,
       name: req.body.name,
       description: req.body.description,

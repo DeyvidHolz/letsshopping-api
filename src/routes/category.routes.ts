@@ -32,6 +32,6 @@ router.delete(
 );
 
 router.post('/', AuthMiddleware, AdminMiddleware, CategoryController.create);
-router.put('/', AuthMiddleware, AdminMiddleware, CategoryController.update);
+router.put('/:id', AuthMiddleware, AdminMiddleware, CategoryController.update);
 
 export default router;

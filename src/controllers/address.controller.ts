@@ -150,7 +150,7 @@ class AddressController {
     const addressRepository = AddressController.getRepository();
 
     const data: updateAddressPayload = {
-      id: req.body.id,
+      id: Number(req.params.id),
       country: req.body.country,
       zipCode: req.body.zipCode,
       state: req.body.state,

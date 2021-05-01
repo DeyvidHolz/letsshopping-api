@@ -25,12 +25,9 @@ export default class ProductValidator extends Validator {
 
     // Categories from endpoint can be an array of integers (ids)
     if (this.data.categories && this.data.categories.length) {
-      const invalidCategory = this.data.categories.find((category) => {
-        if (
-          typeof category !== 'object' ||
-          String(category.id).match(/[0-9]+/)
-        ) {
-          return category;
+      const invalidCategory = this.data.categories.find((categoryId) => {
+        if (String(categoryId).match(/[0-9]+/)) {
+          return categoryId;
         }
       });
 
