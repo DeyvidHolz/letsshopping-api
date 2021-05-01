@@ -166,16 +166,10 @@ class UserController {
 
   public static async update(req: Request, res: Response) {
     const userRepository = await UserController.getRepository();
-    const userIDisEmpty = req.body.id === undefined || req.body.id === '';
-
-    if (userIDisEmpty) {
-      return unprocessableEntity({
-        message: "Field 'id' is required.",
-      }).send(res);
-    }
+    const userDecoded = decode(req.headers.authorization);
 
     const user = await userRepository.findOne({
-      where: { id: req.body.id },
+      where: { id: userDecoded['id'] },
       relations: ['cart'],
     });
 
