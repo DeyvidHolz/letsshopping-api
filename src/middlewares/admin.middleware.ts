@@ -12,8 +12,6 @@ export default function AdminMiddleware(
 ) {
   const user = getUserData(req.headers.authorization);
 
-  console.log(user);
-
   if (user.permission_level === 1) {
     return next();
   }
