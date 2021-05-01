@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 import { User } from '../entities/User.entity';
+import RequestNotExpected from '../errors/test/requestNotExpected.error';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ describe('User controller tests', () => {
       username,
       password,
       firstName: 'User',
-      lastName: 'Test',
+      lastName: 'for Test',
       email,
       birthDate: '1999-12-09',
     };
@@ -85,9 +86,33 @@ describe('User controller tests', () => {
     axios
       .post(`${URL}/users`, createUserPayload)
       .then(() => {
-        throw new Error('Should not create users with same username/email');
+        throw new RequestNotExpected(
+          'Should not create users with same username/email',
+        );
       })
       .catch((err: AxiosError) => {
+        expect(err.response.status).toBe(422);
+        done();
+      });
+  });
+
+  it('Should not create invalid users', (done) => {
+    const createUserPayload = {
+      username: username + ' invalid',
+      password: '1234',
+      firstName: 'User1',
+      lastName: 'Test2',
+      email: email + 'invalid!',
+      birthDate: '19-09-2019',
+    };
+
+    axios
+      .post(`${URL}/users`, createUserPayload)
+      .then(() => {
+        throw new RequestNotExpected('Should not create invalid users');
+      })
+      .catch((err: AxiosError) => {
+        // @todo: add the rest of expects to check all errors it should return
         expect(err.response.status).toBe(422);
         done();
       });
