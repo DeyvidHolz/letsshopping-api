@@ -119,7 +119,7 @@ class CouponController {
     try {
       await couponRepository.save(coupon);
       return res
-        .status(201)
+        .status(200)
         .json({ message: getMessage(couponMessages.updated, coupon), coupon });
     } catch (err) {
       console.log(err);

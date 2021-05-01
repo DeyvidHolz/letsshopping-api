@@ -246,7 +246,7 @@ class AddressController {
 
     try {
       await addressRepository.save(address);
-      return res.status(201).json({
+      return res.status(200).json({
         message: getMessage(addressMessages.created, address),
         address,
       });

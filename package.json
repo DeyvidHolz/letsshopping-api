@@ -4,7 +4,7 @@
   "description": "E-commerce project",
   "main": "app.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "ts-node app.ts",
     "start:dev": "ts-node-dev app.ts",
     "test": "./node_modules/.bin/jest --verbose false"
   },

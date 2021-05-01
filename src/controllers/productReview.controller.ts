@@ -120,7 +120,7 @@ class ProductReviewController {
 
     try {
       await productReviewRepository.save(productReview);
-      return res.status(201).json({
+      return res.status(200).json({
         message: getMessage(productReviewMessages.updated),
         productReview,
       });

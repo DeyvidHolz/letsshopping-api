@@ -104,7 +104,7 @@ class ShippingController {
 
     await shippingRepository.save(updatedShipping);
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: getMessage(shippingMessages.updated, updatedShipping),
       shipping: updatedShipping,
     });
