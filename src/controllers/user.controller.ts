@@ -118,18 +118,6 @@ class UserController {
 
     let user = await userRepository.findOne({
       where: { username },
-      select: [
-        'id',
-        'username',
-        'password',
-        'firstName',
-        'lastName',
-        'email',
-        'birthDate',
-        'createdAt',
-        'updatedAt',
-        'cart',
-      ],
       relations: ['cart'],
     });
 
@@ -167,6 +155,7 @@ class UserController {
         expiresIn: 10000000,
       });
 
+      delete user.password;
       return res.json({ token, user });
     }
 
@@ -177,7 +166,6 @@ class UserController {
 
   public static async update(req: Request, res: Response) {
     const userRepository = await UserController.getRepository();
-
     const userIDisEmpty = req.body.id === undefined || req.body.id === '';
 
     if (userIDisEmpty) {
@@ -186,7 +174,10 @@ class UserController {
       }).send(res);
     }
 
-    const user = await userRepository.findOne(Number(req.body.id));
+    const user = await userRepository.findOne({
+      where: { id: req.body.id },
+      relations: ['cart'],
+    });
 
     if (!user) {
       return notFound({
@@ -221,7 +212,6 @@ class UserController {
 
     user.firstName = StringHelper.uppercaseFirst(data.firstName);
     user.lastName = StringHelper.uppercaseFirst(data.lastName);
-    user.password = data.password;
     user.email = data.email;
     user.birthDate = data.birthDate;
 
@@ -234,10 +224,13 @@ class UserController {
       }).send(res);
     }
 
-    user.password = CryptHelper.encryptPassword(data.password);
+    user.password = data.password
+      ? CryptHelper.encryptPassword(data.password)
+      : user.password;
 
     try {
       if (user.id) {
+        delete user.password;
         return res
           .status(200)
           .json({ message: getMessage(userMessages.updated, user), user });
@@ -255,22 +248,29 @@ class UserController {
   }
 
   public static async delete(req: Request, res: Response) {
-    try {
-      const userDecoded = decode(req.headers.authorization);
-      const userRepository = UserController.getRepository();
+    const userDecoded = decode(req.headers.authorization);
+    const userRepository = UserController.getRepository();
+    const cartRepository = getConnection().getRepository(Cart);
 
-      await userRepository.delete({
-        username: userDecoded['username'],
-      });
+    const user = await userRepository.findOne({
+      username: userDecoded['username'],
+    });
 
-      return res
-        .status(200)
-        .json({ message: getMessage(userMessages.deleted) });
-    } catch (err) {
+    if (!user) {
       return unprocessableEntity({
         message: getMessage(userMessages.alreadyDeleted),
       }).send(res);
     }
+
+    await cartRepository.delete({
+      user: { id: user.id },
+    });
+
+    await userRepository.delete({
+      id: user.id,
+    });
+
+    return res.status(200).json({ message: getMessage(userMessages.deleted) });
   }
 
   public static async search(req: Request, res: Response) {

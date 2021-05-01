@@ -23,7 +23,7 @@ export class User {
   @Column({ unique: true })
   username: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column()
@@ -53,6 +53,7 @@ export class User {
   @OneToOne(() => Cart, (cart) => cart.user, {
     cascade: true,
     persistence: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   cart: Cart;

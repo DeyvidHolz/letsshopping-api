@@ -1,15 +1,86 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
 
+import { User } from '../entities/User.entity';
+
 dotenv.config();
 
-const URL = process.env.URL + (process.env.PORT ? ':' + process.env.PORT : '');
+const URL =
+  process.env.URL + (process.env.PORT ? ':' + process.env.PORT : '') + '/api';
 
-test('Should authenticate user', (done) => {
-  axios
-    .post(`${URL}/api/auth`, { username: 'deyvidholz', password: '123456' })
-    .then((res) => {
-      expect(res.status).toBe(200);
-      done();
+const randomNumber = new Date().valueOf();
+let user: User = new User();
+const username = `${randomNumber}userTest`;
+const email = `${randomNumber}user.test@mail.com`;
+const password = `123456`;
+
+let authToken = null;
+
+describe('User controller tests', () => {
+  it('Should create a user', async () => {
+    const createUserPayload = {
+      username,
+      password,
+      firstName: 'User',
+      lastName: 'Test',
+      email,
+      birthDate: '1999-12-09',
+    };
+
+    const res = await axios.post(`${URL}/users`, createUserPayload);
+
+    expect(res.status).toBe(201);
+    expect(res.data.user.id).toBeGreaterThan(0);
+
+    user = res.data.user;
+  });
+
+  it('Should authenticate user', async () => {
+    const authUserPayload = {
+      username,
+      password,
+    };
+
+    const res = await axios.post(`${URL}/auth`, authUserPayload);
+
+    expect(res.status).toBe(200);
+    expect(res.data).toHaveProperty('token');
+
+    authToken = res.data.token;
+  });
+
+  it('Should update user', async () => {
+    const newfirstName = user.firstName + 'Updated';
+
+    const updateUserPayload = {
+      id: user.id,
+      currentPassword: password,
+      firstName: newfirstName,
+      lastName: user.lastName + 'Updated',
+      email: user.email,
+      birthDate: '1999-12-29',
+    };
+
+    const res = await axios.put(`${URL}/users`, updateUserPayload, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
+
+    expect(res.status).toBe(200);
+    expect(res.data.user.firstName).toBe(newfirstName);
+    expect(res.data.user).not.toHaveProperty('password');
+  });
+
+  it('Should delete user', async () => {
+    const res = await axios.delete(`${URL}/users`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.data).toHaveProperty('message');
+    expect(res.data.message).toBe('User deleted.');
+  });
 });
