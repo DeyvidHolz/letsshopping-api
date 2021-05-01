@@ -1,12 +1,16 @@
+// Modules
 import 'reflect-metadata';
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
-
+import passport from 'passport';
+import passportJWT from 'passport-jwt';
 import { createConnection } from 'typeorm';
-import { User } from './src/entities/User.entity';
 
+// Configs
 import jwtConfig from './src/config/jwt.config';
+import permissionGroupsConfig from './src/config/permissionGroups.config';
 
+// Routes
 import homeRoutes from './src/routes/home.routes';
 import userRoutes from './src/routes/user.routes';
 import productReviewRoutes from './src/routes/productReview.routes';
@@ -19,9 +23,10 @@ import cartRoutes from './src/routes/cart.routes';
 import orderRoutes from './src/routes/order.routes';
 import shippingRoutes from './src/routes/shipping.routes';
 
-import passport from 'passport';
-import passportJWT from 'passport-jwt';
+// Entities
+import { User } from './src/entities/User.entity';
 import { ShopInfo } from './src/entities/ShopInfo.entity';
+import { PermissionGroup } from './src/entities/PermissionGroup.entity';
 
 createConnection().then((connection) => {
   class Server {
@@ -32,6 +37,7 @@ createConnection().then((connection) => {
       this.config();
       this.passportConfig();
       this.routerConfig();
+      this.createDefaultPermisionGroups();
       this.createShop();
     }
 
@@ -81,6 +87,25 @@ createConnection().then((connection) => {
       this.app.use('/api/carts', cartRoutes);
       this.app.use('/api/orders', orderRoutes);
       this.app.use('/api/shippings', shippingRoutes);
+    }
+
+    private async createDefaultPermisionGroups() {
+      const permissionGroupRepository = connection.getRepository(
+        PermissionGroup,
+      );
+      const permissionGroups = await permissionGroupRepository.find();
+
+      if (!permissionGroups.length) {
+        const newPermissionGroups: PermissionGroup[] = [];
+
+        permissionGroupsConfig.defaultGroups.forEach((pg) =>
+          newPermissionGroups.push(
+            permissionGroupRepository.create(pg as PermissionGroup),
+          ),
+        );
+
+        await permissionGroupRepository.save(newPermissionGroups);
+      }
     }
 
     private async createShop() {

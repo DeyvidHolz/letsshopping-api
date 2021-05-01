@@ -1,22 +1,37 @@
 import express from 'express';
 import CategoryController from '../controllers/category.controller';
+import AdminMiddleware from '../middlewares/admin.middleware';
 
 import AuthMiddleware from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-router.get('/all', AuthMiddleware, CategoryController.getAll);
-router.get('/search', AuthMiddleware, CategoryController.searchByName);
+router.get('/all', AuthMiddleware, AdminMiddleware, CategoryController.getAll);
+
+router.get(
+  '/search',
+  AuthMiddleware,
+  AdminMiddleware,
+  CategoryController.searchByName,
+);
 
 router.get(
   '/:id/products',
   AuthMiddleware,
+  AdminMiddleware,
   CategoryController.getProductsByCategory,
 );
 
-router.get('/:id', AuthMiddleware, CategoryController.get);
-router.delete('/:id', AuthMiddleware, CategoryController.delete);
-router.post('/', AuthMiddleware, CategoryController.create);
-router.put('/', AuthMiddleware, CategoryController.update);
+router.get('/:id', AuthMiddleware, AdminMiddleware, CategoryController.get);
+
+router.delete(
+  '/:id',
+  AuthMiddleware,
+  AdminMiddleware,
+  CategoryController.delete,
+);
+
+router.post('/', AuthMiddleware, AdminMiddleware, CategoryController.create);
+router.put('/', AuthMiddleware, AdminMiddleware, CategoryController.update);
 
 export default router;

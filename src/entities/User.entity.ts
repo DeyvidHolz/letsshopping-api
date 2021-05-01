@@ -9,11 +9,13 @@ import {
   JoinTable,
   JoinColumn,
   OneToOne,
+  ManyToOne,
 } from 'typeorm';
 import { Address } from './Address.entity';
 import { Cart } from './Cart.entity';
 import { Notification } from './Notification.entity';
 import { Order } from './Order.entity';
+import { PermissionGroup } from './PermissionGroup.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -49,6 +51,19 @@ export class User {
   })
   @JoinTable()
   addresses: Address[];
+
+  @ManyToOne(
+    () => PermissionGroup,
+    (permissionGroup) => permissionGroup.users,
+    {
+      eager: true,
+      cascade: true,
+      persistence: false,
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinTable()
+  permissionGroup: PermissionGroup;
 
   @OneToOne(() => Cart, (cart) => cart.user, {
     cascade: true,

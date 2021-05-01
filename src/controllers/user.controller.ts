@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 // import jwt_decode from 'jwt-decode'
 import { Request, Response } from 'express';
 import { getConnection, Raw } from 'typeorm';
+import dotenv from 'dotenv';
 import decode from 'jwt-decode';
 
 import jwtConfig from '../config/jwt.config';
@@ -17,6 +18,9 @@ import notFound from '../errors/http/notFound.error';
 import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
 import { Cart } from '../entities/Cart.entity';
+import { PermissionGroup } from '../entities/PermissionGroup.entity';
+
+dotenv.config();
 
 class UserController {
   private static getRepository() {
@@ -49,6 +53,16 @@ class UserController {
         errors: validation.validationErrors,
       }).send(res);
     }
+
+    // Setting user default permission group
+    console.log('def', process.env.DEFAULT_PERMISSION_GROUP);
+    const defaultPermissionGroup = await getConnection()
+      .getRepository(PermissionGroup)
+      .findOne({ where: { name: process.env.DEFAULT_PERMISSION_GROUP } });
+
+    console.log('gp', defaultPermissionGroup);
+
+    user.permissionGroup = defaultPermissionGroup;
 
     user.password = CryptHelper.encryptPassword(data.password);
 
@@ -149,6 +163,8 @@ class UserController {
         email: user.email,
         username: user.username,
         cart_id: user.cart.id,
+        permission_group: user.permissionGroup.name,
+        permission_level: user.permissionGroup.level,
       };
 
       let token = jwt.sign(payload, jwtConfig.secretOrKey, {
