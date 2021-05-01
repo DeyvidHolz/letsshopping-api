@@ -1,5 +1,6 @@
 // Modules
 import 'reflect-metadata';
+import 'colors';
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
@@ -27,18 +28,27 @@ import shippingRoutes from './src/routes/shipping.routes';
 import { User } from './src/entities/User.entity';
 import { ShopInfo } from './src/entities/ShopInfo.entity';
 import { PermissionGroup } from './src/entities/PermissionGroup.entity';
+import cryptHelper from './src/helpers/crypt.helper';
+import { Cart } from './src/entities/Cart.entity';
 
 createConnection().then((connection) => {
   class Server {
     private app: Application;
 
     constructor() {
+      console.log('');
+      console.log('Loading application...'.yellow);
+
       this.app = express();
       this.config();
       this.passportConfig();
       this.routerConfig();
       this.createDefaultPermisionGroups();
       this.createShop();
+      this.createAdminUser();
+
+      console.log('Application loaded!'.green);
+      console.log('');
     }
 
     private config() {
@@ -76,6 +86,7 @@ createConnection().then((connection) => {
     }
 
     private routerConfig() {
+      console.log('Setting routers...'.yellow);
       this.app.use('/api/admin/info', shopInfoRoutes);
       this.app.use('/', homeRoutes);
       this.app.use('/api/users', userRoutes);
@@ -90,6 +101,8 @@ createConnection().then((connection) => {
     }
 
     private async createDefaultPermisionGroups() {
+      console.log('Creating default data...'.yellow);
+
       const permissionGroupRepository = connection.getRepository(
         PermissionGroup,
       );
@@ -119,6 +132,50 @@ createConnection().then((connection) => {
       }
     }
 
+    private async createAdminUser(force: boolean = false) {
+      const userRepository = connection.getRepository(User);
+      const permissionGroupRepository = connection.getRepository(
+        PermissionGroup,
+      );
+      const cartRepository = connection.getRepository(Cart);
+
+      const users = await userRepository.find();
+
+      if (!force) {
+        if (users.length) {
+          return;
+        }
+      }
+
+      const permissionGroup = await permissionGroupRepository.findOne({
+        where: { name: process.env.DEFAULT_PERMISSION_GROUP },
+      });
+
+      // Creating a cart for admin user
+      const cart = new Cart();
+      await cartRepository.save(cart);
+
+      // Creating admin user
+      const user = new User();
+      user.firstName = 'Admin';
+      user.lastName = '';
+      user.username = 'admin';
+      user.email = 'admin@admin.com';
+      user.birthDate = '1999-12-30';
+      user.password = cryptHelper.encryptPassword('admin');
+      user.permissionGroup = permissionGroup;
+      await userRepository.save(user);
+
+      // Saving relation
+      cart.user = user;
+      await cartRepository.save(cart);
+
+      user.cart = cart;
+      await userRepository.save(user);
+
+      console.log(`Admin user created. Username: ${user.username}`.blue);
+    }
+
     public start = (port: number) => {
       return new Promise((resolve, reject) => {
         this.app
@@ -134,6 +191,6 @@ createConnection().then((connection) => {
 
   new Server()
     .start(port)
-    .then((port) => console.log(`Running on port ${port}`))
+    .then((port) => console.log(`Running on port ${port}`.green))
     .catch((error) => console.log(error));
 });
