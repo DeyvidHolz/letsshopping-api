@@ -25,22 +25,21 @@ export default class ProductValidator extends Validator {
 
     // Categories from endpoint can be an array of integers (ids)
     if (this.data.categories && this.data.categories.length) {
-      const invalidCategory = this.data.categories.find((categoryId) => {
-        if (String(categoryId).match(/[0-9]+/)) {
-          return categoryId;
+      this.data.categories.forEach((categoryId: any, index) => {
+        if (typeof categoryId === 'object') categoryId = categoryId.id;
+
+        if (!String(categoryId).match(/[0-9]+/)) {
+          this.addError(`categories[${index}]`, 'Invalid category ID.');
         }
       });
-
-      if (invalidCategory)
-        this.addError('categories', 'One or more categories are invalid.');
     }
 
     // Implementing ProductOption validations
     if (this.data.options && this.data.options.length) {
-      this.data.options.forEach((option) => {
+      this.data.options.forEach((option, index) => {
         const productOptionValidation = new ProductOptionValidator(option);
         if (productOptionValidation.hasErrors()) {
-          this.addError('options', productOptionValidation.first());
+          this.addError(`options[${index}]`, productOptionValidation.first());
           return;
         }
       });
