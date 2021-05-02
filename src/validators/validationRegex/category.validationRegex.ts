@@ -25,7 +25,7 @@ const categoryValidationRegex: validationRegex[] = [
     validations: [
       {
         regex: '^.{0,10000}$',
-        message: 'The product code must have 6 characters.',
+        message: 'The description must have 6 characters.',
       },
     ],
   },
