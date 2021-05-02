@@ -18,6 +18,7 @@ import { calculateTotal } from '../helpers/cart.helper';
 import { CartProduct } from './CartProduct.entity';
 import { Coupon } from './Coupon.entity';
 import { Product } from './Product.entity';
+import { ProductInCart } from './ProductInCart.entity';
 import { User } from './User.entity';
 
 @Entity({ name: 'carts' })
@@ -64,4 +65,9 @@ export class Cart {
   })
   @JoinColumn()
   coupon: Coupon;
+
+  @OneToMany(() => ProductInCart, (productInCart) => productInCart.cart, {
+    eager: true,
+  })
+  productsInCart: ProductInCart[];
 }
