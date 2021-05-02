@@ -1,4 +1,4 @@
-import { getConnection } from 'typeorm';
+import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
@@ -12,6 +12,7 @@ import { getMessage } from '../helpers/messages.helper';
 import { PermissionGroup } from '../entities/PermissionGroup.entity';
 import PermissionGroupValidator from '../validators/permissionGroup.validator';
 import permissionGroupMessages from '../messages/permissionGroup.messages';
+import { User } from '../entities/User.entity';
 
 class PermissionGroupController {
   private static getRepository() {
@@ -167,7 +168,43 @@ class PermissionGroupController {
     }
   }
 
-  public static async setUserPermissionGroup(req: Request, res: Response) {}
+  public static async setUserPermissionGroup(req: Request, res: Response) {
+    const permissionGroupRepository = PermissionGroupController.getRepository();
+    const userRepository = getConnection().getRepository(User);
+
+    // Checking data
+    const permissionGroupName: string = req.params.name;
+    const userId: number = Number(req.params.userId);
+
+    if (isNaN(userId))
+      return unprocessableEntity({ message: 'Invalid user ID.' }).send(res);
+    if (!permissionGroupName)
+      return unprocessableEntity({ message: 'Invalid group name.' });
+
+    // Checking if permissionGroup and user exists
+    const permissionGroup = await permissionGroupRepository.findOne({
+      name: Raw(
+        (alias) => `LOWER(${alias}) Like LOWER('%${permissionGroupName}%')`,
+      ),
+    });
+    const user = await userRepository.findOne(userId);
+
+    if (!permissionGroup)
+      return notFound({
+        message: `Group with name ${permissionGroupName} not found.`,
+      }).send(res);
+    if (!user)
+      return notFound({ message: `User with ID ${userId} not found.` }).send(
+        res,
+      );
+
+    // Changing user's permission group
+    user.permissionGroup = permissionGroup;
+    await userRepository.save(user);
+
+    delete user.password;
+    return res.json({ message: 'Permission group changed.', user });
+  }
 }
 
 export default PermissionGroupController;

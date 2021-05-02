@@ -6,6 +6,13 @@ import AuthMiddleware from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
+router.patch(
+  '/set-group/:userId/:name',
+  AuthMiddleware,
+  AdminMiddleware,
+  PermissionGroupController.setUserPermissionGroup,
+);
+
 router.get(
   '/all',
   AuthMiddleware,
