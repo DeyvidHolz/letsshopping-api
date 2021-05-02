@@ -18,6 +18,7 @@ type validationRegex = {
   field: string;
   regex?: string;
   required?: boolean;
+  requiredOnUpdate?: boolean;
   message?: string;
   validations?: validationRegexArray[];
 };
@@ -25,18 +26,31 @@ type validationRegex = {
 abstract class Validator {
   public validationErrors: validationMessages[] | null = null;
   public data: any = {};
+  public updating: boolean = false;
+
   protected validationRegex: validationRegex[];
 
   public validate(): validation {
     this.validationErrors = [];
 
     this.validationRegex.forEach((validationRegex: validationRegex) => {
+      this.validateField(validationRegex);
+      /*
       if (Array.isArray(validationRegex.validations)) {
         const value = this.data[validationRegex.field] ?? '';
         validationRegex.required =
           validationRegex.required === undefined
             ? true
             : validationRegex.required;
+
+        validationRegex.requiredOnUpdate =
+          validationRegex.required === undefined
+            ? false
+            : validationRegex.requiredOnUpdate;
+
+        if (this.updating && !validationRegex.requiredOnUpdate) {
+          return;
+        }
 
         validationRegex.validations.forEach((v) => {
           if (validationRegex.required) {
@@ -69,6 +83,15 @@ abstract class Validator {
             ? true
             : validationRegex.required;
 
+        validationRegex.requiredOnUpdate =
+          validationRegex.required === undefined
+            ? false
+            : validationRegex.requiredOnUpdate;
+
+        if (this.updating && !validationRegex.requiredOnUpdate) {
+          return;
+        }
+
         if (validationRegex.required) {
           if (value === '' || value === null || value === undefined) {
             this.addError(
@@ -87,6 +110,7 @@ abstract class Validator {
           }
         }
       }
+      */
     });
 
     return {
@@ -111,6 +135,59 @@ abstract class Validator {
     });
 
     return this;
+  }
+
+  protected validateField(validationRegex: validationRegex): void {
+    const isArray = Array.isArray(validationRegex.validations);
+    const value = this.data[validationRegex.field] ?? '';
+
+    validationRegex.required =
+      validationRegex.required === undefined ? true : validationRegex.required;
+
+    validationRegex.requiredOnUpdate =
+      validationRegex.required === undefined
+        ? false
+        : validationRegex.requiredOnUpdate;
+
+    if (this.updating && !validationRegex.requiredOnUpdate) {
+      return;
+    }
+
+    if (isArray) {
+      validationRegex.validations.forEach((v) => {
+        if (validationRegex.required) {
+          if (value === '' || value === null || value === undefined) {
+            this.addError(
+              validationRegex.field,
+              validationRegex.message ??
+                `The field ${validationRegex.field} is required.`,
+            );
+          }
+
+          const regex = new RegExp(v.regex);
+
+          if (!String(value).match(regex)) {
+            this.addError(
+              validationRegex.field,
+              v.message ??
+                validationRegex.message ??
+                `Invalid value for ${validationRegex.field}.`,
+            );
+          }
+        }
+      });
+
+      return;
+    }
+
+    const regex = new RegExp(validationRegex.regex);
+    if (!String(value).match(regex)) {
+      this.addError(
+        validationRegex.field,
+        validationRegex.message ??
+          `Invalid value for ${validationRegex.field}.`,
+      );
+    }
   }
 }
 
