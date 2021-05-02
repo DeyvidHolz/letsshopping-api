@@ -23,6 +23,7 @@ import cartRoutes from './src/routes/cart.routes';
 import orderRoutes from './src/routes/order.routes';
 import shippingRoutes from './src/routes/shipping.routes';
 import permissionGroupRoutes from './src/routes/permissionGroup.routes';
+import authRoutes from './src/routes/auth.routes';
 
 // Entities
 import { User } from './src/entities/User.entity';
@@ -98,6 +99,7 @@ createConnection().then((connection) => {
       this.app.use('/api/orders', orderRoutes);
       this.app.use('/api/shippings', shippingRoutes);
       this.app.use('/api/permission-groups', permissionGroupRoutes);
+      this.app.use('/api', authRoutes);
     }
 
     private async createDefaultPermisionGroups() {

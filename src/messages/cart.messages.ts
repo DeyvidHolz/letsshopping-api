@@ -5,6 +5,11 @@ const cartMessages: messages = {
   productUpdated: 'Product updated.',
   productRemoved: 'Product removed from your cart.',
   cartCleared: 'Your cart has been cleared.',
+
+  notEnoughStock: {
+    msg: 'We do not have as many {name} as you want.',
+    replace: [{ from: 'name', to: 'name' }],
+  },
 };
 
 export default cartMessages;

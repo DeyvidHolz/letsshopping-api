@@ -19,13 +19,13 @@ import { calculateTotal } from '../helpers/cart.helper';
 import { Cart } from './Cart.entity';
 import { Product } from './Product.entity';
 
-@Entity({ name: 'cart_product' })
+@Entity({ name: 'cart_products' })
 export class CartProduct {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
-  cartId?: number;
+  // @Column({ nullable: true })
+  // cartId?: number;
 
   @Column()
   quantity: number;
@@ -37,9 +37,4 @@ export class CartProduct {
   @ManyToOne(() => Cart, (cart) => cart.cartProducts)
   @JoinColumn()
   cart: Cart;
-
-  @AfterInsert()
-  public setCartId() {
-    if (this.cartId) this.cartId = this.cart.id;
-  }
 }

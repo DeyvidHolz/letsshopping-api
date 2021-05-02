@@ -3,13 +3,14 @@ import { Request, Response } from 'express';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import notFound from '../errors/http/notFound.error';
+import cartMessages from '../messages/cart.messages';
 import { Cart } from '../entities/Cart.entity';
-import { getUserData } from '../helpers/auth.helper';
 import { Product } from '../entities/Product.entity';
 import { CartProduct } from '../entities/CartProduct.entity';
+import { getUserData } from '../helpers/auth.helper';
 import { calculateTotal } from '../helpers/cart.helper';
 import { getMessage } from '../helpers/messages.helper';
-import cartMessages from '../messages/cart.messages';
+import { hasStock } from '../helpers/stock.helper';
 
 class CartController {
   private static getRepository() {
@@ -47,17 +48,46 @@ class CartController {
       return Number(cp.product.id) === productId;
     });
 
-    // TODO: check stock -> req.body.quantity
-
     if (currentCartProduct) {
       currentCartProduct.quantity += productQuantity;
-      cartProductRepository.save(currentCartProduct);
+
+      // Checking stock
+      const noStock: boolean = !(await hasStock(
+        currentCartProduct.product,
+        currentCartProduct.quantity,
+        cart.id,
+      ));
+
+      if (noStock) {
+        return unprocessableEntity({
+          message: getMessage(
+            cartMessages.notEnoughStock,
+            currentCartProduct.product,
+          ),
+        }).send(res);
+      }
+
+      await cartProductRepository.save(currentCartProduct);
     } else {
       const product = await productRepository.findOne(productId);
       const cartProduct = new CartProduct();
       cartProduct.quantity = req.body.quantity || 1;
       cartProduct.product = product;
       cartProduct.cart = cart;
+
+      // Checking stock
+      const noStock: boolean = !(await hasStock(
+        product,
+        productQuantity,
+        cart.id,
+      ));
+
+      if (noStock) {
+        return unprocessableEntity({
+          message: getMessage(cartMessages.notEnoughStock, product),
+        }).send(res);
+      }
+
       await cartProductRepository.save(cartProduct);
 
       cart.cartProducts = [...cart.cartProducts, cartProduct];
@@ -85,14 +115,11 @@ class CartController {
       where: { user: { id: userData.id } },
     });
 
-    const currentCartProduct = cart.cartProducts.find(
+    const currentCartProductIndex = cart.cartProducts.findIndex(
       (cp) => Number(cp.product.id) === productId,
     );
 
-    if (currentCartProduct) {
-      cartProductRepository.remove(currentCartProduct);
-    }
-
+    cart.cartProducts.splice(currentCartProductIndex, 1);
     cart.total = calculateTotal(cart);
     await cartRepository.save(cart);
 
@@ -123,8 +150,6 @@ class CartController {
       return Number(cp.product.id) === productId;
     });
 
-    // TODO: check stock -> req.body.quantity
-
     if (!req.body.quantity) {
       return unprocessableEntity({ message: 'Quantity is required.' }).send(
         res,
@@ -137,6 +162,21 @@ class CartController {
     if (!currentCartProduct) {
       return notFound({
         message: `The product with ID ${productId} is not in your cart.`,
+      }).send(res);
+    }
+
+    const noStock: boolean = !(await hasStock(
+      currentCartProduct.product.code,
+      productQuantity,
+      cart.id,
+    ));
+
+    if (noStock) {
+      return unprocessableEntity({
+        message: getMessage(
+          cartMessages.notEnoughStock,
+          currentCartProduct.product,
+        ),
       }).send(res);
     }
 

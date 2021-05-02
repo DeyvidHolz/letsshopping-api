@@ -7,7 +7,8 @@ import {
   UpdateEvent,
 } from 'typeorm';
 import { Cart } from '../entities/Cart.entity';
-import { ProductInCart } from '../entities/ProductInCart.entity';
+import { CartProduct } from '../entities/CartProduct.entity';
+import { Product } from '../entities/Product.entity';
 
 @EventSubscriber()
 export class PostSubscriber implements EntitySubscriberInterface<Cart> {
@@ -19,41 +20,48 @@ export class PostSubscriber implements EntitySubscriberInterface<Cart> {
   }
 
   /*
-   * Every time that the customer cart is updated, a ProductInCart (entity)
+   * Every time that the customer cart is updated, a CartProduct (entity)
    * should be created or updated, so that the stock can stay always updated.
    */
   async beforeUpdate(event: UpdateEvent<Cart>) {
-    const productInCartRepository = getConnection().getRepository(
-      ProductInCart,
-    );
+    const cartProductRepository = getConnection().getRepository(CartProduct);
 
-    // Cart is empty, cleaning productsInCart
+    let product: Product | null = null;
+    let quantity: number | null = null;
+
+    // Cart is empty
     if (!event.entity.cartProducts.length) {
-      productInCartRepository.delete({ cart: { id: event.entity.id } });
-      return;
+      // A product is being added to the cart
+      if (event.entity.cartProducts[0]) {
+        product = event.entity.cartProducts[0].product;
+        quantity = event.entity.cartProducts[0].quantity;
+
+        const cartProduct = new CartProduct();
+        cartProduct.product = product;
+        cartProduct.quantity = quantity;
+        cartProduct.cart = event.entity;
+        return await cartProductRepository.save(cartProduct);
+      }
+
+      // Cart is being cleaned
+      return await cartProductRepository.delete({
+        cart: { id: event.entity.id },
+      });
     }
 
-    const productCode: string = event.entity.cartProducts[0].product.code;
-    const quantity: number = event.entity.cartProducts[0].quantity;
-
-    // Cart is empty, a product is being added to the cart
-    if (!event.entity.productsInCart.length) {
-      const productInCart = new ProductInCart();
-      productInCart.productCode = productCode;
-      productInCart.cart = event.entity;
-      productInCart.quantity = quantity;
-      productInCartRepository.save(productInCart);
-      return;
-    }
+    product = event.entity.cartProducts[0].product;
+    quantity = event.entity.cartProducts[0].quantity;
 
     // Creating or updating product in cart
-    const productInCart =
-      (await productInCartRepository.findOne({ productCode })) ??
-      new ProductInCart();
+    const cartProduct =
+      (await cartProductRepository.findOne({
+        cart: { id: event.entity.id },
+        product: { id: product.id },
+      })) ?? new CartProduct();
 
-    productInCart.productCode = productCode;
-    productInCart.cart = event.entity;
-    productInCart.quantity = quantity;
-    productInCartRepository.save(productInCart);
+    cartProduct.product = product;
+    cartProduct.quantity = quantity;
+    cartProduct.cart = event.entity;
+    return await cartProductRepository.save(cartProduct);
   }
 }
