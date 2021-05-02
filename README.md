@@ -1,3 +1,5 @@
+<!-- TODO: Recommend to use better comments extension in vscode -->
+
 # This project is currently in development...
 
 # Starting the project

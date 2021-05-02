@@ -112,7 +112,7 @@ describe('User controller tests', () => {
         throw new RequestNotExpected('Should not create invalid users');
       })
       .catch((err: AxiosError) => {
-        // @todo: add the rest of expects to check all errors it should return
+        // TODO: add the rest of expects to check all errors it should return
         expect(err.response.status).toBe(422);
         done();
       });

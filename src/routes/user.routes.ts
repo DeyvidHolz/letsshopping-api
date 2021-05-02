@@ -6,7 +6,7 @@ import AuthMiddleware from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-// @todo: create this on an user admin controller
+// TODO: create this on an user admin controller
 router.get('/all', AuthMiddleware, AdminMiddleware, UserController.getAll);
 router.get('/search', AuthMiddleware, UserController.search);
 

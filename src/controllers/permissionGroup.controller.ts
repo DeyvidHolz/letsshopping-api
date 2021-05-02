@@ -80,7 +80,7 @@ class PermissionGroupController {
       level: req.body.level,
     };
 
-    // @todo: find by name then update
+    // TODO: find by name then update
     const permissionGroup = permissionGroupRepository.create(
       data as PermissionGroup,
     );

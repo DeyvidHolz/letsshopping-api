@@ -47,7 +47,7 @@ class CartController {
       return Number(cp.product.id) === productId;
     });
 
-    // @TODO: check stock -> req.body.quantity
+    // TODO: check stock -> req.body.quantity
 
     if (currentCartProduct) {
       currentCartProduct.quantity += productQuantity;
@@ -123,7 +123,7 @@ class CartController {
       return Number(cp.product.id) === productId;
     });
 
-    // @TODO: check stock -> req.body.quantity
+    // TODO: check stock -> req.body.quantity
 
     if (!req.body.quantity) {
       return unprocessableEntity({ message: 'Quantity is required.' }).send(

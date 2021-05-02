@@ -72,13 +72,13 @@ class OrderController {
     order.address = user.addresses.find((a) => a.isMain);
     order.shippingAddress = shippingAddress;
 
-    // @TODO: calculate freight fee
+    // TODO: calculate freight fee
     order.freightValue = 15;
 
-    // @TODO: try to charge then set status
+    // TODO: try to charge then set status
     order.status = 0;
 
-    // @TODO: // @TODO: try to charge then set order events
+    // TODO: // TODO: try to charge then set order events
     // order.events = OrderEvent[]
 
     if (!order.address)
