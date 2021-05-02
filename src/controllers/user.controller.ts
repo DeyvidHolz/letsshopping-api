@@ -91,6 +91,7 @@ class UserController {
   public static async getAll(req: Request, res: Response) {
     const users = await UserController.getRepository().find({
       select: [
+        'id',
         'firstName',
         'lastName',
         'email',
