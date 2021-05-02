@@ -30,7 +30,7 @@ class AddressController {
       neighbourhood: req.body.neighbourhood,
       street: req.body.street,
       number: req.body.number,
-      isMain: req.body.isMain,
+      isMain: req.body.isMain || false,
     };
 
     const address = addressRepository.create(data as Address);
@@ -157,7 +157,7 @@ class AddressController {
       neighbourhood: req.body.neighbourhood,
       street: req.body.street,
       number: req.body.number,
-      isMain: req.body.isMain,
+      isMain: req.body.isMain || false,
     };
 
     const address = addressRepository.create(data as Address);

@@ -5,7 +5,7 @@ type createAddressPayload = {
   neighbourhood: string;
   street: string;
   number: number;
-  isMain: boolean;
+  isMain?: boolean;
 };
 
 type updateAddressPayload = {
@@ -16,7 +16,7 @@ type updateAddressPayload = {
   neighbourhood: string;
   street: string;
   number: number;
-  isMain: boolean;
+  isMain?: boolean;
 };
 
 export { createAddressPayload, updateAddressPayload };
