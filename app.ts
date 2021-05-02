@@ -12,7 +12,6 @@ import jwtConfig from './src/config/jwt.config';
 import permissionGroupsConfig from './src/config/permissionGroups.config';
 
 // Routes
-import homeRoutes from './src/routes/home.routes';
 import userRoutes from './src/routes/user.routes';
 import productReviewRoutes from './src/routes/productReview.routes';
 import productRoutes from './src/routes/product.routes';
@@ -89,7 +88,6 @@ createConnection().then((connection) => {
     private routerConfig() {
       console.log('Setting routers...'.yellow);
       this.app.use('/api/admin/info', shopInfoRoutes);
-      this.app.use('/', homeRoutes);
       this.app.use('/api/users', userRoutes);
       this.app.use('/api/products/reviews', productReviewRoutes);
       this.app.use('/api/products', productRoutes);
