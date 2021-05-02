@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
 import { validationRegex } from '../validator';
+
+dotenv.config();
+const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
 const userValidationRegex: validationRegex[] = [
   {
@@ -7,7 +11,7 @@ const userValidationRegex: validationRegex[] = [
       { regex: '^[\\w\\.]+$' },
       {
         regex: '^.{4,255}$',
-        message: 'The username must have 4 to 255 characters.',
+        message: 'The field username must have 4 to 255 characters.',
       },
     ],
   },
@@ -16,25 +20,17 @@ const userValidationRegex: validationRegex[] = [
     validations: [
       {
         regex: '^.{6,60}$',
-        message: 'The password is too short or too long.',
+        message: 'The field password is too short or too long.',
       },
     ],
   },
   {
     field: 'firstName',
-    validations: [
-      {
-        regex: '^[A-Za-z]+$',
-      },
-    ],
+    validations: [{ regex: `^[${defaultRegexForNames}]+$` }],
   },
   {
     field: 'lastName',
-    validations: [
-      {
-        regex: '^[A-Za-z ]+$',
-      },
-    ],
+    validations: [{ regex: `^[${defaultRegexForNames} ]+$` }],
   },
 ];
 

@@ -73,7 +73,11 @@ abstract class Validator {
         ? false
         : validationRegex.requiredOnUpdate;
 
-    if (this.updating && !validationRegex.requiredOnUpdate) {
+    const shouldNotValidateField =
+      !validationRegex.requiredOnUpdate &&
+      this.data[validationRegex.field] === undefined;
+
+    if (this.updating && shouldNotValidateField) {
       return;
     }
 

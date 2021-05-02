@@ -1,11 +1,11 @@
 import { validationRegex } from '../validator';
 
-const userValidationRegex: validationRegex[] = [
+const permissionGroupValidationRegex: validationRegex[] = [
   {
     field: 'name',
     validations: [
       {
-        regex: '^[A-Za-z ]+$',
+        regex: '^[A-Za-z0-9]+$',
       },
     ],
   },
@@ -21,4 +21,4 @@ const userValidationRegex: validationRegex[] = [
   },
 ];
 
-export default userValidationRegex;
+export default permissionGroupValidationRegex;

@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
-
 import { validationRegex } from '../validator';
-
-dotenv.config();
 
 const addressValidationRegex: validationRegex[] = [
   {

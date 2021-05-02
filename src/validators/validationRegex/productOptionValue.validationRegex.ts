@@ -1,13 +1,17 @@
+import dotenv from 'dotenv';
 import { validationRegex } from '../validator';
+
+dotenv.config();
+const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
 const productOptionValueValidationRegex: validationRegex[] = [
   {
     field: 'value',
     validations: [
-      { regex: '^[A-Za-z0-9 ]+$' },
+      { regex: `^[${defaultRegexForNames}&0-9 ]+$` },
       {
         regex: '^.{1,255}$',
-        message: 'The option value name must have 1 to 255 characters.',
+        message: 'The field value name must have 1 to 255 characters.',
       },
     ],
   },

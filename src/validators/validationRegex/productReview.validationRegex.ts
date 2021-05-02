@@ -1,13 +1,17 @@
+import dotenv from 'dotenv';
 import { validationRegex } from '../validator';
+
+dotenv.config();
+const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
 const productReviewValidationRegex: validationRegex[] = [
   {
     field: 'title',
     validations: [
-      { regex: '^[A-Za-z0-9!? ]+$' },
+      { regex: `^[${defaultRegexForNames}0-9!@?#$%*- ]+$` },
       {
         regex: '^.{4,255}$',
-        message: 'The category name must have 4 to 255 characters.',
+        message: 'The field title must have 4 to 255 characters.',
       },
     ],
   },
@@ -21,7 +25,7 @@ const productReviewValidationRegex: validationRegex[] = [
     validations: [
       {
         regex: '^.{4,255}$',
-        message: 'The category name must have 4 to 255 characters.',
+        message: 'The field description must have 4 to 255 characters.',
       },
     ],
   },
