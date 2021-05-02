@@ -14,7 +14,7 @@ export class ProductInCart {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column()
   productCode: string;
 
   @Column()
