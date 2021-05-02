@@ -25,6 +25,6 @@ router.delete(
 );
 
 router.post('/', AuthMiddleware, AdminMiddleware, ProductController.create);
-router.put('/:id', AuthMiddleware, AdminMiddleware, ProductController.update);
+router.patch('/:id', AuthMiddleware, AdminMiddleware, ProductController.update);
 
 export default router;

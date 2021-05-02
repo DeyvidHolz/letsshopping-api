@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.get('/', AuthMiddleware, AdminMiddleware, ShopInfoController.get);
 router.post('/', AuthMiddleware, AdminMiddleware, ShopInfoController.create);
-router.put('/', AuthMiddleware, AdminMiddleware, ShopInfoController.update);
+router.patch('/', AuthMiddleware, AdminMiddleware, ShopInfoController.update);
 
 export default router;

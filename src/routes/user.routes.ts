@@ -12,7 +12,7 @@ router.get('/search', AuthMiddleware, UserController.search);
 
 router.get('/', AuthMiddleware, UserController.get);
 router.post('/', UserController.create);
-router.put('/', AuthMiddleware, UserController.update);
+router.patch('/', AuthMiddleware, UserController.update);
 router.delete('/', UserController.delete);
 
 export default router;

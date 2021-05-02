@@ -9,6 +9,6 @@ router.get('/all', AuthMiddleware, AddressController.getAll);
 router.delete('/:id', AddressController.delete);
 router.get('/:id', AuthMiddleware, AddressController.get);
 router.post('/', AddressController.create);
-router.put('/:id', AuthMiddleware, AddressController.update);
+router.patch('/:id', AuthMiddleware, AddressController.update);
 
 export default router;

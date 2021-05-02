@@ -34,7 +34,7 @@ router.post(
   PermissionGroupController.create,
 );
 
-router.put(
+router.patch(
   '/:name',
   AuthMiddleware,
   AdminMiddleware,

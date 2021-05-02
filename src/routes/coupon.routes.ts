@@ -10,6 +10,6 @@ router.get('/all', AuthMiddleware, AdminMiddleware, CouponController.getAll);
 router.delete('/:id', CouponController.delete);
 router.get('/:id', AuthMiddleware, AdminMiddleware, CouponController.get);
 router.post('/', CouponController.create);
-router.put('/:id', AuthMiddleware, AdminMiddleware, CouponController.update);
+router.patch('/:id', AuthMiddleware, AdminMiddleware, CouponController.update);
 
 export default router;
