@@ -108,7 +108,7 @@ class CouponController {
 
     const coupon = couponRepository.create(data as Coupon);
 
-    const validation = new CouponValidator(coupon);
+    const validation = new CouponValidator(coupon, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

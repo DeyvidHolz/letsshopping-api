@@ -15,8 +15,9 @@ export default class ShippingValidator extends Validator {
 
   protected validationRegex: validationRegex[] = shippingValidationRegex;
 
-  constructor(shipping: Shipping) {
+  constructor(shipping: Shipping, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = shipping;
   }
 

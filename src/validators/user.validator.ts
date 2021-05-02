@@ -15,8 +15,9 @@ export default class UserValidator extends Validator {
 
   protected validationRegex: validationRegex[] = userValidationRegex;
 
-  constructor(user: User) {
+  constructor(user: User, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = user;
   }
 

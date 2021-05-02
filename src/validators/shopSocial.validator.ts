@@ -14,8 +14,9 @@ export default class ShopSocialValidator extends Validator {
 
   protected validationRegex: validationRegex[] = shopSocialValidationRegex;
 
-  constructor(shopSocial: ShopSocial) {
+  constructor(shopSocial: ShopSocial, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = shopSocial;
   }
 

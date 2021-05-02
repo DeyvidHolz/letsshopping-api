@@ -15,8 +15,9 @@ export default class PermissionGroupValidator extends Validator {
 
   protected validationRegex: validationRegex[] = permissionGroupValidationRegex;
 
-  constructor(permissionGroup: PermissionGroup) {
+  constructor(permissionGroup: PermissionGroup, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = permissionGroup;
   }
 

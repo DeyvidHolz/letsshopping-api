@@ -15,8 +15,9 @@ export default class ProductReviewValidator extends Validator {
 
   protected validationRegex: validationRegex[] = productReviewValidationRegex;
 
-  constructor(productReview: ProductReview) {
+  constructor(productReview: ProductReview, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = productReview;
   }
 

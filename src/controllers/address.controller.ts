@@ -162,7 +162,7 @@ class AddressController {
 
     const address = addressRepository.create(data as Address);
 
-    const validation = new AddressValidator(address);
+    const validation = new AddressValidator(address, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

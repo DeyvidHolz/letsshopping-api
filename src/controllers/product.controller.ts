@@ -165,7 +165,7 @@ class ProductController {
       });
     }
 
-    const validation = new ProductValidator(product);
+    const validation = new ProductValidator(product, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

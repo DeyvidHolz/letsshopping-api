@@ -79,7 +79,7 @@ class ShopInfoController {
 
     const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
 
-    const validation = new ShopInfoValidator(shopInfo);
+    const validation = new ShopInfoValidator(shopInfo, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

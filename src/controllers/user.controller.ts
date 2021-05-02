@@ -235,7 +235,7 @@ class UserController {
     user.email = data.email;
     user.birthDate = data.birthDate;
 
-    const validation = new UserValidator(user);
+    const validation = new UserValidator(user, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

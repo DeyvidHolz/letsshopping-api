@@ -15,8 +15,9 @@ export default class OrderValidator extends Validator {
 
   protected validationRegex: validationRegex[] = orderValidationRegex;
 
-  constructor(order: Order) {
+  constructor(order: Order, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = order;
   }
 

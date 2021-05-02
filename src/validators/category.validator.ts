@@ -14,8 +14,9 @@ export default class CategoryValidator extends Validator {
 
   protected validationRegex: validationRegex[] = categoryValidationRegex;
 
-  constructor(category: Category) {
+  constructor(category: Category, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = category;
   }
 

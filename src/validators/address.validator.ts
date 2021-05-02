@@ -16,8 +16,9 @@ export default class AddressValidator extends Validator {
 
   protected validationRegex: validationRegex[] = addressValidationRegex;
 
-  constructor(address: Address) {
+  constructor(address: Address, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = address;
   }
 

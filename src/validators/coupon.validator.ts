@@ -15,8 +15,9 @@ export default class CouponValidator extends Validator {
 
   protected validationRegex: validationRegex[] = couponValidationRegex;
 
-  constructor(coupon: Coupon) {
+  constructor(coupon: Coupon, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = coupon;
   }
 

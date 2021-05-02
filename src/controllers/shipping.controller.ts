@@ -94,7 +94,7 @@ class ShippingController {
       (data as unknown) as Shipping,
     );
 
-    const validation = new ShippingValidator(shipping);
+    const validation = new ShippingValidator(shipping, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

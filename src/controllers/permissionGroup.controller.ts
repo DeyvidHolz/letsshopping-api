@@ -85,7 +85,7 @@ class PermissionGroupController {
       data as PermissionGroup,
     );
 
-    const validation = new PermissionGroupValidator(permissionGroup);
+    const validation = new PermissionGroupValidator(permissionGroup, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

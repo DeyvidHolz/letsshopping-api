@@ -105,7 +105,7 @@ class ProductReviewController {
       (data as unknown) as ProductReview,
     );
 
-    const validation = new ProductReviewValidator(productReview);
+    const validation = new ProductReviewValidator(productReview, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({

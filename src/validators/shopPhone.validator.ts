@@ -14,8 +14,9 @@ export default class ShopPhoneValidator extends Validator {
 
   protected validationRegex: validationRegex[] = shopPhoneValidationRegex;
 
-  constructor(shopPhone: ShopPhone) {
+  constructor(shopPhone: ShopPhone, updating: boolean = false) {
     super();
+    this.updating = updating;
     this.data = shopPhone;
   }
 

@@ -151,7 +151,7 @@ class CategoryController {
       }).send(res);
     }
 
-    const validation = new CategoryValidator(category);
+    const validation = new CategoryValidator(category, true);
 
     if (validation.hasErrors()) {
       return unprocessableEntity({
