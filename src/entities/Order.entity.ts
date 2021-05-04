@@ -55,13 +55,14 @@ export class Order {
     eager: true,
     cascade: true,
   })
-  @JoinColumn()
+  @JoinTable()
   address: Address;
 
   @ManyToOne(() => OrderAddress, (orderAddress) => orderAddress.orders, {
     eager: true,
     cascade: true,
   })
+  @JoinTable()
   shippingAddress: OrderAddress;
 
   @ManyToMany(() => Product, (product) => product.orders, {

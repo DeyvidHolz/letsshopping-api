@@ -17,7 +17,7 @@ const password = `123456`;
 
 let authToken = null;
 
-describe('User controller tests', () => {
+describe('User routes tests', () => {
   it('Should create a user', async () => {
     const createUserPayload = {
       username,
@@ -54,7 +54,6 @@ describe('User controller tests', () => {
     const newfirstName = user.firstName + 'Updated';
 
     const updateUserPayload = {
-      id: user.id,
       currentPassword: password,
       firstName: newfirstName,
       lastName: user.lastName + 'Updated',
@@ -62,7 +61,7 @@ describe('User controller tests', () => {
       birthDate: '1999-12-29',
     };
 
-    const res = await axios.put(`${URL}/users`, updateUserPayload, {
+    const res = await axios.patch(`${URL}/users`, updateUserPayload, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },

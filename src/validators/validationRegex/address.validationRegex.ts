@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
 import { validationRegex } from '../validator';
+
+dotenv.config();
+const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
 const addressValidationRegex: validationRegex[] = [
   {
@@ -9,7 +13,7 @@ const addressValidationRegex: validationRegex[] = [
     field: 'state',
     validations: [
       {
-        regex: '^[A-Za-z]{2}$',
+        regex: `^[${defaultRegexForNames}]{2}$`,
       },
     ],
   },
@@ -17,7 +21,7 @@ const addressValidationRegex: validationRegex[] = [
     field: 'neighbourhood',
     validations: [
       {
-        regex: '^[A-Za-z0-9 ]{4,255}$',
+        regex: `^[${defaultRegexForNames} ]{4,255}$`,
       },
     ],
   },
@@ -25,7 +29,7 @@ const addressValidationRegex: validationRegex[] = [
     field: 'street',
     validations: [
       {
-        regex: '^[A-Za-z0-9 ]{4,255}$',
+        regex: `^[${defaultRegexForNames}. ]{4,255}$`,
       },
     ],
   },

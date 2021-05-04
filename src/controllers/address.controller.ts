@@ -55,16 +55,24 @@ class AddressController {
     }
 
     try {
+      /**
+       * TODO: select all addresses (not just the main), so that
+       * it won't need to query again for addressWithSamezipCode
+       */
       const addresses = await addressRepository.find({
-        where: { isMain: true },
+        where: {
+          isMain: true,
+          user: { id: user.id },
+        },
       });
 
       /**
        * Checking for duplicated zipCodes.
        */
-      const addressWithSamezipCode = await addresses.find(
-        (a) => a.zipCode === address.zipCode,
-      );
+      // TODO: remove this query
+      const addressWithSamezipCode = await addressRepository.findOne({
+        where: { zipCode: data.zipCode, user: { id: user.id } },
+      });
 
       if (addressWithSamezipCode) {
         return unprocessableEntity({
@@ -97,7 +105,6 @@ class AddressController {
         address,
       });
     } catch (err) {
-      console.log(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);
@@ -148,9 +155,10 @@ class AddressController {
 
   public static async update(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
+    const addressId: number = Number(req.params.id);
 
     const data: updateAddressPayload = {
-      id: Number(req.params.id),
+      id: addressId,
       country: req.body.country,
       zipCode: req.body.zipCode,
       state: req.body.state,
@@ -171,7 +179,7 @@ class AddressController {
       }).send(res);
     }
 
-    if (!req.body.id) {
+    if (!addressId) {
       return unprocessableEntity({
         message: getMessage(addressMessages.invalidId, address),
       }).send(res);
@@ -188,7 +196,10 @@ class AddressController {
     address.user = user;
 
     const addresses = await addressRepository.find({
-      where: { id: Not(address.id) },
+      where: {
+        id: Not(address.id),
+        user: { id: user.id },
+      },
       order: { id: 'DESC' },
     });
 
@@ -260,7 +271,13 @@ class AddressController {
 
   public static async delete(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const address = await addressRepository.findOne(req.params.id);
+    const addressId: number = Number(req.params.id);
+    let user: User | null = getUserData(req.headers.authorization);
+
+    const address = await addressRepository.findOne({
+      id: addressId,
+      user: { id: user.id },
+    });
 
     /**
      * If the main address is being deleted, we should set a new one
@@ -268,7 +285,7 @@ class AddressController {
      */
     if (address && address.isMain) {
       const addresses = await addressRepository.find({
-        where: { id: Not(req.params.id) },
+        where: { id: Not(addressId), user: { id: user.id } },
         order: {
           id: 'DESC',
         },
@@ -282,10 +299,11 @@ class AddressController {
     }
 
     try {
-      await addressRepository.delete(req.params.id);
+      await addressRepository.delete(addressId);
+
       return res
         .status(200)
-        .json({ message: getMessage(addressMessages.indeletedvalidId) });
+        .json({ message: getMessage(addressMessages.deleted) });
     } catch (err) {
       console.log(err);
       return internalServerError({

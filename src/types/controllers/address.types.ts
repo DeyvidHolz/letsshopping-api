@@ -9,7 +9,7 @@ type createAddressPayload = {
 };
 
 type updateAddressPayload = {
-  id: number;
+  id?: number;
   country: string;
   zipCode: string;
   state: string;

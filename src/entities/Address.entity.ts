@@ -43,11 +43,13 @@ export class Address {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => User, (user) => user.addresses)
+  @ManyToOne(() => User, (user) => user.addresses, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   user: User;
 
   @ManyToOne(() => Order, (order) => order.address)
-  @JoinColumn()
+  @JoinTable()
   orders: Order[];
 }

@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/all', AuthMiddleware, AddressController.getAll);
 router.delete('/:id', AddressController.delete);
 router.get('/:id', AuthMiddleware, AddressController.get);
-router.post('/', AddressController.create);
+router.post('/', AuthMiddleware, AddressController.create);
 router.patch('/:id', AuthMiddleware, AddressController.update);
 
 export default router;

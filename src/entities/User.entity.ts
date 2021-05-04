@@ -48,6 +48,7 @@ export class User {
 
   @OneToMany(() => Address, (address) => address.user, {
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   addresses: Address[];
