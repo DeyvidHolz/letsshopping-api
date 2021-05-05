@@ -34,7 +34,7 @@ class CartController {
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
 
-    const productId: number = Number(req.params.id);
+    const productCode: string = req.params.code;
     const quantityConverted = Number(req.body.quantity);
     const productQuantity: number = isNaN(quantityConverted)
       ? 1
@@ -45,7 +45,7 @@ class CartController {
     });
 
     const currentCartProduct = cart.cartProducts.find((cp) => {
-      return Number(cp.product.id) === productId;
+      return cp.product.code === productCode;
     });
 
     if (currentCartProduct) {
@@ -69,9 +69,17 @@ class CartController {
 
       await cartProductRepository.save(currentCartProduct);
     } else {
-      const product = await productRepository.findOne(productId);
+      const product = await productRepository.findOne({ code: productCode });
+
+      if (!product)
+        return notFound({
+          message: getMessage(cartMessages.productNotFound, {
+            code: productCode,
+          }),
+        }).send(res);
+
       const cartProduct = new CartProduct();
-      cartProduct.quantity = req.body.quantity || 1;
+      cartProduct.quantity = productQuantity || 1;
       cartProduct.product = product;
       cartProduct.cart = cart;
 
@@ -106,18 +114,24 @@ class CartController {
 
   public static async removeProduct(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
-    const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
 
-    const productId: number = Number(req.params.id);
+    const productCode: string = req.params.code;
 
     const cart = await cartRepository.findOne({
       where: { user: { id: userData.id } },
     });
 
     const currentCartProductIndex = cart.cartProducts.findIndex(
-      (cp) => Number(cp.product.id) === productId,
+      (cp) => cp.product.code === productCode,
     );
+
+    if (currentCartProductIndex === -1)
+      return notFound({
+        message: getMessage(cartMessages.productNotFound, {
+          code: productCode,
+        }),
+      }).send(res);
 
     cart.cartProducts.splice(currentCartProductIndex, 1);
     cart.total = calculateTotal(cart);
@@ -133,11 +147,10 @@ class CartController {
 
   public static async updateProduct(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
-    const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
     const userData = getUserData(req.headers.authorization);
 
-    const productId: number = Number(req.params.id);
+    const productCode: string = req.params.code;
     const productQuantity = Number(req.body.quantity);
 
     const cart = await cartRepository.findOne({
@@ -147,7 +160,7 @@ class CartController {
     let index = null;
     const currentCartProduct = cart.cartProducts.find((cp, i) => {
       index = i;
-      return Number(cp.product.id) === productId;
+      return cp.product.code === productCode;
     });
 
     if (!req.body.quantity) {
@@ -161,7 +174,9 @@ class CartController {
 
     if (!currentCartProduct) {
       return notFound({
-        message: `The product with ID ${productId} is not in your cart.`,
+        message: getMessage(cartMessages.productNotFound, {
+          code: productCode,
+        }),
       }).send(res);
     }
 
@@ -181,8 +196,8 @@ class CartController {
     }
 
     if (currentCartProduct) {
-      currentCartProduct.quantity = req.body.quantity;
-      cart.cartProducts[index].quantity = req.body.quantity;
+      currentCartProduct.quantity = productQuantity;
+      cart.cartProducts[index].quantity = productQuantity;
       cartProductRepository.save(currentCartProduct);
     }
 

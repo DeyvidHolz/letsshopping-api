@@ -6,6 +6,11 @@ const cartMessages: messages = {
   productRemoved: 'Product removed from your cart.',
   cartCleared: 'Your cart has been cleared.',
 
+  productNotFound: {
+    msg: 'Product with code {code} not found.',
+    replace: [{ from: 'code', to: 'code' }],
+  },
+
   notEnoughStock: {
     msg: 'We do not have as many {name} as you want.',
     replace: [{ from: 'name', to: 'name' }],
