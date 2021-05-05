@@ -1,16 +1,12 @@
 import { Cart } from '../entities/Cart.entity';
+import { CartProduct } from '../entities/CartProduct.entity';
 
 const calculateTotal = (cart: Cart) => {
-  let total = 0;
+  let total: number = 0;
 
-  if (cart.cartProducts) {
-    cart.cartProducts.reduce((current, next) => {
-      total +=
-        current.product.price * current.quantity +
-        next.product.price * current.quantity;
-      return current;
-    }, cart.cartProducts[0]);
-  }
+  cart.cartProducts.forEach(
+    (cp: CartProduct) => (total += cp.product.price * cp.quantity),
+  );
 
   return total;
 };
