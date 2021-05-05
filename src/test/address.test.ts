@@ -1,7 +1,8 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 import { Address } from '../entities/Address.entity';
+import RequestNotExpected from '../errors/test/requestNotExpected.error';
 import {
   createAddressPayload,
   updateAddressPayload,
@@ -74,9 +75,13 @@ describe('Address routes tests', () => {
       number: 410,
     };
 
-    const res = await axios.post(`${URL}/addresses`, createAddressPayload, {
-      headers,
-    });
+    const res: AxiosResponse = await axios.post(
+      `${URL}/addresses`,
+      createAddressPayload,
+      {
+        headers,
+      },
+    );
 
     expect(res.status).toBe(201);
     expect(res.data.address).toHaveProperty('isMain');
@@ -95,9 +100,13 @@ describe('Address routes tests', () => {
       number: 410,
     };
 
-    const res = await axios.post(`${URL}/addresses`, createAddressPayload, {
-      headers,
-    });
+    const res: AxiosResponse = await axios.post(
+      `${URL}/addresses`,
+      createAddressPayload,
+      {
+        headers,
+      },
+    );
 
     expect(res.status).toBe(201);
     expect(res.data.address).toHaveProperty('isMain');
@@ -119,7 +128,7 @@ describe('Address routes tests', () => {
       isMain: true,
     };
 
-    const res = await axios.patch(
+    const res: AxiosResponse = await axios.patch(
       `${URL}/addresses/${id}`,
       updateAddressPayload,
       {
@@ -139,7 +148,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should have only one main address', async () => {
-    const res = await axios.get(`${URL}/addresses/all`, {
+    const res: AxiosResponse = await axios.get(`${URL}/addresses/all`, {
       headers,
     });
 
@@ -152,7 +161,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should get all addresses', async () => {
-    const res = await axios.get(`${URL}/addresses/all`, {
+    const res: AxiosResponse = await axios.get(`${URL}/addresses/all`, {
       headers,
     });
 
@@ -163,7 +172,7 @@ describe('Address routes tests', () => {
   it('Should get a specific address', async () => {
     const { id } = createdAddresses[0];
 
-    const res = await axios.get(`${URL}/addresses/${id}`, {
+    const res: AxiosResponse = await axios.get(`${URL}/addresses/${id}`, {
       headers,
     });
 
@@ -185,7 +194,12 @@ describe('Address routes tests', () => {
       .post(`${URL}/addresses`, createAddressPayload, {
         headers,
       })
-      .catch((err) => {
+      .then(() => {
+        throw new RequestNotExpected(
+          'Should not create addresses with same ZIP Code',
+        );
+      })
+      .catch((err: AxiosError) => {
         expect(err.response.status).toBe(422);
         done();
       });
@@ -205,7 +219,10 @@ describe('Address routes tests', () => {
       .post(`${URL}/addresses`, createAddressPayload, {
         headers,
       })
-      .catch((err) => {
+      .then(() => {
+        throw new RequestNotExpected('Should not create invalid addresses');
+      })
+      .catch((err: AxiosError) => {
         expect(err.response.status).toBe(422);
         done();
       });
@@ -213,7 +230,7 @@ describe('Address routes tests', () => {
 
   it('Should delete an address', async () => {
     const { id } = createdAddresses[0];
-    const res = await axios.delete(`${URL}/addresses/${id}`, {
+    const res: AxiosResponse = await axios.delete(`${URL}/addresses/${id}`, {
       headers,
     });
 
