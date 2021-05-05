@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 import { User } from '../entities/User.entity';
@@ -28,7 +28,10 @@ describe('User routes tests', () => {
       birthDate: '1999-12-09',
     };
 
-    const res = await axios.post(`${URL}/users`, createUserPayload);
+    const res: AxiosResponse = await axios.post(
+      `${URL}/users`,
+      createUserPayload,
+    );
 
     expect(res.status).toBe(201);
     expect(res.data.user.id).toBeGreaterThan(0);
@@ -42,7 +45,7 @@ describe('User routes tests', () => {
       password,
     };
 
-    const res = await axios.post(`${URL}/auth`, authUserPayload);
+    const res: AxiosResponse = await axios.post(`${URL}/auth`, authUserPayload);
 
     expect(res.status).toBe(200);
     expect(res.data).toHaveProperty('token');
@@ -61,11 +64,15 @@ describe('User routes tests', () => {
       birthDate: '1999-12-29',
     };
 
-    const res = await axios.patch(`${URL}/users`, updateUserPayload, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
+    const res: AxiosResponse = await axios.patch(
+      `${URL}/users`,
+      updateUserPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
       },
-    });
+    );
 
     expect(res.status).toBe(200);
     expect(res.data.user.firstName).toBe(newfirstName);
@@ -118,7 +125,7 @@ describe('User routes tests', () => {
   });
 
   it('Should delete user', async () => {
-    const res = await axios.delete(`${URL}/users`, {
+    const res: AxiosResponse = await axios.delete(`${URL}/users`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
