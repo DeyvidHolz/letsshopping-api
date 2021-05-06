@@ -1,11 +1,11 @@
-type createShopInfoPayload = {
+type createShopInfoDto = {
   name: string;
   phones: [{ value: string }];
   emails: [{ value: string }];
   socials: [{ name: string; value: string }];
 };
 
-type updateShopInfoPayload = {
+type updateShopInfoDto = {
   id: number;
   name: string;
   phones: [{ value: string }];
@@ -13,4 +13,4 @@ type updateShopInfoPayload = {
   socials: [{ name: string; value: string }];
 };
 
-export { createShopInfoPayload, updateShopInfoPayload };
+export { createShopInfoDto, updateShopInfoDto };

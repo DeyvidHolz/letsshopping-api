@@ -1,11 +1,11 @@
-type createProductReviewPayload = {
+type createProductReviewDto = {
   title: string;
   rating: number;
   description?: string;
   product?: { id: string };
 };
 
-type updateProductReviewPayload = {
+type updateProductReviewDto = {
   id: number;
   title: string;
   rating: number;
@@ -13,4 +13,4 @@ type updateProductReviewPayload = {
   product?: { id: string };
 };
 
-export { createProductReviewPayload, updateProductReviewPayload };
+export { createProductReviewDto, updateProductReviewDto };

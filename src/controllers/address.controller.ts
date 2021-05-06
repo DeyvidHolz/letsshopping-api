@@ -8,10 +8,7 @@ import { Address } from '../entities/Address.entity';
 import { User } from '../entities/User.entity';
 import unauthorized from '../errors/http/unauthorized';
 import { getUserData } from '../helpers/auth.helper';
-import {
-  createAddressPayload,
-  updateAddressPayload,
-} from '../types/controllers/address.types';
+import { createAddressDto, updateAddressDto } from '../dto/address.types';
 import AddressValidator from '../validators/address.validator';
 import { getMessage } from '../helpers/messages.helper';
 import addressMessages from '../messages/address.messages';
@@ -23,7 +20,7 @@ class AddressController {
 
   public static async create(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const data: createAddressPayload = {
+    const data: createAddressDto = {
       country: req.body.country,
       zipCode: req.body.zipCode,
       state: req.body.state,
@@ -157,7 +154,7 @@ class AddressController {
     const addressRepository = AddressController.getRepository();
     const addressId: number = Number(req.params.id);
 
-    const data: updateAddressPayload = {
+    const data: updateAddressDto = {
       id: addressId,
       country: req.body.country,
       zipCode: req.body.zipCode,
