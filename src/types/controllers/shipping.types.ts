@@ -1,4 +1,4 @@
-type createShippingDto = {
+type createShippingPayload = {
   order: { id: number };
   status: number;
   events: [
@@ -10,7 +10,7 @@ type createShippingDto = {
   ];
 };
 
-type updateShippingDto = {
+type updateShippingPayload = {
   id: number;
   status: number;
   events: [
@@ -22,4 +22,4 @@ type updateShippingDto = {
   ];
 };
 
-export { createShippingDto, updateShippingDto };
+export { createShippingPayload, updateShippingPayload };

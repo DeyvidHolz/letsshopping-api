@@ -8,7 +8,10 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import categoryMessages from '../messages/category.messages';
-import { createCategoryDto, updateCategoryDto } from '../dto/category.types';
+import {
+  createCategoryPayload,
+  updateCategoryPayload,
+} from '../types/controllers/category.types';
 
 class CategoryController {
   private static getRepository() {
@@ -18,7 +21,7 @@ class CategoryController {
   public static async create(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
 
-    const data: createCategoryDto = {
+    const data: createCategoryPayload = {
       name: req.body.name,
       shortDescription: req.body.shortDescription,
       description: req.body.description,
@@ -131,7 +134,7 @@ class CategoryController {
       }).send(res);
     }
 
-    const data: updateCategoryDto = {
+    const data: updateCategoryPayload = {
       id: Number(req.params.id),
       name: req.body.name,
       shortDescription: req.body.shortDescription,

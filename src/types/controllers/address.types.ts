@@ -1,4 +1,4 @@
-type createAddressDto = {
+type createAddressPayload = {
   country: string;
   zipCode: string;
   state: string;
@@ -8,7 +8,7 @@ type createAddressDto = {
   isMain?: boolean;
 };
 
-type updateAddressDto = {
+type updateAddressPayload = {
   id?: number;
   country: string;
   zipCode: string;
@@ -19,4 +19,4 @@ type updateAddressDto = {
   isMain?: boolean;
 };
 
-export { createAddressDto, updateAddressDto };
+export { createAddressPayload, updateAddressPayload };

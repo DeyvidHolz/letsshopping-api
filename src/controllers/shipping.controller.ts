@@ -5,7 +5,10 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import notFound from '../errors/http/notFound.error';
 import { Order } from '../entities/Order.entity';
 import { Shipping } from '../entities/Shipping.entity';
-import { createShippingDto, updateShippingDto } from '../dto/shipping.types';
+import {
+  createShippingPayload,
+  updateShippingPayload,
+} from '../types/controllers/shipping.types';
 import { getMessage } from '../helpers/messages.helper';
 import shippingMessages from '../messages/shipping.messages';
 import ShippingValidator from '../validators/shipping.validator';
@@ -35,7 +38,7 @@ class ShippingController {
 
     req.body.orderId = { id: req.body.orderId };
 
-    const data: createShippingDto = {
+    const data: createShippingPayload = {
       order: req.body.orderId,
       status: req.body.status,
       events: req.body.events,
@@ -81,7 +84,7 @@ class ShippingController {
         }),
       }).send(res);
 
-    const data: updateShippingDto = {
+    const data: updateShippingPayload = {
       id: shippingId,
       status: req.body.status,
       events: req.body.events,

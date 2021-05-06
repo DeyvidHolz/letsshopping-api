@@ -5,7 +5,10 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { Coupon } from '../entities/Coupon.entity';
-import { createCouponDto, updateCouponDto } from '../dto/coupon.types';
+import {
+  createCouponPayload,
+  updateCouponPayload,
+} from '../types/controllers/coupon.types';
 import { getMessage } from '../helpers/messages.helper';
 import couponMessages from '../messages/coupon.messages';
 import CouponValidator from '../validators/coupon.validator';
@@ -17,7 +20,7 @@ class CouponController {
 
   public static async create(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const data: createCouponDto = {
+    const data: createCouponPayload = {
       code: req.body.code,
       name: req.body.name,
       description: req.body.description,
@@ -90,7 +93,7 @@ class CouponController {
       }).send(res);
     }
 
-    const data: updateCouponDto = {
+    const data: updateCouponPayload = {
       id: couponId,
       code: req.body.code,
       name: req.body.name,

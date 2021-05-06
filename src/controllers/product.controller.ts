@@ -8,7 +8,10 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
-import { createProductDto, updateProductDto } from '../dto/product.types';
+import {
+  createProductPayload,
+  updateProductPayload,
+} from '../types/controllers/product.types';
 
 class ProductController {
   private static getRepository() {
@@ -23,7 +26,7 @@ class ProductController {
         id: categoryId,
       }));
 
-    const data: createProductDto = {
+    const data: createProductPayload = {
       code: req.body.code,
       name: req.body.name,
       shortDescription: req.body.shortDescription,
@@ -128,7 +131,7 @@ class ProductController {
         id: categoryId,
       }));
 
-    const data: updateProductDto = {
+    const data: updateProductPayload = {
       id: Number(req.params.id),
       code: req.body.code,
       name: req.body.name,

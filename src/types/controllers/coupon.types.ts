@@ -1,4 +1,4 @@
-type createCouponDto = {
+type createCouponPayload = {
   code: string;
   name: string;
   description?: string;
@@ -10,7 +10,7 @@ type createCouponDto = {
   ruleMinPrice?: number;
 };
 
-type updateCouponDto = {
+type updateCouponPayload = {
   id: number;
   code: string;
   name: string;
@@ -23,4 +23,4 @@ type updateCouponDto = {
   ruleMinPrice?: number;
 };
 
-export { createCouponDto, updateCouponDto };
+export { createCouponPayload, updateCouponPayload };

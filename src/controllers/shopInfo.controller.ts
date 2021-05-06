@@ -3,7 +3,10 @@ import { Request, Response } from 'express';
 
 import internalServerError from '../errors/http/internalServer.error';
 import { ShopInfo } from '../entities/ShopInfo.entity';
-import { createShopInfoDto, updateShopInfoDto } from '../dto/shopInfo.types';
+import {
+  createShopInfoPayload,
+  updateShopInfoPayload,
+} from '../types/controllers/shopInfo.types';
 import { getMessage } from '../helpers/messages.helper';
 import shopInfoMessages from '../messages/shopInfo.messages';
 import ShopInfoValidator from '../validators/shopInfo.validator';
@@ -17,7 +20,7 @@ class ShopInfoController {
   public static async create(req: Request, res: Response) {
     const shopInfoRepository = ShopInfoController.getRepository();
 
-    const data: createShopInfoDto = {
+    const data: createShopInfoPayload = {
       name: req.body.name,
       phones: req.body.phones,
       emails: req.body.emails,
@@ -66,7 +69,7 @@ class ShopInfoController {
     const shopInfoRepository = ShopInfoController.getRepository();
     req.body.id = 1;
 
-    const data: updateShopInfoDto = {
+    const data: updateShopInfoPayload = {
       id: req.body.id,
       name: req.body.name,
       phones: req.body.phones,
