@@ -6,9 +6,9 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { ProductReview } from '../entities/ProductReview.entity';
 import {
-  createProductReviewPayload,
-  updateProductReviewPayload,
-} from '../types/controllers/productReview.types';
+  createProductReviewDto,
+  updateProductReviewDto,
+} from '../dto/productReview.dto';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/productReview.messages';
 import ProductReviewValidator from '../validators/productReview.validator';
@@ -29,7 +29,7 @@ class ProductReviewController {
 
     req.body.product = { id: req.body.product_id };
 
-    const data: createProductReviewPayload = {
+    const data: createProductReviewDto = {
       title: req.body.title,
       rating: req.body.rating,
       description: req.body.description,
@@ -93,7 +93,7 @@ class ProductReviewController {
 
     // req.body.product = { id: req.body.product_id };
 
-    const data: updateProductReviewPayload = {
+    const data: updateProductReviewDto = {
       id: productReviewId,
       title: req.body.title,
       rating: req.body.rating,

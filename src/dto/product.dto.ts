@@ -1,6 +1,6 @@
 import { option } from '../entities/productOptionIn.types';
 
-type createProductPayload = {
+type createProductDto = {
   code: string;
   name: string;
   shortDescription: string;
@@ -17,7 +17,7 @@ type createProductPayload = {
   options: option;
 };
 
-type updateProductPayload = {
+type updateProductDto = {
   id: number;
   code: string;
   name: string;
@@ -35,4 +35,4 @@ type updateProductPayload = {
   options: option;
 };
 
-export { createProductPayload, updateProductPayload };
+export { createProductDto, updateProductDto };
