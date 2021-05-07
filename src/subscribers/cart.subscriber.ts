@@ -29,6 +29,9 @@ export class PostSubscriber implements EntitySubscriberInterface<Cart> {
     let product: Product | null = null;
     let quantity: number | null = null;
 
+    // Table is being created
+    if (!event.entity.cartProducts) return;
+
     // Cart is empty
     if (!event.entity.cartProducts.length) {
       // A product is being added to the cart
