@@ -150,7 +150,7 @@ createConnection().then((connection) => {
       }
 
       const permissionGroup = await permissionGroupRepository.findOne({
-        where: { name: process.env.DEFAULT_PERMISSION_GROUP },
+        where: { name: process.env.DEFAULT_ADMIN_PERMISSION_GROUP },
       });
 
       // Creating a cart for admin user
