@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const shopEmailValidationRegex: validationRegex[] = [
+const shopEmailValidationRegex: ValidationRegex[] = [
   {
     field: 'value',
     regex: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9]+$',

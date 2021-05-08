@@ -18,21 +18,6 @@ class AddressController {
 
   public static async create(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const data: CreateAddressDto = {
-      country: req.body.country,
-      zipCode: req.body.zipCode,
-      state: req.body.state,
-      neighbourhood: req.body.neighbourhood,
-      street: req.body.street,
-      number: req.body.number,
-      isMain: req.body.isMain || false,
-    };
-
-    if (!req.user) {
-      return unauthorized({
-        message: 'Invalid authentication token.',
-      }).send(res);
-    }
 
     const address = addressRepository.create(req.dto as Address);
     address.user = req.user as User;
@@ -54,7 +39,7 @@ class AddressController {
        */
       // TODO: remove this query
       const addressWithSamezipCode = await addressRepository.findOne({
-        where: { zipCode: data.zipCode, user: { id: req.user.id } },
+        where: { zipCode: req.dto.zipCode, user: { id: req.user.id } },
       });
 
       if (addressWithSamezipCode) {
@@ -99,12 +84,6 @@ class AddressController {
   public static async get(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
 
-    if (!req.user) {
-      return unauthorized({
-        message: 'Invalid authentication token.',
-      }).send(res);
-    }
-
     const addressId: number = (req.params.id as unknown) as number;
     const address = await addressRepository.findOne({
       id: addressId,
@@ -119,12 +98,6 @@ class AddressController {
   public static async getAll(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
 
-    if (!req.user) {
-      return unauthorized({
-        message: 'Invalid authentication token.',
-      }).send(res);
-    }
-
     const addresses = await addressRepository.find({
       where: {
         user: { id: req.user.id },
@@ -136,22 +109,6 @@ class AddressController {
 
   public static async update(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const addressId: number = Number(req.params.id);
-    req.dto.id = addressId;
-
-    if (!addressId || isNaN(addressId)) {
-      return unprocessableEntity({
-        message: getMessage(addressMessages.invalidId, { id: addressId }),
-      }).send(res);
-    }
-
-    // TODO: put this in a middleware (globally)
-    if (!req.user) {
-      return unauthorized({
-        message: 'Invalid authentication token.',
-      }).send(res);
-    }
-
     const address = addressRepository.create(req.dto as Address);
     address.user = req.user;
 

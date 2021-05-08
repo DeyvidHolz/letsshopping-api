@@ -13,6 +13,10 @@ const productMessages: messages = {
   invalidSearchCriteria: 'Invalid search criteria.',
   alreadyExists: 'This code is already in use.',
   alreadyDeleted: 'Invalid token or product already deleted.',
+  notFound: {
+    msg: 'Product with {code} not found.',
+    replace: [{ from: 'code', to: 'code' }],
+  },
 
   searchByIDNotFound: {
     msg: 'Product with ID or Code {id} not found.',

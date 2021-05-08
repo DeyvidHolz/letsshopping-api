@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
 dotenv.config();
 const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
-const productOptionValueValidationRegex: validationRegex[] = [
+const productOptionValueValidationRegex: ValidationRegex[] = [
   {
     field: 'value',
     validations: [

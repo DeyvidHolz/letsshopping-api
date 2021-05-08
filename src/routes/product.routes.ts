@@ -3,6 +3,7 @@ import ProductController from '../controllers/product.controller';
 import AdminMiddleware from '../middlewares/admin.middleware';
 
 import AuthMiddleware from '../middlewares/auth.middleware';
+import ProductValidatorMiddleware from '../middlewares/validators/productValidator.middleware';
 
 const router = express.Router();
 
@@ -24,7 +25,20 @@ router.delete(
   ProductController.delete,
 );
 
-router.post('/', AuthMiddleware, AdminMiddleware, ProductController.create);
-router.patch('/:id', AuthMiddleware, AdminMiddleware, ProductController.update);
+router.post(
+  '/',
+  AuthMiddleware,
+  AdminMiddleware,
+  ProductValidatorMiddleware.create,
+  ProductController.create,
+);
+
+router.patch(
+  '/:id',
+  AuthMiddleware,
+  AdminMiddleware,
+  ProductValidatorMiddleware.update,
+  ProductController.update,
+);
 
 export default router;

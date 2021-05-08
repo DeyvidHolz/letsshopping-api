@@ -17,23 +17,7 @@ class CategoryController {
 
   public static async create(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-
-    const data: CreateCategoryDto = {
-      name: req.body.name,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-    };
-
-    const category = categoryRepository.create((data as unknown) as Category);
-
-    const validation = new CategoryValidator(category);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(categoryMessages.invalidData),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const category = categoryRepository.create(req.dto as Category);
 
     try {
       await categoryRepository.save(category);
@@ -81,7 +65,7 @@ class CategoryController {
 
   public static async getAll(req: Request, res: Response) {
     const includeProducts: boolean =
-      req.query['include-products'] === 'true' ? true : false;
+      req.query.includeProducts === 'true' ? true : false;
 
     const categories: Category[] = await CategoryController.getRepository().find(
       {
@@ -95,7 +79,7 @@ class CategoryController {
 
   public static async searchByName(req: Request, res: Response) {
     const includeProducts: boolean =
-      req.query['include-products'] === 'true' ? true : false;
+      req.query.includeProducts === 'true' ? true : false;
 
     if (!req.query.name)
       return unprocessableEntity({ message: 'Invalid search criteria.' }).send(
@@ -122,38 +106,15 @@ class CategoryController {
 
   public static async update(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-    const categoryIDisEmpty =
-      req.params.id === undefined || req.params.id === '';
+    const category = await categoryRepository.create(req.dto as Category);
 
-    if (categoryIDisEmpty) {
-      return unprocessableEntity({
-        message: "Field 'id' is required.",
-      }).send(res);
-    }
-
-    const data: UpdateCategoryDto = {
-      id: Number(req.params.id),
-      name: req.body.name,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-    };
-
-    const category = await categoryRepository.create(data as Category);
-
+    // ! useless if statement
+    // TODO: query category instead of just use .create, then update data. Keep this 'if'.
     if (!category) {
       return notFound({
         message: getMessage(categoryMessages.searchByIDNotFound, {
           id: Number(req.body.id),
         }),
-      }).send(res);
-    }
-
-    const validation = new CategoryValidator(category, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(categoryMessages.invalidData),
-        errors: validation.validationErrors,
       }).send(res);
     }
 
@@ -170,9 +131,9 @@ class CategoryController {
 
   public static async delete(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
+    const id = Number(req.params.id);
 
     try {
-      const id = Number(req.params.id);
       await categoryRepository.delete({ id });
 
       return res.status(200).json({

@@ -33,4 +33,6 @@ export class ProductReview {
   @ManyToOne(() => Product, (product) => product.reviews)
   @JoinTable()
   product: Product;
+
+  // TODO: relation with user.
 }

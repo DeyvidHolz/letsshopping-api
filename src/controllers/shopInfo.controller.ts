@@ -16,24 +16,7 @@ class ShopInfoController {
 
   public static async create(req: Request, res: Response) {
     const shopInfoRepository = ShopInfoController.getRepository();
-
-    const data: CreateShopInfoDto = {
-      name: req.body.name,
-      phones: req.body.phones,
-      emails: req.body.emails,
-      socials: req.body.socials,
-    };
-
-    const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
-
-    const validation = new ShopInfoValidator(shopInfo);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const shopInfo = shopInfoRepository.create(req.dto as ShopInfo);
 
     try {
       await shopInfoRepository.save(shopInfo);
@@ -64,26 +47,7 @@ class ShopInfoController {
 
   public static async update(req: Request, res: Response) {
     const shopInfoRepository = ShopInfoController.getRepository();
-    req.body.id = 1;
-
-    const data: UpdateShopInfoDto = {
-      id: req.body.id,
-      name: req.body.name,
-      phones: req.body.phones,
-      emails: req.body.emails,
-      socials: req.body.socials,
-    };
-
-    const shopInfo = shopInfoRepository.create((data as unknown) as ShopInfo);
-
-    const validation = new ShopInfoValidator(shopInfo, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const shopInfo = shopInfoRepository.create(req.dto as ShopInfo);
 
     try {
       await shopInfoRepository.save(shopInfo);

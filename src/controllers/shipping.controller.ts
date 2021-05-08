@@ -18,13 +18,7 @@ class ShippingController {
   public static async create(req: Request, res: Response) {
     const shippingRepository = ShippingController.getRepository();
     const orderRepository = getConnection().getRepository(Order);
-
-    if (!req.body.orderId)
-      return unprocessableEntity({
-        message: getMessage(shippingMessages.invalidOrderId),
-      }).send(res);
-
-    const order = await orderRepository.findOne(req.body.orderId);
+    const order = await orderRepository.findOne(req.dto.order.id);
 
     if (!order)
       return notFound({
@@ -33,26 +27,8 @@ class ShippingController {
         }),
       }).send(res);
 
-    req.body.orderId = { id: req.body.orderId };
-
-    const data: CreateShippingDto = {
-      order: req.body.orderId,
-      status: req.body.status,
-      events: req.body.events,
-    };
-
-    const shipping = shippingRepository.create((data as unknown) as Shipping);
+    const shipping = shippingRepository.create(req.dto as Shipping);
     order.shipping = shipping;
-
-    const validation = new ShippingValidator(shipping);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
-
     await orderRepository.save(order);
 
     delete shipping.order;
@@ -65,41 +41,18 @@ class ShippingController {
 
   public static async update(req: Request, res: Response) {
     const shippingRepository = getConnection().getRepository(Shipping);
-    const shippingId: number = Number(req.params.id);
 
-    if (!shippingId)
-      return unprocessableEntity({
-        message: getMessage(shippingMessages.invalidId),
-      }).send(res);
-
-    const shipping = await shippingRepository.findOne(shippingId);
+    const shipping = await shippingRepository.findOne(req.dto.id);
 
     if (!shipping)
       return notFound({
         message: getMessage(shippingMessages.searchByIDNotFound, {
-          id: shippingId,
+          id: req.dto.id,
         }),
       }).send(res);
 
-    const data: UpdateShippingDto = {
-      id: shippingId,
-      status: req.body.status,
-      events: req.body.events,
-    };
-
-    const updatedShipping = shippingRepository.create(
-      (data as unknown) as Shipping,
-    );
-
-    const validation = new ShippingValidator(shipping, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
-
+    // TODO: some fields cannot be updated. Create something to handle it.
+    const updatedShipping = shippingRepository.create(req.dto as Shipping);
     await shippingRepository.save(updatedShipping);
 
     return res.status(200).json({

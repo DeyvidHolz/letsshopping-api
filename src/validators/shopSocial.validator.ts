@@ -1,4 +1,4 @@
-import { ShopSocial } from '../entities/ShopSocial.entity';
+import { CreateShopSocialInfoDto } from '../dto/shopSocial.dto';
 import shopSocialValidationRegex from './validationRegex/shopSocial.validationRegex';
 
 import {
@@ -9,12 +9,12 @@ import {
 } from './validator';
 
 export default class ShopSocialValidator extends Validator {
-  public data: ShopSocial;
+  public data: CreateShopSocialInfoDto;
   public validationErrors: ValidationMessages[] | null = null;
 
   protected validationRegex: ValidationRegex[] = shopSocialValidationRegex;
 
-  constructor(shopSocial: ShopSocial, updating: boolean = false) {
+  constructor(shopSocial: CreateShopSocialInfoDto, updating: boolean = false) {
     super();
     this.updating = updating;
     this.data = shopSocial;

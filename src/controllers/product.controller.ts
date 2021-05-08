@@ -17,31 +17,9 @@ class ProductController {
 
   public static async create(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
+    const product = productRepository.create(req.dto as Product);
 
-    if (req.body.categories)
-      req.body.categories = req.body.categories.map((categoryId) => ({
-        id: categoryId,
-      }));
-
-    const data: CreateProductDto = {
-      code: req.body.code,
-      name: req.body.name,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-      mainImage: req.body.mainImage,
-      isActive: req.body.isActive,
-      stock: req.body.stock,
-      price: req.body.price,
-      weight: req.body.weight,
-      width: req.body.width,
-      height: req.body.height,
-      categories: req.body.categories,
-      images: req.body.images,
-      options: req.body.options,
-    };
-
-    const product = productRepository.create((data as unknown) as Product);
-
+    // Updating stock based on options
     if (product.options && product.options.length) {
       product.stock = 0;
 
@@ -54,15 +32,6 @@ class ProductController {
           product.stock += productOptionStock.stock;
         }
       });
-    }
-
-    const validation = new ProductValidator(product);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(productMessages.invalidData),
-        errors: validation.validationErrors,
-      }).send(res);
     }
 
     try {
@@ -122,32 +91,10 @@ class ProductController {
 
   public static async update(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
+    const product = productRepository.create(req.dto as Product);
 
-    if (req.body.categories)
-      req.body.categories = req.body.categories.map((categoryId) => ({
-        id: categoryId,
-      }));
-
-    const data: UpdateProductDto = {
-      id: Number(req.params.id),
-      code: req.body.code,
-      name: req.body.name,
-      shortDescription: req.body.shortDescription,
-      description: req.body.description,
-      mainImage: req.body.mainImage,
-      isActive: req.body.isActive,
-      stock: req.body.stock,
-      price: req.body.price,
-      weight: req.body.weight,
-      width: req.body.width,
-      height: req.body.height,
-      categories: req.body.categories,
-      images: req.body.images,
-      options: req.body.options,
-    };
-
-    const product = productRepository.create((data as unknown) as Product);
-
+    // Updating stock based on options
+    // TODO: duplicated code. Put this in a helper or something like that.
     if (product.options && product.options.length) {
       product.stock = 0;
 
@@ -160,15 +107,6 @@ class ProductController {
           product.stock += productOptionStock.stock;
         }
       });
-    }
-
-    const validation = new ProductValidator(product, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(productMessages.invalidData),
-        errors: validation.validationErrors,
-      }).send(res);
     }
 
     try {
@@ -191,12 +129,13 @@ class ProductController {
 
   public static async delete(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
+    const productCode: string = req.params.code;
 
     try {
-      await productRepository.delete({ id: req.params.id });
+      await productRepository.delete({ code: productCode });
 
       return res.status(200).json({
-        message: getMessage(productMessages.deleted, { id: req.params.id }),
+        message: getMessage(productMessages.deleted, { code: productCode }),
       });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);

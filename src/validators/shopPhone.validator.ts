@@ -1,4 +1,4 @@
-import { ShopPhone } from '../entities/ShopPhone.entity';
+import { CreateShopPhoneInfoDto } from '../dto/shopPhone.dto';
 import shopPhoneValidationRegex from './validationRegex/shopPhone.validationRegex';
 
 import {
@@ -9,12 +9,12 @@ import {
 } from './validator';
 
 export default class ShopPhoneValidator extends Validator {
-  public data: ShopPhone;
+  public data: CreateShopPhoneInfoDto;
   public validationErrors: ValidationMessages[] | null = null;
 
   protected validationRegex: ValidationRegex[] = shopPhoneValidationRegex;
 
-  constructor(shopPhone: ShopPhone, updating: boolean = false) {
+  constructor(shopPhone: CreateShopPhoneInfoDto, updating: boolean = false) {
     super();
     this.updating = updating;
     this.data = shopPhone;

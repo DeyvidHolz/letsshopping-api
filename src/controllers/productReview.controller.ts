@@ -20,32 +20,9 @@ class ProductReviewController {
 
   public static async create(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
-
-    if (!req.body.product_id) {
-      return unprocessableEntity({
-        message: getMessage(productReviewMessages.productNotFound),
-      }).send(res);
-    }
-
-    req.body.product = { id: req.body.product_id };
-
-    const data: CreateProductReviewDto = {
-      title: req.body.title,
-      rating: req.body.rating,
-      description: req.body.description,
-      product: req.body.product,
-    };
-
-    const productReview = productReviewRepository.create(data as ProductReview);
-
-    const validation = new ProductReviewValidator(productReview);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const productReview = productReviewRepository.create(
+      req.dto as ProductReview,
+    );
 
     try {
       await productReviewRepository.save(productReview);
@@ -64,9 +41,13 @@ class ProductReviewController {
 
   public static async get(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
-    const productReview = await productReviewRepository.findOne(req.params.id, {
-      relations: ['product'],
-    });
+    // TODO: where user id.
+    const productReview = await productReviewRepository.findOne(
+      Number(req.params.id),
+      {
+        relations: ['product'],
+      },
+    );
 
     if (!productReview) {
       return notFound({
@@ -80,6 +61,7 @@ class ProductReviewController {
   public static async getAll(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
 
+    // TODO: where user id.
     const productReviews = await productReviewRepository.find({
       relations: ['product'],
     });
@@ -89,36 +71,9 @@ class ProductReviewController {
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
 
-    const productReviewId: number = Number(req.params.id);
-
-    // req.body.product = { id: req.body.product_id };
-
-    const data: UpdateProductReviewDto = {
-      id: productReviewId,
-      title: req.body.title,
-      rating: req.body.rating,
-      description: req.body.description,
-      // product: req.body.product,
-    };
-
     const productReview = productReviewRepository.create(
-      (data as unknown) as ProductReview,
+      req.dto as ProductReview,
     );
-
-    const validation = new ProductReviewValidator(productReview, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
-
-    if (!productReviewId) {
-      return unprocessableEntity({
-        message: getMessage(productReviewMessages.invalidId),
-      }).send(res);
-    }
 
     try {
       await productReviewRepository.save(productReview);

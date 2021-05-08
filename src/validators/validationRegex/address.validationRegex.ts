@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
 dotenv.config();
 const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
-const addressValidationRegex: validationRegex[] = [
+const addressValidationRegex: ValidationRegex[] = [
   {
     field: 'zipCode',
     validations: [{ regex: `^[0-9]{${process.env.COUNTRY_ZIP_CODE_LENGTH}}$` }],

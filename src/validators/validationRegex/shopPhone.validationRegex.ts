@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const shopPhoneValidationRegex: validationRegex[] = [
+const shopPhoneValidationRegex: ValidationRegex[] = [
   {
     field: 'value',
     regex: '^[0-9]+$',

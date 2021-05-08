@@ -17,28 +17,7 @@ class CouponController {
 
   public static async create(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const data: CreateCouponDto = {
-      code: req.body.code,
-      name: req.body.name,
-      description: req.body.description,
-      discountType: req.body.discountType,
-      discountAmount: req.body.discountAmount,
-      maxUsesPerUser: req.body.maxUsesPerUser,
-      maxUsers: req.body.maxUsers,
-      isActive: req.body.isActive,
-      ruleMinPrice: req.body.ruleMinPrice,
-    };
-
-    const coupon = couponRepository.create(data as Coupon);
-
-    const validation = new CouponValidator(coupon);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const coupon = couponRepository.create(req.dto as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -62,11 +41,12 @@ class CouponController {
 
   public static async get(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const coupon = await couponRepository.findOne(req.params.id);
+    const couponId: number = Number(req.params.id);
+    const coupon = await couponRepository.findOne(couponId);
 
     if (!coupon) {
       return notFound({
-        message: getMessage(couponMessages.notFound, { id: req.params.id }),
+        message: getMessage(couponMessages.notFound, { id: couponId }),
       }).send(res);
     }
 
@@ -84,35 +64,14 @@ class CouponController {
     const couponRepository = CouponController.getRepository();
     const couponId: number = Number(req.params.id);
 
-    if (!couponId) {
+    if (!couponId || isNaN(couponId)) {
       return unprocessableEntity({
         message: getMessage(couponMessages.invalidId, { id: couponId }),
       }).send(res);
     }
 
-    const data: UpdateCouponDto = {
-      id: couponId,
-      code: req.body.code,
-      name: req.body.name,
-      description: req.body.description,
-      discountType: req.body.discountType,
-      discountAmount: req.body.discountAmount,
-      maxUsesPerUser: req.body.maxUsesPerUser,
-      maxUsers: req.body.maxUsers,
-      isActive: req.body.isActive,
-      ruleMinPrice: req.body.ruleMinPrice,
-    };
-
-    const coupon = couponRepository.create(data as Coupon);
-
-    const validation = new CouponValidator(coupon, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    // TODO: query category instead of just use .create, then update data.
+    const coupon = couponRepository.create(req.dto as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -138,7 +97,7 @@ class CouponController {
     const couponRepository = CouponController.getRepository();
 
     try {
-      await couponRepository.delete(req.params.id);
+      await couponRepository.delete(Number(req.params.id));
       return res
         .status(200)
         .json({ message: getMessage(couponMessages.deleted) });

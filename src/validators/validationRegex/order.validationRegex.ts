@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const orderValidationRegex: validationRegex[] = [
+const orderValidationRegex: ValidationRegex[] = [
   {
     field: 'totalValue',
     validations: [{ regex: '^[0-9]+$' }],

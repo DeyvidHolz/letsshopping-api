@@ -3,9 +3,11 @@ import PermissionGroupController from '../controllers/permissionGroup.controller
 
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
+import PermissionGroupValidatorMiddleware from '../middlewares/validators/permissionGroupValidator.middleware';
 
 const router = express.Router();
 
+// TODO: middleware
 router.patch(
   '/set-group/:userId/:name',
   AuthMiddleware,
@@ -31,6 +33,7 @@ router.post(
   '/',
   AuthMiddleware,
   AdminMiddleware,
+  PermissionGroupValidatorMiddleware.create,
   PermissionGroupController.create,
 );
 
@@ -38,6 +41,7 @@ router.patch(
   '/:name',
   AuthMiddleware,
   AdminMiddleware,
+  PermissionGroupValidatorMiddleware.update,
   PermissionGroupController.update,
 );
 

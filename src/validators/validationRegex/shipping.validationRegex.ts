@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const shippingValidationRegex: validationRegex[] = [
+const shippingValidationRegex: ValidationRegex[] = [
   {
     field: 'status',
     validations: [{ regex: '^[0-4]{1}$' }],

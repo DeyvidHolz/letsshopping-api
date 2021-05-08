@@ -1,4 +1,4 @@
-import { ShopEmail } from '../entities/ShopEmail.entity';
+import { CreateShopEmailInfoDto } from '../dto/shopEmail.dto';
 import shopEmailValidationRegex from './validationRegex/shopEmail.validationRegex';
 
 import {
@@ -9,12 +9,12 @@ import {
 } from './validator';
 
 export default class ShopEmailValidator extends Validator {
-  public data: ShopEmail;
+  public data: CreateShopEmailInfoDto;
   public validationErrors: ValidationMessages[] | null = null;
 
   protected validationRegex: ValidationRegex[] = shopEmailValidationRegex;
 
-  constructor(shopEmail: ShopEmail, updating: boolean = false) {
+  constructor(shopEmail: CreateShopEmailInfoDto, updating: boolean = false) {
     super();
     this.updating = updating;
     this.data = shopEmail;

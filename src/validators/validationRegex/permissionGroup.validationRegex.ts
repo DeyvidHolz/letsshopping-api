@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const permissionGroupValidationRegex: validationRegex[] = [
+const permissionGroupValidationRegex: ValidationRegex[] = [
   {
     field: 'name',
     validations: [

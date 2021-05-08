@@ -1,12 +1,8 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-import decode from 'jwt-decode';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import unauthorized from '../errors/http/unauthorized';
-import { Coupon } from '../entities/Coupon.entity';
 import { Order } from '../entities/Order.entity';
 import { Cart } from '../entities/Cart.entity';
 import { User } from '../entities/User.entity';
@@ -30,6 +26,7 @@ class OrderController {
     const addressRepository = getConnection().getRepository(Address);
     const orderAddressRepository = getConnection().getRepository(OrderAddress);
 
+    // TODO: include middleware to validate this kind of stuff.
     if (!req.body.shippingAddressId)
       return unprocessableEntity({
         message: getMessage(orderMessages.invalidShippingAddress),

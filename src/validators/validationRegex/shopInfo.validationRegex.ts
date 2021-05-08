@@ -1,6 +1,6 @@
-import { validationRegex } from '../validator';
+import { ValidationRegex } from '../validator';
 
-const shopInfoValidationRegex: validationRegex[] = [
+const shopInfoValidationRegex: ValidationRegex[] = [
   {
     field: 'name',
     regex: '^.{4,60}$',

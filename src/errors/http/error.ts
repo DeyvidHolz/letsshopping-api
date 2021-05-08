@@ -1,13 +1,13 @@
 import { Response } from 'express';
-import { validationMessages } from '../../validators/validator';
+import { ValidationRegex } from '../../validators/validator';
 
 class HTTPError {
   public message!: string;
-  public errors?: validationMessages[];
+  public errors?: ValidationRegex[];
 
   private status: number;
 
-  constructor(message: string, errors?: validationMessages[]) {
+  constructor(message: string, errors?: ValidationRegex[]) {
     this.message = message;
     this.errors = errors;
   }
@@ -28,7 +28,7 @@ class HTTPError {
 
 type httpErrorData = {
   message: string;
-  errors?: validationMessages[];
+  errors?: ValidationRegex[];
 };
 
 function httpError(data: httpErrorData): HTTPError {
