@@ -1,27 +1,32 @@
-import validator from 'validator';
-import { ProductReview } from '../entities/ProductReview.entity';
+import {
+  CreateProductReviewDto,
+  UpdateProductReviewDto,
+} from '../dto/productReview.dto';
 import productReviewValidationRegex from './validationRegex/productReview.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ProductReviewValidator extends Validator {
-  public data: ProductReview;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateProductReviewDto | UpdateProductReviewDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = productReviewValidationRegex;
+  protected validationRegex: ValidationRegex[] = productReviewValidationRegex;
 
-  constructor(productReview: ProductReview, updating: boolean = false) {
+  constructor(
+    productReview: CreateProductReviewDto | UpdateProductReviewDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = productReview;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

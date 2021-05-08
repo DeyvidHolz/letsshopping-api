@@ -4,17 +4,17 @@ import addressValidationRegex from './validationRegex/address.validationRegex';
 import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class AddressValidator extends Validator {
   public data: CreateAddressDto | UpdateAddressDto;
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = addressValidationRegex;
+  protected validationRegex: ValidationRegex[] = addressValidationRegex;
 
   constructor(
     address: CreateAddressDto | UpdateAddressDto,
@@ -25,7 +25,7 @@ export default class AddressValidator extends Validator {
     this.data = address;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     if (!validator.isBoolean(String(this.data.isMain))) this.addError('isMain');

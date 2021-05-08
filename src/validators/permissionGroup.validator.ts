@@ -1,27 +1,32 @@
-import validator from 'validator';
-import { PermissionGroup } from '../entities/PermissionGroup.entity';
+import {
+  CreatePermissionGroupDto,
+  UpdatePermissionGroupDto,
+} from '../dto/permissionGroup.dto';
 import permissionGroupValidationRegex from './validationRegex/permissionGroup.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class PermissionGroupValidator extends Validator {
-  public data: PermissionGroup;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreatePermissionGroupDto | UpdatePermissionGroupDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = permissionGroupValidationRegex;
+  protected validationRegex: ValidationRegex[] = permissionGroupValidationRegex;
 
-  constructor(permissionGroup: PermissionGroup, updating: boolean = false) {
+  constructor(
+    permissionGroup: CreatePermissionGroupDto | UpdatePermissionGroupDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = permissionGroup;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

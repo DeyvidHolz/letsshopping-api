@@ -2,17 +2,17 @@ import { ShopEmail } from '../entities/ShopEmail.entity';
 import shopEmailValidationRegex from './validationRegex/shopEmail.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ShopEmailValidator extends Validator {
   public data: ShopEmail;
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = shopEmailValidationRegex;
+  protected validationRegex: ValidationRegex[] = shopEmailValidationRegex;
 
   constructor(shopEmail: ShopEmail, updating: boolean = false) {
     super();
@@ -20,7 +20,7 @@ export default class ShopEmailValidator extends Validator {
     this.data = shopEmail;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

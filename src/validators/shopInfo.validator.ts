@@ -1,28 +1,30 @@
-import validator from 'validator';
-import { ShopInfo } from '../entities/ShopInfo.entity';
+import { CreateShopInfoDto, UpdateShopInfoDto } from '../dto/shopInfo.dto';
 import ShopPhoneValidator from './shopPhone.validator';
 import shopInfoValidationRegex from './validationRegex/shopInfo.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ShopInfoValidator extends Validator {
-  public data: ShopInfo;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateShopInfoDto | UpdateShopInfoDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = shopInfoValidationRegex;
+  protected validationRegex: ValidationRegex[] = shopInfoValidationRegex;
 
-  constructor(shopInfo: ShopInfo, updating: boolean = false) {
+  constructor(
+    shopInfo: CreateShopInfoDto | UpdateShopInfoDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = shopInfo;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     // Implementing ShopPhone validations

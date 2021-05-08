@@ -1,21 +1,21 @@
-import { ProductOptionValue } from '../entities/ProductOptionValue.entity';
+import { CreateProductOptionValueDto } from '../dto/productOptionValue.dto';
 import productOptionValueValidationRegex from './validationRegex/productOptionValue.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ProductOptionValueValidator extends Validator {
-  public data: ProductOptionValue;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateProductOptionValueDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = productOptionValueValidationRegex;
+  protected validationRegex: ValidationRegex[] = productOptionValueValidationRegex;
 
   constructor(
-    productOptionValue: ProductOptionValue,
+    productOptionValue: CreateProductOptionValueDto,
     updating: boolean = false,
   ) {
     super();
@@ -23,7 +23,7 @@ export default class ProductOptionValueValidator extends Validator {
     this.data = productOptionValue;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

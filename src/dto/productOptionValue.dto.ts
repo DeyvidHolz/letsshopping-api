@@ -1,4 +1,4 @@
-type OptionValue = {
+type CreateProductOptionValueDto = {
   value: string;
   price: number;
   mainImage?: string;
@@ -6,4 +6,4 @@ type OptionValue = {
   stock: number;
 };
 
-export { OptionValue };
+export { CreateProductOptionValueDto };

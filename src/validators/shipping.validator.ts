@@ -1,27 +1,29 @@
-import validator from 'validator';
-import { Shipping } from '../entities/Shipping.entity';
+import { CreateShippingDto, UpdateShippingDto } from '../dto/shipping.dto';
 import shippingValidationRegex from './validationRegex/shipping.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ShippingValidator extends Validator {
-  public data: Shipping;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateShippingDto | UpdateShippingDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = shippingValidationRegex;
+  protected validationRegex: ValidationRegex[] = shippingValidationRegex;
 
-  constructor(shipping: Shipping, updating: boolean = false) {
+  constructor(
+    shipping: CreateShippingDto | UpdateShippingDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = shipping;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

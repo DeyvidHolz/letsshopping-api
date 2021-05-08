@@ -1,27 +1,30 @@
 import validator from 'validator';
-import { Coupon } from '../entities/Coupon.entity';
+import { CreateCouponDto, UpdateCouponDto } from '../dto/coupon.dto';
 import couponValidationRegex from './validationRegex/coupon.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class CouponValidator extends Validator {
-  public data: Coupon;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateCouponDto | UpdateCouponDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = couponValidationRegex;
+  protected validationRegex: ValidationRegex[] = couponValidationRegex;
 
-  constructor(coupon: Coupon, updating: boolean = false) {
+  constructor(
+    coupon: CreateCouponDto | UpdateCouponDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = coupon;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     if (!validator.isBoolean(String(this.data.isActive)))

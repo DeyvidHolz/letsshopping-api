@@ -1,4 +1,4 @@
-import { Option } from './option.dto';
+import { CreateOptionDto } from './productOption.dto';
 
 type CreateProductDto = {
   code: string;
@@ -14,7 +14,7 @@ type CreateProductDto = {
   height?: number;
   categories: number[];
   images: [{ src: string; description?: string }];
-  options: Option;
+  options: CreateOptionDto[];
 };
 
 type UpdateProductDto = {
@@ -32,7 +32,7 @@ type UpdateProductDto = {
   height?: number;
   categories: number[];
   images: [{ src: string; description?: string }];
-  options: Option;
+  options: CreateOptionDto[];
 };
 
 export { CreateProductDto, UpdateProductDto };

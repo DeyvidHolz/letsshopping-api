@@ -1,39 +1,39 @@
-type validationMessages = {
+type ValidationMessages = {
   field: string;
   message: string;
   tip?: string;
 };
 
-type validation = {
+type Validation = {
   hasErrors: boolean;
-  errors: validationMessages[];
+  errors: ValidationMessages[];
 };
 
-type validationRegexArray = {
+type ValidationRegexArray = {
   regex: string;
   message?: string;
 };
 
-type validationRegex = {
+type ValidationRegex = {
   field: string;
   regex?: string;
   required?: boolean;
   requiredOnUpdate?: boolean;
   message?: string;
-  validations?: validationRegexArray[];
+  validations?: ValidationRegexArray[];
 };
 
 abstract class Validator {
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
   public data: any = {};
   public updating: boolean = false;
 
-  protected validationRegex: validationRegex[];
+  protected validationRegex: ValidationRegex[];
 
-  public validate(): validation {
+  public validate(): Validation {
     this.validationErrors = [];
 
-    this.validationRegex.forEach((validationRegex: validationRegex) => {
+    this.validationRegex.forEach((validationRegex: ValidationRegex) => {
       this.validateField(validationRegex);
     });
 
@@ -61,7 +61,7 @@ abstract class Validator {
     return this;
   }
 
-  protected validateField(validationRegex: validationRegex): void {
+  protected validateField(validationRegex: ValidationRegex): void {
     const isArray = Array.isArray(validationRegex.validations);
     const value = this.data[validationRegex.field] ?? '';
 
@@ -119,4 +119,4 @@ abstract class Validator {
   }
 }
 
-export { validation, validationMessages, Validator, validationRegex };
+export { Validation, ValidationMessages, Validator, ValidationRegex };

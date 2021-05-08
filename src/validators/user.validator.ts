@@ -3,17 +3,17 @@ import { User } from '../entities/User.entity';
 import userValidationRegex from './validationRegex/user.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class UserValidator extends Validator {
   public data: User;
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = userValidationRegex;
+  protected validationRegex: ValidationRegex[] = userValidationRegex;
 
   constructor(user: User, updating: boolean = false) {
     super();
@@ -21,7 +21,7 @@ export default class UserValidator extends Validator {
     this.data = user;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     if (!validator.isEmail(this.data.email))

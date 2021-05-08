@@ -2,17 +2,17 @@ import { ShopPhone } from '../entities/ShopPhone.entity';
 import shopPhoneValidationRegex from './validationRegex/shopPhone.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ShopPhoneValidator extends Validator {
   public data: ShopPhone;
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = shopPhoneValidationRegex;
+  protected validationRegex: ValidationRegex[] = shopPhoneValidationRegex;
 
   constructor(shopPhone: ShopPhone, updating: boolean = false) {
     super();
@@ -20,7 +20,7 @@ export default class ShopPhoneValidator extends Validator {
     this.data = shopPhone;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

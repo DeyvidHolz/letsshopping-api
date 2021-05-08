@@ -1,27 +1,30 @@
-import { Product } from '../entities/Product.entity';
+import { CreateProductDto, UpdateProductDto } from '../dto/product.dto';
 import ProductOptionValidator from './productOption.validator';
 import productValidationRegex from './validationRegex/product.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ProductValidator extends Validator {
-  public data: Product;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateProductDto | UpdateProductDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = productValidationRegex;
+  protected validationRegex: ValidationRegex[] = productValidationRegex;
 
-  constructor(product: Product, updating: boolean = false) {
+  constructor(
+    product: CreateProductDto | UpdateProductDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = product;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     // Categories from endpoint can be an array of integers (ids)

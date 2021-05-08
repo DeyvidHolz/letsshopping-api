@@ -1,27 +1,30 @@
-import { ProductOption } from '../entities/ProductOption.entity';
+import { CreateProductOptionDto } from '../dto/productOption.dto';
 import ProductOptionValueValidator from './productOptionValue.validator';
 import productOptionValidationRegex from './validationRegex/productOption.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class ProductOptionValidator extends Validator {
-  public data: ProductOption;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateProductOptionDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = productOptionValidationRegex;
+  protected validationRegex: ValidationRegex[] = productOptionValidationRegex;
 
-  constructor(productOption: ProductOption, updating: boolean = false) {
+  constructor(
+    productOption: CreateProductOptionDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = productOption;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     // Implementing ProductOptionValue validations

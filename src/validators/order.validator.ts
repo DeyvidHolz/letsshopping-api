@@ -3,17 +3,17 @@ import { Order } from '../entities/Order.entity';
 import orderValidationRegex from './validationRegex/order.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class OrderValidator extends Validator {
   public data: Order;
-  public validationErrors: validationMessages[] | null = null;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = orderValidationRegex;
+  protected validationRegex: ValidationRegex[] = orderValidationRegex;
 
   constructor(order: Order, updating: boolean = false) {
     super();
@@ -21,7 +21,7 @@ export default class OrderValidator extends Validator {
     this.data = order;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {

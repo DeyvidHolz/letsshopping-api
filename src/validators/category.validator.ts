@@ -1,26 +1,29 @@
-import { Category } from '../entities/Category.entity';
+import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
 import categoryValidationRegex from './validationRegex/category.validationRegex';
 
 import {
-  validation,
-  validationMessages,
+  Validation,
+  ValidationMessages,
   Validator,
-  validationRegex,
+  ValidationRegex,
 } from './validator';
 
 export default class CategoryValidator extends Validator {
-  public data: Category;
-  public validationErrors: validationMessages[] | null = null;
+  public data: CreateCategoryDto | UpdateCategoryDto;
+  public validationErrors: ValidationMessages[] | null = null;
 
-  protected validationRegex: validationRegex[] = categoryValidationRegex;
+  protected validationRegex: ValidationRegex[] = categoryValidationRegex;
 
-  constructor(category: Category, updating: boolean = false) {
+  constructor(
+    category: CreateCategoryDto | UpdateCategoryDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = category;
   }
 
-  public validate(): validation {
+  public validate(): Validation {
     super.validate();
 
     return {
