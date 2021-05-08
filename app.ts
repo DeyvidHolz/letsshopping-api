@@ -72,9 +72,10 @@ createConnection().then((connection) => {
           const userRepository = connection.getRepository(User);
 
           const id = jwt_payload.id;
-          let user = userRepository.findOne(id);
+          let user = await userRepository.findOne(id);
 
           if (user) {
+            delete user.password;
             next(null, user);
           } else {
             next(null, false);
