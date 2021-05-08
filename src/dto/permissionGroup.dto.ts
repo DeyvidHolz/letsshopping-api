@@ -1,11 +1,11 @@
-type createPermissionGroupDto = {
+type CreatePermissionGroupDto = {
   name: string;
   level: number;
 };
 
-type updatePermissionGroupDto = {
+type UpdatePermissionGroupDto = {
   name: string;
   level: number;
 };
 
-export { createPermissionGroupDto, updatePermissionGroupDto };
+export { CreatePermissionGroupDto, UpdatePermissionGroupDto };

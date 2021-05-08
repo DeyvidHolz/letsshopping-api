@@ -1,14 +1,14 @@
-type createCategoryDto = {
+type CreateCategoryDto = {
   name: string;
   shortDescription?: string;
   description?: string;
 };
 
-type updateCategoryDto = {
+type UpdateCategoryDto = {
   id: number;
   name: string;
   shortDescription?: string;
   description?: string;
 };
 
-export { createCategoryDto, updateCategoryDto };
+export { CreateCategoryDto, UpdateCategoryDto };

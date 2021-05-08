@@ -5,8 +5,8 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import {
-  createPermissionGroupDto,
-  updatePermissionGroupDto,
+  CreatePermissionGroupDto,
+  UpdatePermissionGroupDto,
 } from '../dto/permissionGroup.dto';
 import { getMessage } from '../helpers/messages.helper';
 import { PermissionGroup } from '../entities/PermissionGroup.entity';
@@ -21,7 +21,7 @@ class PermissionGroupController {
 
   public static async create(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
-    const data: createPermissionGroupDto = {
+    const data: CreatePermissionGroupDto = {
       name: req.body.name,
       level: req.body.level,
     };
@@ -75,7 +75,7 @@ class PermissionGroupController {
       }).send(res);
     }
 
-    const data: updatePermissionGroupDto = {
+    const data: UpdatePermissionGroupDto = {
       name: permissionGroupName,
       level: req.body.level,
     };

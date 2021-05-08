@@ -1,11 +1,11 @@
-type createShopInfoDto = {
+type CreateShopInfoDto = {
   name: string;
   phones: [{ value: string }];
   emails: [{ value: string }];
   socials: [{ name: string; value: string }];
 };
 
-type updateShopInfoDto = {
+type UpdateShopInfoDto = {
   id: number;
   name: string;
   phones: [{ value: string }];
@@ -13,4 +13,4 @@ type updateShopInfoDto = {
   socials: [{ name: string; value: string }];
 };
 
-export { createShopInfoDto, updateShopInfoDto };
+export { CreateShopInfoDto, UpdateShopInfoDto };

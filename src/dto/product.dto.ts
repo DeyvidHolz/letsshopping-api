@@ -1,6 +1,6 @@
-import { option } from '../entities/productOptionIn.types';
+import { Option } from './option.dto';
 
-type createProductDto = {
+type CreateProductDto = {
   code: string;
   name: string;
   shortDescription: string;
@@ -14,10 +14,10 @@ type createProductDto = {
   height?: number;
   categories: number[];
   images: [{ src: string; description?: string }];
-  options: option;
+  options: Option;
 };
 
-type updateProductDto = {
+type UpdateProductDto = {
   id: number;
   code: string;
   name: string;
@@ -32,7 +32,7 @@ type updateProductDto = {
   height?: number;
   categories: number[];
   images: [{ src: string; description?: string }];
-  options: option;
+  options: Option;
 };
 
-export { createProductDto, updateProductDto };
+export { CreateProductDto, UpdateProductDto };
