@@ -7,9 +7,7 @@ import notFound from '../errors/http/notFound.error';
 import { Address } from '../entities/Address.entity';
 import { User } from '../entities/User.entity';
 import unauthorized from '../errors/http/unauthorized';
-import { getUserData } from '../helpers/auth.helper';
-import { createAddressDto, updateAddressDto } from '../dto/address.dto';
-import AddressValidator from '../validators/address.validator';
+import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 import { getMessage } from '../helpers/messages.helper';
 import addressMessages from '../messages/address.messages';
 
@@ -20,7 +18,7 @@ class AddressController {
 
   public static async create(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const data: createAddressDto = {
+    const data: CreateAddressDto = {
       country: req.body.country,
       zipCode: req.body.zipCode,
       state: req.body.state,
@@ -30,26 +28,14 @@ class AddressController {
       isMain: req.body.isMain || false,
     };
 
-    const address = addressRepository.create(data as Address);
-
-    let user: User | null = getUserData(req.headers.authorization);
-
-    if (!user) {
+    if (!req.user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
     }
 
-    address.user = user;
-
-    const validation = new AddressValidator(address);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const address = addressRepository.create(req.dto as Address);
+    address.user = req.user as User;
 
     try {
       /**
@@ -59,7 +45,7 @@ class AddressController {
       const addresses = await addressRepository.find({
         where: {
           isMain: true,
-          user: { id: user.id },
+          user: { id: req.user.id },
         },
       });
 
@@ -68,11 +54,12 @@ class AddressController {
        */
       // TODO: remove this query
       const addressWithSamezipCode = await addressRepository.findOne({
-        where: { zipCode: data.zipCode, user: { id: user.id } },
+        where: { zipCode: data.zipCode, user: { id: req.user.id } },
       });
 
       if (addressWithSamezipCode) {
         return unprocessableEntity({
+          // TODO: place this on address.messages
           message: "There's another address with this zipCode.",
         }).send(res);
       }
@@ -102,6 +89,7 @@ class AddressController {
         address,
       });
     } catch (err) {
+      console.log(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);
@@ -111,9 +99,7 @@ class AddressController {
   public static async get(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
 
-    let user: User | null = getUserData(req.headers.authorization);
-
-    if (!user) {
+    if (!req.user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
@@ -122,7 +108,7 @@ class AddressController {
     const addressId: number = (req.params.id as unknown) as number;
     const address = await addressRepository.findOne({
       id: addressId,
-      user: { id: user.id },
+      user: { id: req.user.id },
     });
 
     if (!address) return notFound({ message: 'Address not found' }).send(res);
@@ -133,9 +119,7 @@ class AddressController {
   public static async getAll(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
 
-    let user: User | null = getUserData(req.headers.authorization);
-
-    if (!user) {
+    if (!req.user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
@@ -143,7 +127,7 @@ class AddressController {
 
     const addresses = await addressRepository.find({
       where: {
-        user: { id: user.id },
+        user: { id: req.user.id },
       },
       order: { id: 'DESC' },
     });
@@ -153,49 +137,28 @@ class AddressController {
   public static async update(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
     const addressId: number = Number(req.params.id);
+    req.dto.id = addressId;
 
-    const data: updateAddressDto = {
-      id: addressId,
-      country: req.body.country,
-      zipCode: req.body.zipCode,
-      state: req.body.state,
-      neighbourhood: req.body.neighbourhood,
-      street: req.body.street,
-      number: req.body.number,
-      isMain: req.body.isMain || false,
-    };
-
-    const address = addressRepository.create(data as Address);
-
-    const validation = new AddressValidator(address, true);
-
-    if (validation.hasErrors()) {
+    if (!addressId || isNaN(addressId)) {
       return unprocessableEntity({
-        message: validation.first(),
-        errors: validation.validationErrors,
+        message: getMessage(addressMessages.invalidId, { id: addressId }),
       }).send(res);
     }
 
-    if (!addressId) {
-      return unprocessableEntity({
-        message: getMessage(addressMessages.invalidId, address),
-      }).send(res);
-    }
-
-    let user: User | null = getUserData(req.headers.authorization);
-
-    if (!user) {
+    // TODO: put this in a middleware (globally)
+    if (!req.user) {
       return unauthorized({
         message: 'Invalid authentication token.',
       }).send(res);
     }
 
-    address.user = user;
+    const address = addressRepository.create(req.dto as Address);
+    address.user = req.user;
 
     const addresses = await addressRepository.find({
       where: {
         id: Not(address.id),
-        user: { id: user.id },
+        user: { id: req.user.id },
       },
       order: { id: 'DESC' },
     });
@@ -255,7 +218,7 @@ class AddressController {
     try {
       await addressRepository.save(address);
       return res.status(200).json({
-        message: getMessage(addressMessages.created, address),
+        message: getMessage(addressMessages.updated, address),
         address,
       });
     } catch (err) {
@@ -269,11 +232,10 @@ class AddressController {
   public static async delete(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
     const addressId: number = Number(req.params.id);
-    let user: User | null = getUserData(req.headers.authorization);
 
     const address = await addressRepository.findOne({
       id: addressId,
-      user: { id: user.id },
+      user: { id: req.user.id },
     });
 
     /**
@@ -282,7 +244,7 @@ class AddressController {
      */
     if (address && address.isMain) {
       const addresses = await addressRepository.find({
-        where: { id: Not(addressId), user: { id: user.id } },
+        where: { id: Not(addressId), user: { id: req.user.id } },
         order: {
           id: 'DESC',
         },
