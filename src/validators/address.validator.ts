@@ -1,7 +1,7 @@
 import validator from 'validator';
 import countryList from '../config/countryList.config';
-import { Address } from '../entities/Address.entity';
 import addressValidationRegex from './validationRegex/address.validationRegex';
+import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 
 import {
   validation,
@@ -11,12 +11,15 @@ import {
 } from './validator';
 
 export default class AddressValidator extends Validator {
-  public data: Address;
+  public data: CreateAddressDto | UpdateAddressDto;
   public validationErrors: validationMessages[] | null = null;
 
   protected validationRegex: validationRegex[] = addressValidationRegex;
 
-  constructor(address: Address, updating: boolean = false) {
+  constructor(
+    address: CreateAddressDto | UpdateAddressDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
     this.data = address;
