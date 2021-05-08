@@ -7,7 +7,6 @@ import cartMessages from '../messages/cart.messages';
 import { Cart } from '../entities/Cart.entity';
 import { Product } from '../entities/Product.entity';
 import { CartProduct } from '../entities/CartProduct.entity';
-import { getUserData } from '../helpers/auth.helper';
 import { calculateTotal } from '../helpers/cart.helper';
 import { getMessage } from '../helpers/messages.helper';
 import { hasStock } from '../helpers/stock.helper';
@@ -19,10 +18,9 @@ class CartController {
 
   public static async get(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
-    const userData = getUserData(req.headers.authorization);
 
     const cart = await cartRepository.findOne({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
     });
 
     return res.json(cart);
@@ -32,7 +30,6 @@ class CartController {
     const cartRepository = CartController.getRepository();
     const productRepository = getConnection().getRepository(Product);
     const cartProductRepository = getConnection().getRepository(CartProduct);
-    const userData = getUserData(req.headers.authorization);
 
     const productCode: string = req.params.code;
     const quantityConverted = Number(req.body.quantity);
@@ -41,7 +38,7 @@ class CartController {
       : quantityConverted;
 
     const cart = await cartRepository.findOne({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
     });
 
     const currentCartProduct = cart.cartProducts.find((cp) => {
@@ -114,12 +111,11 @@ class CartController {
 
   public static async removeProduct(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
-    const userData = getUserData(req.headers.authorization);
 
     const productCode: string = req.params.code;
 
     const cart = await cartRepository.findOne({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
     });
 
     const currentCartProductIndex = cart.cartProducts.findIndex(
@@ -148,13 +144,12 @@ class CartController {
   public static async updateProduct(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
     const cartProductRepository = getConnection().getRepository(CartProduct);
-    const userData = getUserData(req.headers.authorization);
 
     const productCode: string = req.params.code;
     const productQuantity = Number(req.body.quantity);
 
     const cart = await cartRepository.findOne({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
     });
 
     let index = null;
@@ -213,8 +208,7 @@ class CartController {
   public static async clearCart(req: Request, res: Response) {
     const cartRepository = CartController.getRepository();
     const cartProductRepository = getConnection().getRepository(CartProduct);
-    const userData = getUserData(req.headers.authorization);
-    const cart = await cartRepository.findOne({ user: { id: userData.id } });
+    const cart = await cartRepository.findOne({ user: { id: req.user.id } });
 
     if (cart.cartProducts && cart.cartProducts.length) {
       await cartProductRepository.remove(cart.cartProducts);

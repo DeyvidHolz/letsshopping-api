@@ -8,7 +8,6 @@ import notFound from '../errors/http/notFound.error';
 import unauthorized from '../errors/http/unauthorized';
 import { Coupon } from '../entities/Coupon.entity';
 import { Order } from '../entities/Order.entity';
-import { getUserData } from '../helpers/auth.helper';
 import { Cart } from '../entities/Cart.entity';
 import { User } from '../entities/User.entity';
 import { OrderAddress } from '../entities/OrderAddress.entity';
@@ -31,19 +30,17 @@ class OrderController {
     const addressRepository = getConnection().getRepository(Address);
     const orderAddressRepository = getConnection().getRepository(OrderAddress);
 
-    const userData = getUserData(req.headers.authorization);
-
     if (!req.body.shippingAddressId)
       return unprocessableEntity({
         message: getMessage(orderMessages.invalidShippingAddress),
       }).send(res);
 
-    const user = await userRepository.findOne(userData.id, {
+    const user = await userRepository.findOne(req.user.id, {
       relations: ['addresses'],
     });
 
     const userSentAddress = await addressRepository.findOne({
-      where: { id: req.body.shippingAddressId, user: { id: userData.id } },
+      where: { id: req.body.shippingAddressId, user: { id: req.user.id } },
     });
 
     if (!userSentAddress)
@@ -54,7 +51,7 @@ class OrderController {
     const shippingAddress = orderAddressRepository.create(userSentAddress);
 
     const cart = await cartRepository.findOne({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
     });
 
     if (!cart.cartProducts.length) {
@@ -110,10 +107,9 @@ class OrderController {
 
   public static async get(req: Request, res: Response) {
     const orderRepository = OrderController.getRepository();
-    const userData = getUserData(req.headers.authorization);
 
     const order = await orderRepository.findOne({
-      where: { id: req.params.id, user: { id: userData.id } },
+      where: { id: req.params.id, user: { id: req.user.id } },
     });
 
     if (!order) {
@@ -127,10 +123,9 @@ class OrderController {
 
   public static async getAll(req: Request, res: Response) {
     const orderRepository = OrderController.getRepository();
-    const userData = getUserData(req.headers.authorization);
 
     const orders = await orderRepository.find({
-      where: { user: { id: userData.id } },
+      where: { user: { id: req.user.id } },
       order: { id: 'DESC' },
     });
 

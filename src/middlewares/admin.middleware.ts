@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-import { getUserData } from '../helpers/auth.helper';
-
 dotenv.config();
 
 export default function AdminMiddleware(
@@ -10,10 +8,7 @@ export default function AdminMiddleware(
   res: Response,
   next: NextFunction,
 ) {
-  const user = getUserData(req.headers.authorization);
-
-  // TODO: check on database
-  if (user.permission_level === 1) {
+  if (req.user.permissionGroup.level === 1) {
     return next();
   }
 

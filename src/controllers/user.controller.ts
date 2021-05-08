@@ -19,6 +19,7 @@ import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
 import { Cart } from '../entities/Cart.entity';
 import { PermissionGroup } from '../entities/PermissionGroup.entity';
+import { JwtUser } from '../types/controllers/userController.types';
 
 dotenv.config();
 
@@ -166,15 +167,17 @@ class UserController {
     }
 
     if (CryptHelper.checkPassword(password, user.password)) {
-      let payload = {
+      let payload: JwtUser = {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         username: user.username,
-        cart_id: user.cart.id,
-        permission_group: user.permissionGroup.name,
-        permission_level: user.permissionGroup.level,
+        cart: { id: user.cart.id },
+        permissionGroup: {
+          name: user.permissionGroup.name,
+          level: user.permissionGroup.level,
+        },
       };
 
       let token = jwt.sign(payload, jwtConfig.secretOrKey, {
