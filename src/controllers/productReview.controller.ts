@@ -5,13 +5,8 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { ProductReview } from '../entities/ProductReview.entity';
-import {
-  CreateProductReviewDto,
-  UpdateProductReviewDto,
-} from '../dto/productReview.dto';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/productReview.messages';
-import ProductReviewValidator from '../validators/productReview.validator';
 
 class ProductReviewController {
   private static getRepository() {
@@ -20,6 +15,10 @@ class ProductReviewController {
 
   public static async create(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+
+    // TODO: put this in a interceptor
+    req.dto.user = req.user;
+
     const productReview = productReviewRepository.create(
       req.dto as ProductReview,
     );
@@ -70,6 +69,9 @@ class ProductReviewController {
 
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+
+    // TODO: put this in a interceptor
+    req.dto.user = req.user;
 
     const productReview = productReviewRepository.create(
       req.dto as ProductReview,

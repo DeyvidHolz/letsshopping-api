@@ -35,7 +35,6 @@ router.post(
   ProductController.create,
 );
 
-// TODO: change to :code
 router.patch(
   '/:code',
   AuthMiddleware,

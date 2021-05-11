@@ -16,6 +16,7 @@ import { Cart } from './Cart.entity';
 import { Notification } from './Notification.entity';
 import { Order } from './Order.entity';
 import { PermissionGroup } from './PermissionGroup.entity';
+import { ProductReview } from './ProductReview.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -86,4 +87,11 @@ export class User {
   })
   @JoinTable()
   notifications: Notification[];
+
+  @OneToMany(() => ProductReview, (productReview) => productReview.user, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinTable()
+  productReviews: ProductReview[];
 }

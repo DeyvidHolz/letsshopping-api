@@ -5,10 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   JoinTable,
 } from 'typeorm';
 import { Product } from './Product.entity';
+import { User } from './User.entity';
 
 @Entity({ name: 'product_reviews' })
 export class ProductReview {
@@ -34,5 +34,9 @@ export class ProductReview {
   @JoinTable()
   product: Product;
 
-  // TODO: relation with user.
+  @ManyToOne(() => User, (user) => user.productReviews, {
+    onDelete: 'CASCADE',
+  })
+  @JoinTable()
+  user: User;
 }
