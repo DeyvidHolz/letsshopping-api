@@ -52,6 +52,7 @@ class ShippingController {
       }).send(res);
 
     // TODO: some fields cannot be updated. Create something to handle it.
+    // ! Create route to add events, remove it from middleware. Or: add event here querying and do shipping.events = [...shipingEvents, ...newEvents]
     const updatedShipping = shippingRepository.create(req.dto as Shipping);
     await shippingRepository.save(updatedShipping);
 
