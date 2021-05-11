@@ -12,12 +12,6 @@ import ValidatorMiddleware from './validatorMiddleware';
 
 class ProductValidatorMiddleware extends ValidatorMiddleware {
   public static create(req: Request, res: Response, next: NextFunction) {
-    // TODO: create something (like a pipe) to do this stuff. Avoid code duplication.
-    if (req.body.categories)
-      req.body.categories = req.body.categories.map((categoryId) => ({
-        id: categoryId,
-      }));
-
     const dto: CreateProductDto = {
       code: req.body.code,
       name: req.body.name,
@@ -46,14 +40,8 @@ class ProductValidatorMiddleware extends ValidatorMiddleware {
   }
 
   public static async update(req: Request, res: Response, next: NextFunction) {
-    if (req.body.categories)
-      req.body.categories = req.body.categories.map((categoryId) => ({
-        id: categoryId,
-      }));
-
     const dto: UpdateProductDto = {
-      id: 0,
-      code: req.body.code,
+      code: req.params.code,
       name: req.body.name,
       shortDescription: req.body.shortDescription,
       description: req.body.description,
@@ -71,22 +59,9 @@ class ProductValidatorMiddleware extends ValidatorMiddleware {
 
     if (!dto.code) {
       return unprocessableEntity({
-        message: "Field 'id' is required.",
+        message: "Param 'code' is required.",
       }).send(res);
     }
-
-    // TODO: Create interceptor for this.
-    // Getting ID of product
-    const productRepository = getConnection().getRepository(Product);
-    const product = await productRepository.findOne({ code: dto.code });
-
-    if (!product)
-      return notFound({
-        message: getMessage(productMessages.notFound, { code: dto.code }),
-      }).send(res);
-
-    // Setting id
-    dto.id = Number(product.id);
 
     const validation = new ProductValidator(dto, true);
     ProductValidatorMiddleware.validate({

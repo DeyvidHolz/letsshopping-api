@@ -19,7 +19,7 @@ type CreateProductDto = {
 
 type UpdateProductDto = {
   // Product code is unique. Use 'code' instead of id.
-  id: number;
+  id?: number;
   code: string;
   name: string;
   shortDescription: string;

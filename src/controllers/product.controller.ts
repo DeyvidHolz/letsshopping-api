@@ -54,24 +54,16 @@ class ProductController {
 
   public static async get(req: Request, res: Response) {
     const productRespository = getConnection().getRepository(Product);
-    let product: Product | null = null;
+    const productCode: string = req.params.code;
 
-    if (isNaN(Number(req.params.id))) {
-      // If it's NaN then it's a product code.
-      product = await productRespository.findOne({
-        where: { code: req.params.id },
-      });
-    } else {
-      // Else, it can be an ID or a numeric Code
-      product = await productRespository.findOne({
-        where: [{ id: req.params.id }, { code: req.params.id }],
-      });
-    }
+    let product = await productRespository.findOne({
+      where: { code: productCode },
+    });
 
     if (!product) {
       return notFound({
-        message: getMessage(productMessages.searchByIDNotFound, {
-          id: req.params.id,
+        message: getMessage(productMessages.searchByCodeNotFound, {
+          code: productCode,
         }),
       }).send(res);
     }
@@ -91,10 +83,18 @@ class ProductController {
 
   public static async update(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
+    const oldProduct = await productRepository.findOne({ code: req.dto.code });
+
+    if (!oldProduct)
+      return notFound({
+        message: getMessage(productMessages.notFound, { code: req.dto.code }),
+      }).send(res);
+
+    req.dto.id = oldProduct.id;
     const product = productRepository.create(req.dto as Product);
 
     // Updating stock based on options
-    // TODO: duplicated code. Put this in a helper or something like that.
+    // TODO: duplicated code. Put this in a SUBSCRIBER.
     if (product.options && product.options.length) {
       product.stock = 0;
 

@@ -5,8 +5,8 @@ const productMessages: messages = {
   updated: 'Product updated.',
 
   deleted: {
-    msg: 'Product with ID or Code {id} deleted.',
-    replace: [{ from: 'id', to: 'id' }],
+    msg: 'Product with code {code} deleted.',
+    replace: [{ from: 'code', to: 'code' }],
   },
 
   invalidData: 'Invalid data.',
@@ -18,9 +18,9 @@ const productMessages: messages = {
     replace: [{ from: 'code', to: 'code' }],
   },
 
-  searchByIDNotFound: {
-    msg: 'Product with ID or Code {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+  searchByCodeNotFound: {
+    msg: 'Product with code {code} not found.',
+    replace: [{ from: 'code', to: 'code' }],
   },
 };
 

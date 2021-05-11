@@ -1,7 +1,8 @@
 import express from 'express';
-import ProductController from '../controllers/product.controller';
-import AdminMiddleware from '../middlewares/admin.middleware';
 
+import ProductController from '../controllers/product.controller';
+import { ProductRequestInterceptor } from '../interceptors/productRequest.interceptor';
+import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
 import ProductValidatorMiddleware from '../middlewares/validators/productValidator.middleware';
 
@@ -16,10 +17,10 @@ router.get(
   ProductController.searchByName,
 );
 
-router.get('/:id', AuthMiddleware, AdminMiddleware, ProductController.get);
+router.get('/:code', AuthMiddleware, AdminMiddleware, ProductController.get);
 
 router.delete(
-  '/:id',
+  '/:code',
   AuthMiddleware,
   AdminMiddleware,
   ProductController.delete,
@@ -29,14 +30,17 @@ router.post(
   '/',
   AuthMiddleware,
   AdminMiddleware,
+  ProductRequestInterceptor.create,
   ProductValidatorMiddleware.create,
   ProductController.create,
 );
 
+// TODO: change to :code
 router.patch(
-  '/:id',
+  '/:code',
   AuthMiddleware,
   AdminMiddleware,
+  ProductRequestInterceptor.update,
   ProductValidatorMiddleware.update,
   ProductController.update,
 );
