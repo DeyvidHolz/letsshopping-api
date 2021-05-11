@@ -64,6 +64,7 @@ export class Product {
   @ManyToMany(() => Category, (category) => category.products, {
     eager: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   categories: Category[];
@@ -71,6 +72,7 @@ export class Product {
   @OneToMany(() => ProductImage, (image) => image.product, {
     eager: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   images: ProductImage[];
@@ -78,6 +80,7 @@ export class Product {
   @OneToMany(() => ProductOption, (option) => option.product, {
     eager: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   options: ProductOption[];
@@ -85,6 +88,7 @@ export class Product {
   @OneToMany(() => ProductReview, (review) => review.product, {
     cascade: true,
     persistence: false,
+    onDelete: 'CASCADE',
   })
   @JoinTable()
   reviews: ProductReview[];

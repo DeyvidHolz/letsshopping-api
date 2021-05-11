@@ -36,6 +36,8 @@ export class ProductOptionValue {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => ProductOption, (option) => option.values)
+  @ManyToOne(() => ProductOption, (option) => option.values, {
+    onDelete: 'CASCADE',
+  })
   option: ProductOption;
 }

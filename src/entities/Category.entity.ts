@@ -21,7 +21,9 @@ export class Category {
   @Column('text')
   description: string;
 
-  @ManyToMany(() => Product, (product) => product.categories)
+  @ManyToMany(() => Product, (product) => product.categories, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   products: Product[];
 }

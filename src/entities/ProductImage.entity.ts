@@ -27,7 +27,9 @@ export class ProductImage {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Product, (product) => product.images)
+  @ManyToOne(() => Product, (product) => product.images, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   product: Product;
 }

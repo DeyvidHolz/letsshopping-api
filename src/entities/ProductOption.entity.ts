@@ -25,13 +25,16 @@ export class ProductOption {
   @UpdateDateColumn()
   updatedAt: string;
 
-  @ManyToOne(() => Product, (product) => product.options)
+  @ManyToOne(() => Product, (product) => product.options, {
+    onDelete: 'CASCADE',
+  })
   @JoinTable()
   product: Product;
 
   @OneToMany(() => ProductOptionValue, (value) => value.option, {
     eager: true,
     cascade: true,
+    onDelete: 'CASCADE',
   })
   values: ProductOptionValue[];
 }
