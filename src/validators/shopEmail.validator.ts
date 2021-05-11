@@ -14,10 +14,10 @@ export default class ShopEmailValidator extends Validator {
 
   protected validationRegex: ValidationRegex[] = shopEmailValidationRegex;
 
-  constructor(shopEmail: CreateShopEmailInfoDto, updating: boolean = false) {
+  constructor(shopEmailDto: CreateShopEmailInfoDto, updating: boolean = false) {
     super();
     this.updating = updating;
-    this.data = shopEmail;
+    this.data = shopEmailDto;
   }
 
   public validate(): Validation {

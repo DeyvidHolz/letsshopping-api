@@ -16,12 +16,12 @@ export default class ProductValidator extends Validator {
   protected validationRegex: ValidationRegex[] = productValidationRegex;
 
   constructor(
-    product: CreateProductDto | UpdateProductDto,
+    productDto: CreateProductDto | UpdateProductDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = product;
+    this.data = productDto;
   }
 
   public validate(): Validation {

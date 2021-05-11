@@ -18,12 +18,12 @@ export default class PermissionGroupValidator extends Validator {
   protected validationRegex: ValidationRegex[] = permissionGroupValidationRegex;
 
   constructor(
-    permissionGroup: CreatePermissionGroupDto | UpdatePermissionGroupDto,
+    permissionGroupDto: CreatePermissionGroupDto | UpdatePermissionGroupDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = permissionGroup;
+    this.data = permissionGroupDto;
   }
 
   public validate(): Validation {

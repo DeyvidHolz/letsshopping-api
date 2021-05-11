@@ -15,12 +15,12 @@ export default class ShippingValidator extends Validator {
   protected validationRegex: ValidationRegex[] = shippingValidationRegex;
 
   constructor(
-    shipping: CreateShippingDto | UpdateShippingDto,
+    shippingDto: CreateShippingDto | UpdateShippingDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = shipping;
+    this.data = shippingDto;
   }
 
   public validate(): Validation {

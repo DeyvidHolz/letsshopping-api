@@ -15,10 +15,10 @@ export default class OrderValidator extends Validator {
 
   protected validationRegex: ValidationRegex[] = orderValidationRegex;
 
-  constructor(order: Order, updating: boolean = false) {
+  constructor(orderDto: Order, updating: boolean = false) {
     super();
     this.updating = updating;
-    this.data = order;
+    this.data = orderDto;
   }
 
   public validate(): Validation {

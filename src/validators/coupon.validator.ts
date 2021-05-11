@@ -16,12 +16,12 @@ export default class CouponValidator extends Validator {
   protected validationRegex: ValidationRegex[] = couponValidationRegex;
 
   constructor(
-    coupon: CreateCouponDto | UpdateCouponDto,
+    couponDto: CreateCouponDto | UpdateCouponDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = coupon;
+    this.data = couponDto;
   }
 
   public validate(): Validation {

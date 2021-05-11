@@ -15,12 +15,12 @@ export default class CategoryValidator extends Validator {
   protected validationRegex: ValidationRegex[] = categoryValidationRegex;
 
   constructor(
-    category: CreateCategoryDto | UpdateCategoryDto,
+    categoryDto: CreateCategoryDto | UpdateCategoryDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = category;
+    this.data = categoryDto;
   }
 
   public validate(): Validation {

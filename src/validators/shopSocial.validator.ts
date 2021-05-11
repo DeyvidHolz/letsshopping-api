@@ -14,10 +14,13 @@ export default class ShopSocialValidator extends Validator {
 
   protected validationRegex: ValidationRegex[] = shopSocialValidationRegex;
 
-  constructor(shopSocial: CreateShopSocialInfoDto, updating: boolean = false) {
+  constructor(
+    shopSocialDto: CreateShopSocialInfoDto,
+    updating: boolean = false,
+  ) {
     super();
     this.updating = updating;
-    this.data = shopSocial;
+    this.data = shopSocialDto;
   }
 
   public validate(): Validation {

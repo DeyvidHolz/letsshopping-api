@@ -17,12 +17,12 @@ export default class AddressValidator extends Validator {
   protected validationRegex: ValidationRegex[] = addressValidationRegex;
 
   constructor(
-    address: CreateAddressDto | UpdateAddressDto,
+    addressDto: CreateAddressDto | UpdateAddressDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = address;
+    this.data = addressDto;
   }
 
   public validate(): Validation {

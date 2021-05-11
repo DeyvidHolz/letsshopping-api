@@ -16,12 +16,12 @@ export default class ShopInfoValidator extends Validator {
   protected validationRegex: ValidationRegex[] = shopInfoValidationRegex;
 
   constructor(
-    shopInfo: CreateShopInfoDto | UpdateShopInfoDto,
+    shopInfoDto: CreateShopInfoDto | UpdateShopInfoDto,
     updating: boolean = false,
   ) {
     super();
     this.updating = updating;
-    this.data = shopInfo;
+    this.data = shopInfoDto;
   }
 
   public validate(): Validation {

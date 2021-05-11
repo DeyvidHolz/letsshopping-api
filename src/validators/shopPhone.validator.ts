@@ -14,10 +14,10 @@ export default class ShopPhoneValidator extends Validator {
 
   protected validationRegex: ValidationRegex[] = shopPhoneValidationRegex;
 
-  constructor(shopPhone: CreateShopPhoneInfoDto, updating: boolean = false) {
+  constructor(shopPhoneDto: CreateShopPhoneInfoDto, updating: boolean = false) {
     super();
     this.updating = updating;
-    this.data = shopPhone;
+    this.data = shopPhoneDto;
   }
 
   public validate(): Validation {
