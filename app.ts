@@ -66,22 +66,22 @@ createConnection().then((connection) => {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       };
 
-      let strategy = new JwtStrategy(
-        jwtOptions,
-        async function (jwt_payload, next) {
-          const userRepository = connection.getRepository(User);
+      let strategy = new JwtStrategy(jwtOptions, async function (
+        jwt_payload,
+        next,
+      ) {
+        const userRepository = connection.getRepository(User);
 
-          const id = jwt_payload.id;
-          let user = await userRepository.findOne(id);
+        const id = jwt_payload.id;
+        let user = await userRepository.findOne(id);
 
-          if (user) {
-            delete user.password;
-            next(null, user);
-          } else {
-            next(null, false);
-          }
-        },
-      );
+        if (user) {
+          delete user.password;
+          next(null, user);
+        } else {
+          next(null, false);
+        }
+      });
 
       passport.use(strategy);
       this.app.use(passport.initialize());
@@ -106,9 +106,8 @@ createConnection().then((connection) => {
     private async createDefaultPermisionGroups() {
       console.log('Creating default data...'.yellow);
 
-      const permissionGroupRepository = connection.getRepository(
-        PermissionGroup,
-      );
+      const permissionGroupRepository =
+        connection.getRepository(PermissionGroup);
       const permissionGroups = await permissionGroupRepository.find();
 
       if (!permissionGroups.length) {
@@ -137,9 +136,8 @@ createConnection().then((connection) => {
 
     private async createAdminUser(force: boolean = false) {
       const userRepository = connection.getRepository(User);
-      const permissionGroupRepository = connection.getRepository(
-        PermissionGroup,
-      );
+      const permissionGroupRepository =
+        connection.getRepository(PermissionGroup);
       const cartRepository = connection.getRepository(Cart);
 
       const users = await userRepository.find();
