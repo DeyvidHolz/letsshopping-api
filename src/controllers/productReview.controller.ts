@@ -38,13 +38,16 @@ class ProductReviewController {
 
   public static async get(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+    const productReviewId: number = Number(req.params.id);
+
     // TODO: where user id.
-    const productReview = await productReviewRepository.findOne(
-      Number(req.params.id),
-      {
-        relations: ['product'],
+    const productReview = await productReviewRepository.findOne({
+      where: {
+        id: productReviewId,
+        user: { id: req.user.id },
       },
-    );
+      relations: ['product'],
+    });
 
     if (!productReview) {
       return notFound({
@@ -58,10 +61,11 @@ class ProductReviewController {
   public static async getAll(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
 
-    // TODO: where user id.
     const productReviews = await productReviewRepository.find({
+      where: { user: { id: req.user.id } },
       relations: ['product'],
     });
+
     return res.status(200).json(productReviews);
   }
 
