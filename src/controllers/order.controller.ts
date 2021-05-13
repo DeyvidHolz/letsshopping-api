@@ -26,7 +26,8 @@ class OrderController {
     const addressRepository = getConnection().getRepository(Address);
     const orderAddressRepository = getConnection().getRepository(OrderAddress);
 
-    // TODO: include middleware to validate this kind of stuff.
+    // TODO: this is wrong. A order can be created without a shipping.
+    // ! Therefore, a shipping cannot be created without a order.
     if (!req.body.shippingAddressId)
       return unprocessableEntity({
         message: getMessage(orderMessages.invalidShippingAddress),
@@ -72,7 +73,7 @@ class OrderController {
     // TODO: try to charge then set status
     order.status = 0;
 
-    // TODO: // TODO: try to charge then set order events
+    // TODO: try to charge then set order events
     // order.events = OrderEvent[]
 
     if (!order.address)
