@@ -1,6 +1,7 @@
 import express from 'express';
 
 import ProductReviewController from '../controllers/productReview.controller';
+import { ProductReviewRequestInterceptor } from '../interceptors/productReviewRequest.interceptor';
 import AuthMiddleware from '../middlewares/auth.middleware';
 import ProductReviewValidatorMiddleware from '../middlewares/validators/productReviewValidator.middleware';
 
@@ -12,6 +13,8 @@ router.get('/:id', AuthMiddleware, ProductReviewController.get);
 
 router.post(
   '/',
+  AuthMiddleware,
+  ProductReviewRequestInterceptor.create,
   ProductReviewValidatorMiddleware.create,
   ProductReviewController.create,
 );
@@ -19,6 +22,7 @@ router.post(
 router.patch(
   '/:id',
   AuthMiddleware,
+  ProductReviewRequestInterceptor.update,
   ProductReviewValidatorMiddleware.update,
   ProductReviewController.update,
 );

@@ -15,8 +15,6 @@ class ProductReviewController {
 
   public static async create(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
-
-    // TODO: put this in a interceptor
     req.dto.user = req.user;
 
     const productReview = productReviewRepository.create(
@@ -69,9 +67,6 @@ class ProductReviewController {
 
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
-
-    // TODO: put this in a interceptor
-    req.dto.user = req.user;
 
     const productReview = productReviewRepository.create(
       req.dto as ProductReview,

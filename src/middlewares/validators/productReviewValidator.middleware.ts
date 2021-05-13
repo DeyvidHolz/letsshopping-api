@@ -12,15 +12,6 @@ import ValidatorMiddleware from './validatorMiddleware';
 
 class ProductReviewValidatorMiddleware extends ValidatorMiddleware {
   public static create(req: Request, res: Response, next: NextFunction) {
-    // TODO: create mapper/interceptor for that.
-    if (!req.body.productId) {
-      return unprocessableEntity({
-        message: getMessage(productReviewMessages.productNotFound),
-      }).send(res);
-    }
-
-    req.body.product = { id: req.body.product_id };
-
     const dto: CreateProductReviewDto = {
       title: req.body.title,
       rating: req.body.rating,
