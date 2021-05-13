@@ -26,8 +26,7 @@ class ShopInfoValidatorMiddleware extends ValidatorMiddleware {
 
   public static update(req: Request, res: Response, next: NextFunction) {
     const dto: UpdateShopInfoDto = {
-      // TODO: interceptor should do this "id: 1"
-      id: 1,
+      id: req.body.id, // from interceptor
       name: req.body.name,
       phones: req.body.phones,
       emails: req.body.emails,

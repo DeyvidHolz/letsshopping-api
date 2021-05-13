@@ -1,6 +1,7 @@
 import express from 'express';
 
 import ShopInfoController from '../controllers/shopInfo.controller';
+import { ShopInfoRequestInterceptor } from '../interceptors/shopInfoRequest.interceptor';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
 import ShopInfoValidatorMiddleware from '../middlewares/validators/shopInfoValidator.middleware';
@@ -21,6 +22,7 @@ router.patch(
   '/',
   AuthMiddleware,
   AdminMiddleware,
+  ShopInfoRequestInterceptor.update,
   ShopInfoValidatorMiddleware.update,
   ShopInfoController.update,
 );
