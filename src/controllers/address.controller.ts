@@ -44,8 +44,9 @@ class AddressController {
 
       if (addressWithSamezipCode) {
         return unprocessableEntity({
-          // TODO: place this on address.messages
-          message: "There's another address with this zipCode.",
+          message: getMessage(addressMessages.duplicatedZipCode, {
+            zipCode: req.dto.zipCode,
+          }),
         }).send(res);
       }
 
@@ -84,7 +85,7 @@ class AddressController {
   public static async get(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
 
-    const addressId: number = (req.params.id as unknown) as number;
+    const addressId: number = req.params.id as unknown as number;
     const address = await addressRepository.findOne({
       id: addressId,
       user: { id: req.user.id },
