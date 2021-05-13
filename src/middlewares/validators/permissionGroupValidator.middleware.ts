@@ -4,6 +4,7 @@ import {
   CreatePermissionGroupDto,
   UpdatePermissionGroupDto,
 } from '../../dto/permissionGroup.dto';
+import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
 import PermissionGroupValidator from '../../validators/permissionGroup.validator';
 import ValidatorMiddleware from './validatorMiddleware';
 
@@ -38,6 +39,22 @@ class PermissionGroupValidatorMiddleware extends ValidatorMiddleware {
       res,
       next,
     });
+  }
+
+  public static setUserPermissionGroup(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    const permissionGroupName: string = req.params.name;
+    const userId: number = Number(req.params.userId);
+
+    if (isNaN(userId))
+      return unprocessableEntity({ message: 'Invalid user ID.' }).send(res);
+    if (!permissionGroupName)
+      return unprocessableEntity({ message: 'Invalid group name.' });
+
+    next();
   }
 }
 

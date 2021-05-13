@@ -138,18 +138,11 @@ class PermissionGroupController {
     // Checking data
     const userId: number = Number(req.params.userId);
 
-    // TODO: create middleware to do this kind of stuff.
-    if (isNaN(userId))
-      return unprocessableEntity({ message: 'Invalid user ID.' }).send(res);
-    if (!permissionGroupName)
-      return unprocessableEntity({ message: 'Invalid group name.' });
-
     // Checking if permissionGroup and user exists
     const permissionGroup = await permissionGroupRepository.findOne({
-      name: Raw(
-        (alias) => `LOWER(${alias}) Like LOWER('%${permissionGroupName}%')`,
-      ),
+      name: Raw((alias) => `LOWER(${alias}) = LOWER('${permissionGroupName}')`),
     });
+
     const user = await userRepository.findOne(userId);
 
     if (!permissionGroup)

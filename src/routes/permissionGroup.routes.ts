@@ -7,11 +7,11 @@ import PermissionGroupValidatorMiddleware from '../middlewares/validators/permis
 
 const router = express.Router();
 
-// TODO: middleware
 router.patch(
   '/set-group/:userId/:name',
   AuthMiddleware,
   AdminMiddleware,
+  PermissionGroupValidatorMiddleware.setUserPermissionGroup,
   PermissionGroupController.setUserPermissionGroup,
 );
 
