@@ -12,7 +12,7 @@ router.delete('/:id', ProductReviewController.delete);
 router.get('/:id', AuthMiddleware, ProductReviewController.get);
 
 router.post(
-  '/',
+  '/:productCode',
   AuthMiddleware,
   ProductReviewRequestInterceptor.create,
   ProductReviewValidatorMiddleware.create,

@@ -4,8 +4,6 @@ import { handlerReturn } from '../types/middlewares/interceptors/handlerReturn.t
 
 export class ProductReviewRequestInterceptor {
   public static handler(req: Request): handlerReturn {
-    req.body.product = { id: req.body.productId };
-
     return {
       success: true,
     };
@@ -13,6 +11,8 @@ export class ProductReviewRequestInterceptor {
 
   public static create(req: Request, res: Response, next: NextFunction) {
     const handled = ProductReviewRequestInterceptor.handler(req);
+
+    req.body.product = { code: req.params.productCode };
 
     if (!handled.success)
       return unprocessableEntity({ message: handled.message }).send(res);

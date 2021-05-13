@@ -7,6 +7,7 @@ import notFound from '../errors/http/notFound.error';
 import { ProductReview } from '../entities/ProductReview.entity';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/productReview.messages';
+import { Product } from '../entities/Product.entity';
 
 class ProductReviewController {
   private static getRepository() {
@@ -15,7 +16,13 @@ class ProductReviewController {
 
   public static async create(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+    const productRepository = getConnection().getRepository(Product);
     req.dto.user = req.user;
+
+    const product = await productRepository.findOne({
+      code: req.dto.product.code,
+    });
+    req.dto.product = product;
 
     const productReview = productReviewRepository.create(
       req.dto as ProductReview,
@@ -40,7 +47,6 @@ class ProductReviewController {
     const productReviewRepository = ProductReviewController.getRepository();
     const productReviewId: number = Number(req.params.id);
 
-    // TODO: where user id.
     const productReview = await productReviewRepository.findOne({
       where: {
         id: productReviewId,

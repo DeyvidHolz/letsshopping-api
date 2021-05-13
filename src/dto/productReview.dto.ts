@@ -4,7 +4,7 @@ type CreateProductReviewDto = {
   title: string;
   rating: number;
   description?: string;
-  product?: { id: string };
+  product?: { id: string; code: string };
   user?: User;
 };
 
@@ -13,7 +13,7 @@ type UpdateProductReviewDto = {
   title: string;
   rating: number;
   description?: string;
-  product?: { id: string };
+  product?: { id: string; code: string };
   user?: User;
 };
 

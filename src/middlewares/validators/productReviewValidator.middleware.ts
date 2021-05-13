@@ -19,6 +19,11 @@ class ProductReviewValidatorMiddleware extends ValidatorMiddleware {
       product: req.body.product,
     };
 
+    if (!dto.product.code)
+      return unprocessableEntity({
+        message: 'Param productCode is required.',
+      }).send(res);
+
     const validation = new ProductReviewValidator(dto);
     ProductReviewValidatorMiddleware.validate({
       dto,
