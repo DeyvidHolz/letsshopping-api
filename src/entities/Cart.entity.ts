@@ -37,14 +37,6 @@ export class Cart {
   @UpdateDateColumn()
   updatedAt: string;
 
-  // @ManyToMany(() => Product, (product) => product.carts, {
-  //   eager: true,
-  //   cascade: true,
-  //   // persistence: false,
-  // })
-  // @JoinTable()
-  // products: Product[];
-
   @OneToMany(() => CartProduct, (cartProduct) => cartProduct.cart, {
     eager: true,
     onDelete: 'CASCADE',
@@ -53,6 +45,7 @@ export class Cart {
 
   @OneToOne(() => User, (user) => user.cart, {
     persistence: false,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   user: User;
