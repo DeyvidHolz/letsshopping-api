@@ -13,7 +13,7 @@ const couponMessages: Messages = {
 
   searchByIDNotFound: {
     msg: 'Coupon with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

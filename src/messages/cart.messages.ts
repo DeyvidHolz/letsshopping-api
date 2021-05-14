@@ -8,12 +8,12 @@ const cartMessages: Messages = {
 
   productNotFound: {
     msg: 'Product with code {code} not found.',
-    replace: [{ from: 'code', to: 'code' }],
+    replace: ['code'],
   },
 
   notEnoughStock: {
     msg: 'We do not have as many {name} as you want.',
-    replace: [{ from: 'name', to: 'name' }],
+    replace: ['name'],
   },
 };
 

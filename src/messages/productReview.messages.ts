@@ -12,7 +12,7 @@ const productReviewMessages: Messages = {
 
   searchByIDNotFound: {
     msg: 'Review with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

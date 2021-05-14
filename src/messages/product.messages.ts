@@ -6,7 +6,7 @@ const productMessages: Messages = {
 
   deleted: {
     msg: 'Product with code {code} deleted.',
-    replace: [{ from: 'code', to: 'code' }],
+    replace: ['code'],
   },
 
   invalidData: 'Invalid data.',
@@ -15,12 +15,12 @@ const productMessages: Messages = {
   alreadyDeleted: 'Invalid token or product already deleted.',
   notFound: {
     msg: 'Product with {code} not found.',
-    replace: [{ from: 'code', to: 'code' }],
+    replace: ['code'],
   },
 
   searchByCodeNotFound: {
     msg: 'Product with code {code} not found.',
-    replace: [{ from: 'code', to: 'code' }],
+    replace: ['code'],
   },
 };
 

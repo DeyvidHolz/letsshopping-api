@@ -13,11 +13,11 @@ const userMessages: Messages = {
 
   searchByEmailNotFound: {
     msg: 'User with email {email} not found.',
-    replace: [{ from: 'email', to: 'email' }],
+    replace: ['email'],
   },
   searchByIDNotFound: {
     msg: 'User with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

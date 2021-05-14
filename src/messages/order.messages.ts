@@ -17,7 +17,7 @@ const orderMessages: Messages = {
 
   searchByIDNotFound: {
     msg: 'Order with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

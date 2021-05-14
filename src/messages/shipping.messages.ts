@@ -12,12 +12,12 @@ const shippingMessages: Messages = {
 
   orderNotFound: {
     msg: 'Order with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 
   searchByIDNotFound: {
     msg: 'Shipping with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

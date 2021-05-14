@@ -10,7 +10,7 @@ const addressMessages: Messages = {
 
   searchByIDNotFound: {
     msg: 'Address with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 

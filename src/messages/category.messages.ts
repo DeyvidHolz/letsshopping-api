@@ -6,14 +6,14 @@ const categoryMessages: Messages = {
 
   deleted: {
     msg: 'Category with ID {id} deleted.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 
   invalidData: 'Invalid data.',
 
   searchByIDNotFound: {
     msg: 'Category with ID {id} not found.',
-    replace: [{ from: 'id', to: 'id' }],
+    replace: ['id'],
   },
 };
 
