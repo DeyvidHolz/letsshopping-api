@@ -7,7 +7,7 @@ import AddressValidatorMiddleware from '../middlewares/validators/addressValidat
 const router = express.Router();
 
 router.get('/all', AuthMiddleware, AddressController.getAll);
-router.delete('/:id', AddressController.delete);
+router.delete('/:id', AuthMiddleware, AddressController.delete);
 router.get('/:id', AuthMiddleware, AddressController.get);
 
 router.post(
