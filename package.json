@@ -2,10 +2,10 @@
   "name": "letsshopping",
   "version": "1.0.0",
   "description": "E-commerce project",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
-    "start": "ts-node app.ts",
-    "start:dev": "ts-node-dev app.ts",
+    "start": "ts-node server.ts",
+    "start:dev": "ts-node-dev server.ts",
     "test": "./node_modules/.bin/jest --verbose false"
   },
   "keywords": [
