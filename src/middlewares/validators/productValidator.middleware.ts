@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { getConnection } from 'typeorm';
 
 import { CreateProductDto, UpdateProductDto } from '../../dto/product.dto';
-import { Product } from '../../entities/Product.entity';
-import notFound from '../../errors/http/notFound.error';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
-import { getMessage } from '../../helpers/messages.helper';
-import productMessages from '../../messages/product.messages';
 import ProductValidator from '../../validators/product.validator';
 import ValidatorMiddleware from './validatorMiddleware';
 
@@ -24,7 +19,7 @@ class ProductValidatorMiddleware extends ValidatorMiddleware {
       weight: req.body.weight,
       width: req.body.width,
       height: req.body.height,
-      categories: req.body.categories,
+      categories: req.interceptor.categories,
       images: req.body.images,
       options: req.body.options,
     };
@@ -52,7 +47,7 @@ class ProductValidatorMiddleware extends ValidatorMiddleware {
       weight: req.body.weight,
       width: req.body.width,
       height: req.body.height,
-      categories: req.body.categories,
+      categories: req.interceptor.categories,
       images: req.body.images,
       options: req.body.options,
     };

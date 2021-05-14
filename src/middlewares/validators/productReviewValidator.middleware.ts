@@ -5,8 +5,6 @@ import {
   UpdateProductReviewDto,
 } from '../../dto/productReview.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
-import { getMessage } from '../../helpers/messages.helper';
-import productReviewMessages from '../../messages/productReview.messages';
 import ProductReviewValidator from '../../validators/productReview.validator';
 import ValidatorMiddleware from './validatorMiddleware';
 
@@ -16,7 +14,7 @@ class ProductReviewValidatorMiddleware extends ValidatorMiddleware {
       title: req.body.title,
       rating: req.body.rating,
       description: req.body.description,
-      product: req.body.product,
+      product: req.interceptor.product,
     };
 
     if (!dto.product.code)

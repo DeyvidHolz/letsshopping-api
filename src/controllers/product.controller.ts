@@ -2,13 +2,11 @@ import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
 
 import { Product } from '../entities/Product.entity';
-import ProductValidator from '../validators/product.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
-import { CreateProductDto, UpdateProductDto } from '../dto/product.dto';
 
 class ProductController {
   private static getRepository() {

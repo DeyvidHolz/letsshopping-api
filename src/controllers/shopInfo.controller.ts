@@ -3,11 +3,8 @@ import { Request, Response } from 'express';
 
 import internalServerError from '../errors/http/internalServer.error';
 import { ShopInfo } from '../entities/ShopInfo.entity';
-import { CreateShopInfoDto, UpdateShopInfoDto } from '../dto/shopInfo.dto';
 import { getMessage } from '../helpers/messages.helper';
 import shopInfoMessages from '../messages/shopInfo.messages';
-import ShopInfoValidator from '../validators/shopInfo.validator';
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 
 class ShopInfoController {
   private static getRepository() {

@@ -4,19 +4,6 @@ import { handlerReturn } from '../types/middlewares/interceptors/handlerReturn.t
 
 export class ShopInfoRequestInterceptor {
   public static handler(req: Request): handlerReturn {
-    if (req.body.categories) {
-      const invalidCategories = req.body.categories.filter(
-        (categoryId) => typeof categoryId !== 'number',
-      );
-
-      if (invalidCategories.length)
-        return { success: false, message: 'Invalid value for "categories".' };
-
-      req.body.categories = req.body.categories.map((categoryId) => ({
-        id: categoryId,
-      }));
-    }
-
     return {
       success: true,
     };
@@ -34,7 +21,7 @@ export class ShopInfoRequestInterceptor {
   public static update(req: Request, res: Response, next: NextFunction) {
     const handled = ShopInfoRequestInterceptor.handler(req);
 
-    req.body.id = 1;
+    req.interceptor.id = 1;
 
     if (!handled.success)
       return unprocessableEntity({ message: handled.message }).send(res);

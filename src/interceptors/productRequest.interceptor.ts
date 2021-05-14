@@ -12,7 +12,7 @@ export class ProductRequestInterceptor {
       if (invalidCategories.length)
         return { success: false, message: 'Invalid value for "categories".' };
 
-      req.body.categories = req.body.categories.map((categoryId) => ({
+      req.interceptor.categories = req.body.categories.map((categoryId) => ({
         id: categoryId,
       }));
     }

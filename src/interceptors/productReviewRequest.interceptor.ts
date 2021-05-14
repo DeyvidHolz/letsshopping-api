@@ -12,7 +12,7 @@ export class ProductReviewRequestInterceptor {
   public static create(req: Request, res: Response, next: NextFunction) {
     const handled = ProductReviewRequestInterceptor.handler(req);
 
-    req.body.product = { code: req.params.productCode };
+    req.interceptor.product = { code: req.params.productCode };
 
     if (!handled.success)
       return unprocessableEntity({ message: handled.message }).send(res);
