@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const productReviewMessages: messages = {
+const productReviewMessages: Messages = {
   created: 'Review created.',
   updated: 'Review updated.',
   deleted: 'Review deleted.',

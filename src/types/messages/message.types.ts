@@ -1,9 +1,9 @@
-type message =
+type Message =
   | string
   | { msg: string; replace?: { from: string; to: string }[] };
 
-type messages = {
-  [key: string]: message;
+type Messages = {
+  [key: string]: Message;
 };
 
-export { message, messages };
+export { Message, Messages };

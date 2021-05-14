@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const addressMessages: messages = {
+const addressMessages: Messages = {
   created: 'Address created.',
   updated: 'Address updated.',
   deleted: 'Address deleted.',

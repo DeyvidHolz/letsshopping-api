@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import { handlerReturn } from '../types/middlewares/interceptors/handlerReturn.types';
+import { HandlerReturn } from '../types/middlewares/interceptors/handlerReturn.types';
 
 export class ShopInfoRequestInterceptor {
-  public static handler(req: Request): handlerReturn {
+  public static handler(req: Request): HandlerReturn {
     return {
       success: true,
     };

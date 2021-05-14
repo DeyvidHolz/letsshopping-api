@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const couponMessages: messages = {
+const couponMessages: Messages = {
   created: 'Coupon created.',
   updated: 'Coupon updated.',
 

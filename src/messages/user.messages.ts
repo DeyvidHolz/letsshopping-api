@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const userMessages: messages = {
+const userMessages: Messages = {
   created: 'User created.',
   updated: 'User updated.',
   deleted: 'User deleted.',

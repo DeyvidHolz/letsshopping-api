@@ -1,6 +1,6 @@
-import { message } from '../types/messages/message.types';
+import { Message } from '../types/messages/message.types';
 
-const getMessage = (message: message, object?: object): string => {
+const getMessage = (message: Message, object?: object): string => {
   if (typeof message !== 'object') return message;
 
   let replacedMessage: string = message.msg;

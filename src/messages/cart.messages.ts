@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const cartMessages: messages = {
+const cartMessages: Messages = {
   productAdded: 'Product added to your cart.',
   productUpdated: 'Product updated.',
   productRemoved: 'Product removed from your cart.',

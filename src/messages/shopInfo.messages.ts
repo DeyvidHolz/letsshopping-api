@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const shopInfoMessages: messages = {
+const shopInfoMessages: Messages = {
   created: 'Shop Info created.',
   updated: 'Shop Info updated.',
 };

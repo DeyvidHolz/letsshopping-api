@@ -1,6 +1,6 @@
-type handlerReturn = {
+type HandlerReturn = {
   success: boolean;
   message?: string;
 };
 
-export { handlerReturn };
+export { HandlerReturn };

@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const categoryMessages: messages = {
+const categoryMessages: Messages = {
   created: 'Category created.',
   updated: 'Category updated.',
 

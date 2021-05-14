@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const orderMessages: messages = {
+const orderMessages: Messages = {
   created: 'Order created.',
   updated: 'Order updated.',
   duplicatedCode: 'The order code is already in use.',

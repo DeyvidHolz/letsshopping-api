@@ -1,6 +1,6 @@
-import { messages } from '../types/messages/message.types';
+import { Messages } from '../types/messages/message.types';
 
-const permissionGroupMessages: messages = {
+const permissionGroupMessages: Messages = {
   created: 'Permission group created.',
   updated: 'Permission group updated.',
   deleted: 'Permission group deleted.',
