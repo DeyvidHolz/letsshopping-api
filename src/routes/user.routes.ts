@@ -21,6 +21,6 @@ router.patch(
   UserController.update,
 );
 
-router.delete('/', UserController.delete);
+router.delete('/', AuthMiddleware, UserController.delete);
 
 export default router;
