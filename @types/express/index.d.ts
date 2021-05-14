@@ -7,6 +7,7 @@ declare global {
     interface Request {
       dto: any;
       user: User;
+      interceptor: any;
     }
   }
 }

@@ -1,7 +1,7 @@
 // Modules
 import 'reflect-metadata';
 import 'colors';
-import express, { Application } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
@@ -89,6 +89,12 @@ createConnection().then((connection) => {
 
     private routerConfig() {
       console.log('Setting routers...'.yellow);
+
+      this.app.use('*', (req: Request, res: Response, next: NextFunction) => {
+        req.interceptor = {};
+        next();
+      });
+
       this.app.use('/api/admin/info', shopInfoRoutes);
       this.app.use('/api/users', userRoutes);
       this.app.use('/api/products/reviews', productReviewRoutes);
