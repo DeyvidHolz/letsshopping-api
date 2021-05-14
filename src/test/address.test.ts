@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { Address } from '../entities/Address.entity';
 import RequestNotExpected from '../errors/test/requestNotExpected.error';
-import { createAddressDto, updateAddressDto } from '../dto/address.dto';
+import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 
 dotenv.config();
 
@@ -63,7 +63,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should create an address', async () => {
-    const createAddressDto: createAddressDto = {
+    const CreateAddressDto: CreateAddressDto = {
       country: 'BR',
       zipCode: '02995000',
       state: 'SP',
@@ -74,7 +74,7 @@ describe('Address routes tests', () => {
 
     const res: AxiosResponse = await axios.post(
       `${URL}/addresses`,
-      createAddressDto,
+      CreateAddressDto,
       {
         headers,
       },
@@ -88,7 +88,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should create a non-main address', async () => {
-    const createAddressDto: createAddressDto = {
+    const CreateAddressDto: CreateAddressDto = {
       country: 'BR',
       zipCode: '02995001',
       state: 'SP',
@@ -99,7 +99,7 @@ describe('Address routes tests', () => {
 
     const res: AxiosResponse = await axios.post(
       `${URL}/addresses`,
-      createAddressDto,
+      CreateAddressDto,
       {
         headers,
       },
@@ -115,7 +115,7 @@ describe('Address routes tests', () => {
   it('Should update an address', async () => {
     const { id, country, zipCode } = createdAddresses[1];
 
-    const updateAddressDto: updateAddressDto = {
+    const UpdateAddressDto: UpdateAddressDto = {
       country,
       zipCode,
       state: 'RJ',
@@ -127,7 +127,7 @@ describe('Address routes tests', () => {
 
     const res: AxiosResponse = await axios.patch(
       `${URL}/addresses/${id}`,
-      updateAddressDto,
+      UpdateAddressDto,
       {
         headers,
       },
@@ -178,7 +178,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should not create addresses with same ZIP Code', (done) => {
-    const createAddressDto: createAddressDto = {
+    const CreateAddressDto: CreateAddressDto = {
       country: 'BR',
       zipCode: '02995000',
       state: 'SP',
@@ -188,7 +188,7 @@ describe('Address routes tests', () => {
     };
 
     axios
-      .post(`${URL}/addresses`, createAddressDto, {
+      .post(`${URL}/addresses`, CreateAddressDto, {
         headers,
       })
       .then(() => {
@@ -203,7 +203,7 @@ describe('Address routes tests', () => {
   });
 
   it('Should not create invalid addresses', (done) => {
-    const createAddressDto: createAddressDto = {
+    const CreateAddressDto: CreateAddressDto = {
       country: 'BR',
       zipCode: null,
       state: 'SP123',
@@ -213,7 +213,7 @@ describe('Address routes tests', () => {
     };
 
     axios
-      .post(`${URL}/addresses`, createAddressDto, {
+      .post(`${URL}/addresses`, CreateAddressDto, {
         headers,
       })
       .then(() => {
