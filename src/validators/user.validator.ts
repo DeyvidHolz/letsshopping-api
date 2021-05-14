@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { User } from '../entities/User.entity';
+import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 import userValidationRegex from './validationRegex/user.validationRegex';
 
 import {
@@ -10,12 +10,12 @@ import {
 } from './validator';
 
 export default class UserValidator extends Validator {
-  public data: User;
+  public data: CreateUserDto | UpdateUserDto;
   public validationErrors: ValidationMessages[] | null = null;
 
   protected validationRegex: ValidationRegex[] = userValidationRegex;
 
-  constructor(user: User, updating: boolean = false) {
+  constructor(user: CreateUserDto | UpdateUserDto, updating: boolean = false) {
     super();
     this.updating = updating;
     this.data = user;
@@ -23,6 +23,15 @@ export default class UserValidator extends Validator {
 
   public validate(): Validation {
     super.validate();
+
+    if (this.updating) {
+      const data = this.data as UpdateUserDto;
+      if (!data.currentPassword)
+        this.addError(
+          'currentPassword',
+          "Field 'currentPassword' is required.",
+        );
+    }
 
     if (!validator.isEmail(this.data.email))
       this.addError('email', 'Invalid email.');

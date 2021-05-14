@@ -76,7 +76,6 @@ createConnection().then((connection) => {
         let user = await userRepository.findOne(id);
 
         if (user) {
-          delete user.password;
           next(null, user);
         } else {
           next(null, false);

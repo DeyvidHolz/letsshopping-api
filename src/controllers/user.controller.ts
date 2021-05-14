@@ -1,17 +1,12 @@
-import jwt from 'jsonwebtoken';
-// import jwt_decode from 'jwt-decode'
-import { Request, Response } from 'express';
-import { getConnection, Raw } from 'typeorm';
 import dotenv from 'dotenv';
-import decode from 'jwt-decode';
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { getConnection, Raw } from 'typeorm';
 
 import jwtConfig from '../config/jwt.config';
-
 import { User } from '../entities/User.entity';
-
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
-import UserValidator from '../validators/user.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
@@ -20,6 +15,7 @@ import { getMessage } from '../helpers/messages.helper';
 import { Cart } from '../entities/Cart.entity';
 import { PermissionGroup } from '../entities/PermissionGroup.entity';
 import { JwtUser } from '../types/controllers/userController.types';
+import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 
 dotenv.config();
 
@@ -29,31 +25,11 @@ class UserController {
   }
 
   public static async create(req: Request, res: Response) {
-    const data = {
-      username: req.body.username,
-      password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      birthDate: req.body.birthDate,
-    };
+    const userRepository = UserController.getRepository();
+    req.dto.firstName = StringHelper.uppercaseFirst(req.dto.firstName);
+    req.dto.lastName = StringHelper.uppercaseFirst(req.dto.lastName);
 
-    const user = new User();
-    user.firstName = StringHelper.uppercaseFirst(data.firstName);
-    user.lastName = StringHelper.uppercaseFirst(data.lastName);
-    user.password = data.password;
-    user.username = data.username;
-    user.email = data.email;
-    user.birthDate = data.birthDate;
-
-    const validation = new UserValidator(user);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(userMessages.invalidData, user),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
+    const user = userRepository.create(req.dto as CreateUserDto);
 
     // Setting user default permission group
     const defaultPermissionGroup = await getConnection()
@@ -62,9 +38,8 @@ class UserController {
 
     user.permissionGroup = defaultPermissionGroup;
 
-    user.password = CryptHelper.encryptPassword(data.password);
-
-    const userRepository = await UserController.getRepository();
+    // TODO: put this in a listener
+    user.password = CryptHelper.encryptPassword(user.password);
 
     try {
       await userRepository.save(user);
@@ -81,7 +56,6 @@ class UserController {
       if (err.code === '23505') {
         return unprocessableEntity({
           message: getMessage(userMessages.alreadyExists, user),
-          errors: validation.validationErrors,
         }).send(res);
       }
 
@@ -89,6 +63,7 @@ class UserController {
     }
   }
 
+  // TODO: put this in UserAdminController
   public static async getAll(req: Request, res: Response) {
     const users = await UserController.getRepository().find({
       select: [
@@ -108,26 +83,8 @@ class UserController {
   }
 
   public static async get(req: Request, res: Response) {
-    const userRepository = await UserController.getRepository();
-
-    if (!req.query.email)
-      return unprocessableEntity({
-        message: getMessage(userMessages.invalidEmail),
-      }).send(res);
-
-    const email: string = req.query.email as string;
-
-    const user = await userRepository.findOne({ email });
-
-    if (!user)
-      return notFound({
-        message: getMessage(userMessages.searchByEmailNotFound, {
-          email: req.query.email,
-        }),
-      }).send(res);
-
-    delete user.password;
-    return res.json(user);
+    delete req.user.password;
+    return res.json(req.user);
   }
 
   public static async auth(req: Request, res: Response) {
@@ -195,74 +152,38 @@ class UserController {
 
   public static async update(req: Request, res: Response) {
     const userRepository = await UserController.getRepository();
-    const userDecoded = decode(req.headers.authorization);
+    const data: UpdateUserDto = req.dto;
 
-    const user = await userRepository.findOne({
-      where: { id: userDecoded['id'] },
-      relations: ['cart'],
-    });
+    if (data.firstName)
+      data.firstName = StringHelper.uppercaseFirst(data.firstName);
 
-    if (!user) {
-      return notFound({
-        message: getMessage(userMessages.searchByIDNotFound, {
-          id: req.body.id,
-        }),
-      }).send(res);
-    }
+    if (data.lastName)
+      data.lastName = StringHelper.uppercaseFirst(data.lastName);
 
-    const currentPasswordIsEmpty =
-      req.body.currentPassword === undefined || req.body.currentPassword === '';
+    if (data.password)
+      data.password = CryptHelper.encryptPassword(data.password);
 
-    if (currentPasswordIsEmpty) {
-      return unprocessableEntity({
-        message: "Field 'currentPassword' is required.",
-      }).send(res);
-    }
-
-    if (!CryptHelper.checkPassword(req.body.currentPassword, user.password)) {
+    if (
+      !CryptHelper.checkPassword(req.body.currentPassword, req.user.password)
+    ) {
       return unprocessableEntity({
         message: getMessage(userMessages.invalidPassword),
       }).send(res);
     }
 
-    const data = {
-      password: req.body.password ?? user.password,
-      firstName: req.body.firstName ?? user.firstName,
-      lastName: req.body.lastName ?? user.lastName,
-      email: req.body.email ?? user.email,
-      birthDate: req.body.birthDate ?? user.birthDate,
-    };
-
-    user.firstName = StringHelper.uppercaseFirst(data.firstName);
-    user.lastName = StringHelper.uppercaseFirst(data.lastName);
-    user.email = data.email;
-    user.birthDate = data.birthDate;
-
-    const validation = new UserValidator(user, true);
-
-    if (validation.hasErrors()) {
-      return unprocessableEntity({
-        message: getMessage(userMessages.invalidData),
-        errors: validation.validationErrors,
-      }).send(res);
-    }
-
-    user.password = data.password
-      ? CryptHelper.encryptPassword(data.password)
-      : user.password;
+    const user = await userRepository.create(data);
 
     try {
-      if (user.id) {
-        delete user.password;
-        return res
-          .status(200)
-          .json({ message: getMessage(userMessages.updated, user), user });
-      }
+      await userRepository.save(user);
+      delete user.password;
+
+      return res
+        .status(200)
+        .json({ message: getMessage(userMessages.updated, user), user });
     } catch (err) {
       if (err.code === '23505') {
         return unprocessableEntity({
           message: getMessage(userMessages.alreadyExists, user),
-          errors: validation.validationErrors,
         }).send(res);
       }
 
@@ -271,31 +192,16 @@ class UserController {
   }
 
   public static async delete(req: Request, res: Response) {
-    const userDecoded = decode(req.headers.authorization);
     const userRepository = UserController.getRepository();
-    const cartRepository = getConnection().getRepository(Cart);
-
-    const user = await userRepository.findOne({
-      username: userDecoded['username'],
-    });
-
-    if (!user) {
-      return unprocessableEntity({
-        message: getMessage(userMessages.alreadyDeleted),
-      }).send(res);
-    }
-
-    await cartRepository.delete({
-      user: { id: user.id },
-    });
 
     await userRepository.delete({
-      id: user.id,
+      id: req.user.id,
     });
 
     return res.status(200).json({ message: getMessage(userMessages.deleted) });
   }
 
+  // TODO: put this in UserAdminController
   public static async search(req: Request, res: Response) {
     if (!req.query.firstName && req.query.name)
       req.query.firstName = req.query.name;
