@@ -1,6 +1,7 @@
 // Modules
 import 'reflect-metadata';
 import 'colors';
+import fs from 'fs';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
@@ -42,8 +43,6 @@ createConnection().then((connection) => {
 
       this.app = express();
       this.config();
-      this.passportConfig();
-      this.routerConfig();
       this.createDefaultPermisionGroups();
       this.createShop();
       this.createAdminUser();
@@ -55,6 +54,16 @@ createConnection().then((connection) => {
     private config() {
       this.app.use(bodyParser.urlencoded({ extended: true }));
       this.app.use(bodyParser.json({ limit: '1mb' }));
+
+      this.logConfig();
+      this.passportConfig();
+      this.routerConfig();
+    }
+
+    private logConfig() {
+      if (!fs.existsSync('./logs')) {
+        fs.mkdirSync('./logs');
+      }
     }
 
     private passportConfig() {
