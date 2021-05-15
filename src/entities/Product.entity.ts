@@ -28,16 +28,16 @@ export class Product {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   shortDescription: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   mainImage: string;
 
-  @Column()
+  @Column({ default: false })
   isActive: boolean;
 
   @Column({ default: 0 })

@@ -6,15 +6,15 @@ type CreateProductDto = {
   shortDescription: string;
   description: string;
   mainImage: string;
-  isActive: boolean;
+  isActive?: boolean;
   stock?: number;
   price: number;
   weight?: number;
   width?: number;
   height?: number;
-  categories: number[];
-  images: [{ src: string; description?: string }];
-  options: CreateProductOptionDto[];
+  categories?: number[] | { id: number }[];
+  images?: { src: string; description?: string }[];
+  options?: CreateProductOptionDto[];
 };
 
 type UpdateProductDto = {
@@ -25,15 +25,15 @@ type UpdateProductDto = {
   shortDescription: string;
   description: string;
   mainImage: string;
-  isActive: boolean;
+  isActive?: boolean;
   stock?: number;
   price: number;
   weight?: number;
   width?: number;
   height?: number;
-  categories: number[];
-  images: [{ src: string; description?: string }];
-  options: CreateProductOptionDto[];
+  categories?: number[] | { id: number }[];
+  images?: { src: string; description?: string }[];
+  options?: CreateProductOptionDto[];
 };
 
 export { CreateProductDto, UpdateProductDto };
