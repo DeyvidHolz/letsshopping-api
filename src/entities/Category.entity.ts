@@ -15,10 +15,10 @@ export class Category {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   shortDescription: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @ManyToMany(() => Product, (product) => product.categories, {
