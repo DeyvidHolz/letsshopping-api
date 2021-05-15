@@ -37,6 +37,7 @@ import { ShopInfo } from './src/entities/ShopInfo.entity';
 import { PermissionGroup } from './src/entities/PermissionGroup.entity';
 import cryptHelper from './src/helpers/crypt.helper';
 import { Cart } from './src/entities/Cart.entity';
+import { createSeeds } from './src/seeds/seeds';
 
 class Application {
   private app: ExpressApplication;
@@ -47,11 +48,13 @@ class Application {
 
     this.app = express();
 
-    this.connect().then(() => {
+    this.connect().then(async () => {
       this.config();
       this.createDefaultPermisionGroups();
       this.createShop();
       this.createAdminUser();
+
+      await createSeeds();
 
       console.log('Application loaded!'.green);
       console.log('');
