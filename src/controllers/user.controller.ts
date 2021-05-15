@@ -26,9 +26,6 @@ class UserController {
 
   public static async create(req: Request, res: Response) {
     const userRepository = UserController.getRepository();
-    req.dto.firstName = StringHelper.uppercaseFirst(req.dto.firstName);
-    req.dto.lastName = StringHelper.uppercaseFirst(req.dto.lastName);
-
     const user = userRepository.create(req.dto as CreateUserDto);
 
     // Setting user default permission group
@@ -153,12 +150,6 @@ class UserController {
   public static async update(req: Request, res: Response) {
     const userRepository = await UserController.getRepository();
     const data: UpdateUserDto = req.dto;
-
-    if (data.firstName)
-      data.firstName = StringHelper.uppercaseFirst(data.firstName);
-
-    if (data.lastName)
-      data.lastName = StringHelper.uppercaseFirst(data.lastName);
 
     if (data.password)
       data.password = CryptHelper.encryptPassword(data.password);

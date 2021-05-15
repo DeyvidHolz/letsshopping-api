@@ -9,8 +9,8 @@ class UserValidatorMiddleware extends ValidatorMiddleware {
     const dto: CreateUserDto = {
       username: req.body.username,
       password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstName: req.interceptor.firstName,
+      lastName: req.interceptor.lastName,
       email: req.body.email,
       birthDate: req.body.birthDate,
     };
@@ -24,8 +24,8 @@ class UserValidatorMiddleware extends ValidatorMiddleware {
       id: req.user.id,
       password: req.body.password,
       currentPassword: req.body.currentPassword,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstName: req.interceptor.firstName,
+      lastName: req.interceptor.lastName,
       email: req.body.email,
       birthDate: req.body.birthDate,
     };
