@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { decode } from 'jsonwebtoken';
 import { getConnection, Raw } from 'typeorm';
 
 import jwtConfig from '../config/jwt.config';
@@ -80,7 +80,6 @@ class UserController {
   }
 
   public static async get(req: Request, res: Response) {
-    delete req.user.password;
     return res.json(req.user);
   }
 
@@ -96,8 +95,17 @@ class UserController {
     const userRepository = await UserController.getRepository();
 
     let user = await userRepository.findOne({
+      select: [
+        'id',
+        'username',
+        'password',
+        'firstName',
+        'lastName',
+        'email',
+        'birthDate',
+      ],
       where: { username },
-      relations: ['cart'],
+      relations: ['cart', 'permissionGroup'],
     });
 
     if (!user)
@@ -166,7 +174,6 @@ class UserController {
 
     try {
       await userRepository.save(user);
-      delete user.password;
 
       return res
         .status(200)

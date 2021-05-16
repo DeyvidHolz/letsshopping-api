@@ -158,7 +158,6 @@ class PermissionGroupController {
     user.permissionGroup = permissionGroup;
     await userRepository.save(user);
 
-    delete user.password;
     return res.json({ message: 'Permission group changed.', user });
   }
 }
