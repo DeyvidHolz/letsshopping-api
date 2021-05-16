@@ -114,6 +114,7 @@ class Application {
 
     this.app.use('*', (req: Request, res: Response, next: NextFunction) => {
       req.interceptor = {};
+      req.dto = {};
       next();
     });
 
