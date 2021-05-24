@@ -1,7 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateCouponDto, UpdateCouponDto } from '../../dto/coupon.dto';
+import {
+  CreateCouponDto,
+  DeleteCouponDto,
+  GetCouponDto,
+  UpdateCouponDto,
+} from '../../dto/coupon.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
+import { getMessage } from '../../helpers/messages.helper';
+import couponMessages from '../../messages/coupon.messages';
 import CouponValidator from '../../validators/coupon.validator';
 import ValidatorMiddleware from './validatorMiddleware';
 
@@ -41,12 +48,42 @@ class CouponValidatorMiddleware extends ValidatorMiddleware {
 
     if (couponIdIsEmpty) {
       return unprocessableEntity({
-        message: "Field 'id' is required.",
+        message: getMessage(couponMessages.invalidId, { id: dto.id }),
       }).send(res);
     }
 
     const validation = new CouponValidator(dto, true);
     CouponValidatorMiddleware.validate({ dto, validation, req, res, next });
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetCouponDto = {
+      id: +req.params.id,
+    };
+
+    if (!dto.id || isNaN(dto.id)) {
+      return unprocessableEntity({
+        message: 'Invalid param id.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
+  }
+
+  public static delete(req: Request, res: Response, next: NextFunction) {
+    const dto: DeleteCouponDto = {
+      id: +req.params.id,
+    };
+
+    if (!dto.id || isNaN(dto.id)) {
+      return unprocessableEntity({
+        message: 'Invalid param id.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
   }
 }
 

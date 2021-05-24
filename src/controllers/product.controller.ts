@@ -1,12 +1,17 @@
-import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-
+import { getConnection, Raw } from 'typeorm';
 import { Product } from '../entities/Product.entity';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import productMessages from '../messages/product.messages';
+import {
+  CreateProductDto,
+  DeleteProductDto,
+  GetProductDto,
+  UpdateProductDto,
+} from '../dto/product.dto';
 
 class ProductController {
   private static getRepository() {
@@ -15,7 +20,8 @@ class ProductController {
 
   public static async create(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
-    const product = productRepository.create(req.dto as Product);
+    const dto: CreateProductDto = req.dto;
+    const product = productRepository.create(dto as Product);
 
     // Updating stock based on options
     if (product.options && product.options.length) {
@@ -52,16 +58,16 @@ class ProductController {
 
   public static async get(req: Request, res: Response) {
     const productRespository = getConnection().getRepository(Product);
-    const productCode: string = req.params.code;
+    const dto: GetProductDto = req.dto;
 
     let product = await productRespository.findOne({
-      where: { code: productCode },
+      where: { code: dto.code },
     });
 
     if (!product) {
       return notFound({
         message: getMessage(productMessages.searchByCodeNotFound, {
-          code: productCode,
+          code: dto.code,
         }),
       }).send(res);
     }
@@ -81,15 +87,16 @@ class ProductController {
 
   public static async update(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
-    const oldProduct = await productRepository.findOne({ code: req.dto.code });
+    const dto: UpdateProductDto = req.dto;
+    const oldProduct = await productRepository.findOne({ code: dto.code });
 
     if (!oldProduct)
       return notFound({
-        message: getMessage(productMessages.notFound, { code: req.dto.code }),
+        message: getMessage(productMessages.notFound, { code: dto.code }),
       }).send(res);
 
-    req.dto.id = oldProduct.id;
-    const product = productRepository.create(req.dto as Product);
+    dto.id = Number(oldProduct.id);
+    const product = productRepository.create(dto as unknown as Product);
 
     // Updating stock based on options
     // TODO: duplicated code. Put this in a SUBSCRIBER.
@@ -127,13 +134,13 @@ class ProductController {
 
   public static async delete(req: Request, res: Response) {
     const productRepository = ProductController.getRepository();
-    const productCode: string = req.params.code;
+    const dto: DeleteProductDto = req.dto;
 
     try {
-      await productRepository.delete({ code: productCode });
+      await productRepository.delete({ code: dto.code });
 
       return res.status(200).json({
-        message: getMessage(productMessages.deleted, { code: productCode }),
+        message: getMessage(productMessages.deleted, { code: dto.code }),
       });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);

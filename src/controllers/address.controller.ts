@@ -1,13 +1,16 @@
 import { getConnection, Not } from 'typeorm';
 import { Request, Response } from 'express';
-
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { Address } from '../entities/Address.entity';
 import { User } from '../entities/User.entity';
-import unauthorized from '../errors/http/unauthorized';
-import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
+import {
+  GetAddressDto,
+  CreateAddressDto,
+  DeleteAddressDto,
+  UpdateAddressDto,
+} from '../dto/address.dto';
 import { getMessage } from '../helpers/messages.helper';
 import addressMessages from '../messages/address.messages';
 
@@ -18,8 +21,9 @@ class AddressController {
 
   public static async create(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
+    const dto: CreateAddressDto = req.dto;
 
-    const address = addressRepository.create(req.dto as Address);
+    const address = addressRepository.create(dto as Address);
     address.user = req.user as User;
 
     try {
@@ -39,13 +43,13 @@ class AddressController {
        */
       // TODO: remove this query
       const addressWithSamezipCode = await addressRepository.findOne({
-        where: { zipCode: req.dto.zipCode, user: { id: req.user.id } },
+        where: { zipCode: dto.zipCode, user: { id: req.user.id } },
       });
 
       if (addressWithSamezipCode) {
         return unprocessableEntity({
           message: getMessage(addressMessages.duplicatedZipCode, {
-            zipCode: req.dto.zipCode,
+            zipCode: dto.zipCode,
           }),
         }).send(res);
       }
@@ -84,10 +88,10 @@ class AddressController {
 
   public static async get(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
+    const dto: GetAddressDto = req.dto;
 
-    const addressId: number = req.params.id as unknown as number;
     const address = await addressRepository.findOne({
-      id: addressId,
+      id: dto.id,
       user: { id: req.user.id },
     });
 
@@ -110,7 +114,8 @@ class AddressController {
 
   public static async update(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const address = addressRepository.create(req.dto as Address);
+    const dto: UpdateAddressDto = req.dto;
+    const address = addressRepository.create(dto as Address);
     address.user = req.user;
 
     const addresses = await addressRepository.find({
@@ -189,10 +194,10 @@ class AddressController {
 
   public static async delete(req: Request, res: Response) {
     const addressRepository = AddressController.getRepository();
-    const addressId: number = Number(req.params.id);
+    const dto: DeleteAddressDto = req.dto;
 
     const address = await addressRepository.findOne({
-      id: addressId,
+      id: dto.id,
       user: { id: req.user.id },
     });
 
@@ -202,7 +207,7 @@ class AddressController {
      */
     if (address && address.isMain) {
       const addresses = await addressRepository.find({
-        where: { id: Not(addressId), user: { id: req.user.id } },
+        where: { id: Not(dto.id), user: { id: req.user.id } },
         order: {
           id: 'DESC',
         },
@@ -216,7 +221,7 @@ class AddressController {
     }
 
     try {
-      await addressRepository.delete(addressId);
+      await addressRepository.delete(dto.id);
 
       return res
         .status(200)

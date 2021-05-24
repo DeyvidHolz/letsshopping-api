@@ -5,7 +5,12 @@ import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { Coupon } from '../entities/Coupon.entity';
-import { CreateCouponDto, UpdateCouponDto } from '../dto/coupon.dto';
+import {
+  CreateCouponDto,
+  DeleteCouponDto,
+  GetCouponDto,
+  UpdateCouponDto,
+} from '../dto/coupon.dto';
 import { getMessage } from '../helpers/messages.helper';
 import couponMessages from '../messages/coupon.messages';
 import CouponValidator from '../validators/coupon.validator';
@@ -17,7 +22,8 @@ class CouponController {
 
   public static async create(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const coupon = couponRepository.create(req.dto as Coupon);
+    const dto: CreateCouponDto = req.dto;
+    const coupon = couponRepository.create(dto as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -41,12 +47,12 @@ class CouponController {
 
   public static async get(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const couponId: number = Number(req.params.id);
-    const coupon = await couponRepository.findOne(couponId);
+    const dto: GetCouponDto = req.dto;
+    const coupon = await couponRepository.findOne(dto.id);
 
     if (!coupon) {
       return notFound({
-        message: getMessage(couponMessages.notFound, { id: couponId }),
+        message: getMessage(couponMessages.notFound, { id: dto.id }),
       }).send(res);
     }
 
@@ -62,16 +68,10 @@ class CouponController {
 
   public static async update(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
-    const couponId: number = Number(req.params.id);
-
-    if (!couponId || isNaN(couponId)) {
-      return unprocessableEntity({
-        message: getMessage(couponMessages.invalidId, { id: couponId }),
-      }).send(res);
-    }
+    const dto: UpdateCouponDto = req.dto;
 
     // TODO: query category instead of just use .create, then update data.
-    const coupon = couponRepository.create(req.dto as Coupon);
+    const coupon = couponRepository.create(dto as Coupon);
 
     try {
       await couponRepository.save(coupon);
@@ -95,9 +95,10 @@ class CouponController {
 
   public static async delete(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
+    const dto: DeleteCouponDto = req.dto;
 
     try {
-      await couponRepository.delete(Number(req.params.id));
+      await couponRepository.delete(dto.id);
       return res
         .status(200)
         .json({ message: getMessage(couponMessages.deleted) });

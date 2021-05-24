@@ -108,6 +108,8 @@ class UserController {
       relations: ['cart', 'permissionGroup'],
     });
 
+    const hashedPassword: string = user.password;
+
     if (!user)
       return unprocessableEntity({
         message: getMessage(userMessages.invalidCredentials),
@@ -128,7 +130,7 @@ class UserController {
       });
     }
 
-    if (CryptHelper.checkPassword(password, user.password)) {
+    if (CryptHelper.checkPassword(password, hashedPassword)) {
       let payload: JwtUser = {
         id: user.id,
         firstName: user.firstName,

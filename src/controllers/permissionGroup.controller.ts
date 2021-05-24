@@ -1,6 +1,5 @@
-import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-
+import { getConnection, Raw } from 'typeorm';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
@@ -8,6 +7,12 @@ import { getMessage } from '../helpers/messages.helper';
 import { PermissionGroup } from '../entities/PermissionGroup.entity';
 import permissionGroupMessages from '../messages/permissionGroup.messages';
 import { User } from '../entities/User.entity';
+import {
+  CreatePermissionGroupDto,
+  DeletePermissionGroupDto,
+  GetPermissionGroupDto,
+  UpdatePermissionGroupDto,
+} from '../dto/permissionGroup.dto';
 
 class PermissionGroupController {
   private static getRepository() {
@@ -16,9 +21,10 @@ class PermissionGroupController {
 
   public static async create(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
+    const dto: CreatePermissionGroupDto = req.dto;
 
     const permissionGroup = permissionGroupRepository.create(
-      req.dto as PermissionGroup,
+      dto as PermissionGroup,
     );
 
     try {
@@ -47,10 +53,11 @@ class PermissionGroupController {
 
   public static async update(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
+    const dto: UpdatePermissionGroupDto = req.dto;
 
     // TODO: find by name then update
     const permissionGroup = permissionGroupRepository.create(
-      req.dto as PermissionGroup,
+      dto as PermissionGroup,
     );
 
     try {
@@ -79,16 +86,16 @@ class PermissionGroupController {
 
   public static async get(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
-    const permissionGroupName: string = req.params.name;
+    const dto: GetPermissionGroupDto = req.dto;
 
     const permissionGroup = await permissionGroupRepository.findOne({
-      name: permissionGroupName,
+      name: dto.name,
     });
 
     if (!permissionGroup) {
       return notFound({
         message: getMessage(permissionGroupMessages.notFound, {
-          name: permissionGroupName,
+          name: dto.name,
         }),
       }).send(res);
     }
@@ -105,20 +112,18 @@ class PermissionGroupController {
 
   public static async delete(req: Request, res: Response) {
     const permissionGroupRepository = PermissionGroupController.getRepository();
-    const permissionGroupName: string = req.params.name;
+    const dto: DeletePermissionGroupDto = req.dto;
 
-    if (!permissionGroupName)
-      return unprocessableEntity({ message: "Param 'name' is required. " });
-
-    if (permissionGroupName === process.env.DEFAULT_PERMISSION_GROUP)
+    if (dto.name === process.env.DEFAULT_PERMISSION_GROUP) {
       return unprocessableEntity({
         message: getMessage(permissionGroupMessages.noPermissionToDelete, {
-          name: permissionGroupName,
+          name: dto.name,
         }),
       });
+    }
 
     try {
-      await permissionGroupRepository.delete({ name: permissionGroupName });
+      await permissionGroupRepository.delete({ name: dto.name });
       return res
         .status(200)
         .json({ message: getMessage(permissionGroupMessages.deleted) });

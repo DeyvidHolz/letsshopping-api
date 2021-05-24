@@ -26,6 +26,7 @@ router.get(
   '/:name',
   AuthMiddleware,
   AdminMiddleware,
+  PermissionGroupValidatorMiddleware.get,
   PermissionGroupController.get,
 );
 
@@ -49,6 +50,7 @@ router.delete(
   '/:name',
   AuthMiddleware,
   AdminMiddleware,
+  PermissionGroupValidatorMiddleware.delete,
   PermissionGroupController.delete,
 );
 

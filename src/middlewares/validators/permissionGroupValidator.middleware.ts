@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 
 import {
   CreatePermissionGroupDto,
+  DeletePermissionGroupDto,
+  GetPermissionGroupDto,
   UpdatePermissionGroupDto,
 } from '../../dto/permissionGroup.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
@@ -54,6 +56,32 @@ class PermissionGroupValidatorMiddleware extends ValidatorMiddleware {
     if (!permissionGroupName)
       return unprocessableEntity({ message: 'Invalid group name.' });
 
+    next();
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetPermissionGroupDto = { name: req.params.name };
+
+    if (!dto.name) {
+      return unprocessableEntity({
+        message: 'Invalid param name.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
+  }
+
+  public static delete(req: Request, res: Response, next: NextFunction) {
+    const dto: DeletePermissionGroupDto = { name: req.params.name };
+
+    if (!dto.name) {
+      return unprocessableEntity({
+        message: 'Invalid param name.',
+      }).send(res);
+    }
+
+    req.dto = dto;
     next();
   }
 }

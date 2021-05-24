@@ -1,6 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, request, Request, Response } from 'express';
 
-import { CreateAddressDto, UpdateAddressDto } from '../../dto/address.dto';
+import {
+  CreateAddressDto,
+  DeleteAddressDto,
+  GetAddressDto,
+  UpdateAddressDto,
+} from '../../dto/address.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
 import { getMessage } from '../../helpers/messages.helper';
 import addressMessages from '../../messages/address.messages';
@@ -53,6 +58,36 @@ class AddressValidatorMiddleware extends ValidatorMiddleware {
 
     const validation = new AddressValidator(dto, true);
     AddressValidatorMiddleware.validate({ dto, validation, req, res, next });
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetAddressDto = {
+      id: Number(req.params.id),
+    };
+
+    if (isNaN(dto.id) || dto.id < 1) {
+      return unprocessableEntity({
+        message: 'Invalid param ID.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
+  }
+
+  public static delete(req: Request, res: Response, next: NextFunction) {
+    const dto: DeleteAddressDto = {
+      id: Number(req.params.id),
+    };
+
+    if (isNaN(dto.id) || dto.id < 1) {
+      return unprocessableEntity({
+        message: 'Invalid param ID.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
   }
 }
 

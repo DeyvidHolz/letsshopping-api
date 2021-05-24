@@ -17,4 +17,17 @@ type UpdateProductReviewDto = {
   user?: User;
 };
 
-export { CreateProductReviewDto, UpdateProductReviewDto };
+type GetProductReviewDto = {
+  id: number;
+};
+
+type DeleteProductReviewDto = {
+  id: number;
+};
+
+export {
+  CreateProductReviewDto,
+  UpdateProductReviewDto,
+  GetProductReviewDto,
+  DeleteProductReviewDto,
+};

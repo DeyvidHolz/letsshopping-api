@@ -36,4 +36,12 @@ type UpdateProductDto = {
   options?: CreateProductOptionDto[];
 };
 
-export { CreateProductDto, UpdateProductDto };
+type GetProductDto = {
+  code: string;
+};
+
+type DeleteProductDto = {
+  code: string;
+};
+
+export { CreateProductDto, UpdateProductDto, GetProductDto, DeleteProductDto };

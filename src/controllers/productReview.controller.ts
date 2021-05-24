@@ -1,13 +1,17 @@
-import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
-
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import { getConnection } from 'typeorm';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { ProductReview } from '../entities/ProductReview.entity';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/productReview.messages';
 import { Product } from '../entities/Product.entity';
+import {
+  CreateProductReviewDto,
+  DeleteProductReviewDto,
+  GetProductReviewDto,
+  UpdateProductReviewDto,
+} from '../dto/productReview.dto';
 
 class ProductReviewController {
   private static getRepository() {
@@ -16,17 +20,16 @@ class ProductReviewController {
 
   public static async create(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+    const dto: CreateProductReviewDto = req.dto;
     const productRepository = getConnection().getRepository(Product);
-    req.dto.user = req.user;
-
     const product = await productRepository.findOne({
-      code: req.dto.product.code,
+      code: dto.product.code,
     });
-    req.dto.product = product;
 
-    const productReview = productReviewRepository.create(
-      req.dto as ProductReview,
-    );
+    dto.user = req.user;
+    dto.product = product;
+
+    const productReview = productReviewRepository.create(dto as ProductReview);
 
     try {
       await productReviewRepository.save(productReview);
@@ -45,11 +48,11 @@ class ProductReviewController {
 
   public static async get(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
-    const productReviewId: number = Number(req.params.id);
+    const dto: GetProductReviewDto = req.dto;
 
     const productReview = await productReviewRepository.findOne({
       where: {
-        id: productReviewId,
+        id: dto.id,
         user: { id: req.user.id },
       },
       relations: ['product'],
@@ -77,9 +80,10 @@ class ProductReviewController {
 
   public static async update(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+    const dto: UpdateProductReviewDto = req.dto;
 
     const productReview = productReviewRepository.create(
-      req.dto as ProductReview,
+      dto as unknown as ProductReview,
     );
 
     try {
@@ -99,8 +103,10 @@ class ProductReviewController {
 
   public static async delete(req: Request, res: Response) {
     const productReviewRepository = ProductReviewController.getRepository();
+    const dto: DeleteProductReviewDto = req.dto;
+
     try {
-      await productReviewRepository.delete(req.params.id);
+      await productReviewRepository.delete(dto.id);
       return res
         .status(200)
         .json({ message: getMessage(productReviewMessages.deleted) });

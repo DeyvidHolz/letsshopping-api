@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateCategoryDto, UpdateCategoryDto } from '../../dto/category.dto';
+import {
+  CreateCategoryDto,
+  DeleteCategoryDto,
+  GetCategoryDto,
+  UpdateCategoryDto,
+} from '../../dto/category.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
 import CategoryValidator from '../../validators/category.validator';
 import ValidatorMiddleware from './validatorMiddleware';
@@ -36,6 +41,36 @@ class CategoryValidatorMiddleware extends ValidatorMiddleware {
 
     const validation = new CategoryValidator(dto, true);
     CategoryValidatorMiddleware.validate({ dto, validation, req, res, next });
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetCategoryDto = {
+      id: +req.params.id,
+    };
+
+    if (!dto.id || isNaN(dto.id)) {
+      return unprocessableEntity({
+        message: 'Invalid param code.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
+  }
+
+  public static delete(req: Request, res: Response, next: NextFunction) {
+    const dto: DeleteCategoryDto = {
+      id: +req.params.id,
+    };
+
+    if (!dto.id || isNaN(dto.id)) {
+      return unprocessableEntity({
+        message: 'Invalid param code.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
   }
 }
 

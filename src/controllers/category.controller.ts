@@ -1,14 +1,17 @@
-import { getConnection, Raw } from 'typeorm';
 import { Request, Response } from 'express';
-
+import { getConnection, Raw } from 'typeorm';
 import { Category } from '../entities/Category.entity';
-import CategoryValidator from '../validators/category.validator';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import { getMessage } from '../helpers/messages.helper';
 import categoryMessages from '../messages/category.messages';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import {
+  CreateCategoryDto,
+  DeleteCategoryDto,
+  GetCategoryDto,
+  UpdateCategoryDto,
+} from '../dto/category.dto';
 
 class CategoryController {
   private static getRepository() {
@@ -17,7 +20,8 @@ class CategoryController {
 
   public static async create(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-    const category = categoryRepository.create(req.dto as Category);
+    const dto: CreateCategoryDto = req.dto;
+    const category = categoryRepository.create(dto as Category);
 
     try {
       await categoryRepository.save(category);
@@ -31,14 +35,13 @@ class CategoryController {
   }
 
   public static async get(req: Request, res: Response) {
-    const category = await CategoryController.getRepository().findOne(
-      Number(req.params.id),
-    );
+    const dto: GetCategoryDto = req.dto;
+    const category = await CategoryController.getRepository().findOne(dto.id);
 
     if (!category) {
       return notFound({
         message: getMessage(categoryMessages.searchByIDNotFound, {
-          id: Number(req.params.id),
+          id: dto.id,
         }),
       }).send(res);
     }
@@ -67,12 +70,11 @@ class CategoryController {
     const includeProducts: boolean =
       req.query.includeProducts === 'true' ? true : false;
 
-    const categories: Category[] = await CategoryController.getRepository().find(
-      {
+    const categories: Category[] =
+      await CategoryController.getRepository().find({
         order: { id: 'DESC' },
         relations: includeProducts ? ['products'] : [],
-      },
-    );
+      });
 
     return res.status(200).json(categories);
   }
@@ -86,8 +88,8 @@ class CategoryController {
         res,
       );
 
-    const categories: Category[] = await CategoryController.getRepository().find(
-      {
+    const categories: Category[] =
+      await CategoryController.getRepository().find({
         where: {
           name: Raw(
             (alias) => `LOWER(${alias}) Like LOWER('%${req.query.name}%')`,
@@ -95,8 +97,7 @@ class CategoryController {
         },
         order: { id: 'DESC' },
         relations: includeProducts ? ['products'] : [],
-      },
-    );
+      });
 
     if (!categories.length)
       return notFound({ message: 'No categories found.' }).send(res);
@@ -106,14 +107,15 @@ class CategoryController {
 
   public static async update(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-    const category = await categoryRepository.create(req.dto as Category);
+    const dto: UpdateCategoryDto = req.dto;
+    const category = await categoryRepository.create(dto as Category);
 
     // ! useless if statement
     // TODO: query category instead of just use .create, then update data. Keep this 'if'.
     if (!category) {
       return notFound({
         message: getMessage(categoryMessages.searchByIDNotFound, {
-          id: Number(req.body.id),
+          id: dto.id,
         }),
       }).send(res);
     }
@@ -131,13 +133,13 @@ class CategoryController {
 
   public static async delete(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
-    const id = Number(req.params.id);
+    const dto: DeleteCategoryDto = req.dto;
 
     try {
-      await categoryRepository.delete({ id });
+      await categoryRepository.delete({ id: dto.id });
 
       return res.status(200).json({
-        message: getMessage(categoryMessages.deleted, { id }),
+        message: getMessage(categoryMessages.deleted, { id: dto.id }),
       });
     } catch (err) {
       return internalServerError({ message: err.message }).send(res);

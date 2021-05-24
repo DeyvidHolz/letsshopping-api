@@ -8,4 +8,17 @@ type UpdatePermissionGroupDto = {
   level: number;
 };
 
-export { CreatePermissionGroupDto, UpdatePermissionGroupDto };
+type GetPermissionGroupDto = {
+  name: string;
+};
+
+type DeletePermissionGroupDto = {
+  name: string;
+};
+
+export {
+  CreatePermissionGroupDto,
+  UpdatePermissionGroupDto,
+  GetPermissionGroupDto,
+  DeletePermissionGroupDto,
+};

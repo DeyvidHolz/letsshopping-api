@@ -11,4 +11,17 @@ type UpdateCategoryDto = {
   description?: string;
 };
 
-export { CreateCategoryDto, UpdateCategoryDto };
+type GetCategoryDto = {
+  id: number;
+};
+
+type DeleteCategoryDto = {
+  id: number;
+};
+
+export {
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  GetCategoryDto,
+  DeleteCategoryDto,
+};

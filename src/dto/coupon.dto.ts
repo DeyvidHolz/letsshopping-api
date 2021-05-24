@@ -23,4 +23,12 @@ type UpdateCouponDto = {
   ruleMinPrice?: number;
 };
 
-export { CreateCouponDto, UpdateCouponDto };
+type GetCouponDto = {
+  id: number;
+};
+
+type DeleteCouponDto = {
+  id: number;
+};
+
+export { CreateCouponDto, UpdateCouponDto, GetCouponDto, DeleteCouponDto };

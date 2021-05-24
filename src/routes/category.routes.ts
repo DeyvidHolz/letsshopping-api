@@ -23,12 +23,19 @@ router.get(
   CategoryController.getProductsByCategory,
 );
 
-router.get('/:id', AuthMiddleware, AdminMiddleware, CategoryController.get);
+router.get(
+  '/:id',
+  AuthMiddleware,
+  AdminMiddleware,
+  CategoryValidatorMiddleware.get,
+  CategoryController.get,
+);
 
 router.delete(
   '/:id',
   AuthMiddleware,
   AdminMiddleware,
+  CategoryValidatorMiddleware.delete,
   CategoryController.delete,
 );
 

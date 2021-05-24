@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateProductDto, UpdateProductDto } from '../../dto/product.dto';
+import {
+  CreateProductDto,
+  DeleteProductDto,
+  GetProductDto,
+  UpdateProductDto,
+} from '../../dto/product.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
 import ProductValidator from '../../validators/product.validator';
 import ValidatorMiddleware from './validatorMiddleware';
@@ -66,6 +71,36 @@ class ProductValidatorMiddleware extends ValidatorMiddleware {
       res,
       next,
     });
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetProductDto = {
+      code: req.params.code,
+    };
+
+    if (!dto.code || dto.code.length !== 6) {
+      return unprocessableEntity({
+        message: 'Invalid param code.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
+  }
+
+  public static delete(req: Request, res: Response, next: NextFunction) {
+    const dto: DeleteProductDto = {
+      code: req.params.code,
+    };
+
+    if (!dto.code || dto.code.length !== 6) {
+      return unprocessableEntity({
+        message: 'Invalid param code.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
   }
 }
 

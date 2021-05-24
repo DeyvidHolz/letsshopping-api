@@ -19,4 +19,12 @@ type UpdateAddressDto = {
   isMain?: boolean;
 };
 
-export { CreateAddressDto, UpdateAddressDto };
+type GetAddressDto = {
+  id: number;
+};
+
+type DeleteAddressDto = {
+  id: number;
+};
+
+export { CreateAddressDto, UpdateAddressDto, GetAddressDto, DeleteAddressDto };

@@ -17,12 +17,19 @@ router.get(
   ProductController.searchByName,
 );
 
-router.get('/:code', AuthMiddleware, AdminMiddleware, ProductController.get);
+router.get(
+  '/:code',
+  AuthMiddleware,
+  AdminMiddleware,
+  ProductValidatorMiddleware.get,
+  ProductController.get,
+);
 
 router.delete(
   '/:code',
   AuthMiddleware,
   AdminMiddleware,
+  ProductValidatorMiddleware.delete,
   ProductController.delete,
 );
 

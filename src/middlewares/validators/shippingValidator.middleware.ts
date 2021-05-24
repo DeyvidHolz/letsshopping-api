@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateShippingDto, UpdateShippingDto } from '../../dto/shipping.dto';
+import {
+  CreateShippingDto,
+  GetShippingDto,
+  UpdateShippingDto,
+} from '../../dto/shipping.dto';
 import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
-import { getMessage } from '../../helpers/messages.helper';
-import shippingMessages from '../../messages/shipping.messages';
 import ShippingValidator from '../../validators/shipping.validator';
 import ValidatorMiddleware from './validatorMiddleware';
 
@@ -55,6 +57,21 @@ class ShippingValidatorMiddleware extends ValidatorMiddleware {
       res,
       next,
     });
+  }
+
+  public static get(req: Request, res: Response, next: NextFunction) {
+    const dto: GetShippingDto = {
+      id: +req.params.id,
+    };
+
+    if (!dto.id || isNaN(dto.id)) {
+      return unprocessableEntity({
+        message: 'Invalid param id.',
+      }).send(res);
+    }
+
+    req.dto = dto;
+    next();
   }
 }
 
