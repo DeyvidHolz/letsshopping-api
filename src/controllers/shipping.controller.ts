@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import notFound from '../errors/http/notFound.error';
-import { Order } from '../entities/Order.entity';
-import { Shipping } from '../entities/Shipping.entity';
+import { Order } from '../entities/order.entity';
+import { Shipping } from '../entities/shipping.entity';
 import {
   CreateShippingDto,
   GetShippingDto,

@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { Coupon } from '../entities/Coupon.entity';
+import { Coupon } from '../entities/coupon.entity';
 import {
   CreateCouponDto,
   DeleteCouponDto,

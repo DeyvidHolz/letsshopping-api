@@ -1,7 +1,7 @@
 import express from 'express';
 import ShippingController from '../controllers/shipping.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import ShippingValidatorMiddleware from '../middlewares/validators/shippingValidator.middleware';
+import ShippingValidatorMiddleware from '../middlewares/validators/shipping-validator.middleware';
 
 const router = express.Router();
 

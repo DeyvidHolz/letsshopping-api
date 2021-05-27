@@ -1,7 +1,7 @@
 import { getConnection } from 'typeorm';
-import { Cart } from '../entities/Cart.entity';
-import { CartProduct } from '../entities/CartProduct.entity';
-import { Product } from '../entities/Product.entity';
+import { Cart } from '../entities/cart.entity';
+import { CartProduct } from '../entities/cart-product.entity';
+import { Product } from '../entities/product.entity';
 
 const hasStock = async (
   product: Product | string,

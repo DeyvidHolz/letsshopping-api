@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
-import { Address } from '../entities/Address.entity';
-import { User } from '../entities/User.entity';
+import { Address } from '../entities/address.entity';
+import { User } from '../entities/user.entity';
 import {
   GetAddressDto,
   CreateAddressDto,

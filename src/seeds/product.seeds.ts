@@ -1,6 +1,6 @@
 import { getConnection } from 'typeorm';
 import { CreateProductDto } from '../dto/product.dto';
-import { Product } from '../entities/Product.entity';
+import { Product } from '../entities/product.entity';
 
 const seeds: CreateProductDto[] = [
   {

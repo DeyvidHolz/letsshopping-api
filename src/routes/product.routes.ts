@@ -1,10 +1,10 @@
 import express from 'express';
 
 import ProductController from '../controllers/product.controller';
-import { ProductRequestInterceptor } from '../interceptors/productRequest.interceptor';
+import { ProductRequestInterceptor } from '../interceptors/product-request.interceptor';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import ProductValidatorMiddleware from '../middlewares/validators/productValidator.middleware';
+import ProductValidatorMiddleware from '../middlewares/validators/product-validator.middleware';
 
 const router = express.Router();
 

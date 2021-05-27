@@ -2,7 +2,7 @@ import express from 'express';
 import CouponController from '../controllers/coupon.controller';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import CouponValidatorMiddleware from '../middlewares/validators/couponValidator.middleware';
+import CouponValidatorMiddleware from '../middlewares/validators/coupon-validator.middleware';
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
-import { Cart } from '../entities/Cart.entity';
-import { CartProduct } from '../entities/CartProduct.entity';
+import { Cart } from '../entities/cart.entity';
+import { CartProduct } from '../entities/cart-product.entity';
 
 const calculateTotal = (cart: Cart) => {
   let total: number = 0;

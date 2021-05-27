@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
-import { Address } from '../entities/Address.entity';
+import { Address } from '../entities/address.entity';
 import RequestNotExpected from '../errors/test/requestNotExpected.error';
 import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 

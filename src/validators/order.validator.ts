@@ -1,6 +1,6 @@
 import validator from 'validator';
-import { Order } from '../entities/Order.entity';
-import orderValidationRegex from './validationRegex/order.validationRegex';
+import { Order } from '../entities/order.entity';
+import orderValidationRegex from './validationRegex/order.validation-regex';
 
 import {
   Validation,

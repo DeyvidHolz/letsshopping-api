@@ -6,9 +6,9 @@ import {
   RemoveEvent,
   UpdateEvent,
 } from 'typeorm';
-import { Cart } from '../entities/Cart.entity';
-import { CartProduct } from '../entities/CartProduct.entity';
-import { Product } from '../entities/Product.entity';
+import { Cart } from '../entities/cart.entity';
+import { CartProduct } from '../entities/cart-product.entity';
+import { Product } from '../entities/product.entity';
 
 @EventSubscriber()
 export class PostSubscriber implements EntitySubscriberInterface<Cart> {

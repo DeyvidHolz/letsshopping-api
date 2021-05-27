@@ -1,10 +1,10 @@
 import express from 'express';
 
 import UserController from '../controllers/user.controller';
-import { UserRequestInterceptor } from '../interceptors/userRequest.interceptor';
+import { UserRequestInterceptor } from '../interceptors/user-request.interceptor';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import UserValidatorMiddleware from '../middlewares/validators/userValidator.middleware';
+import UserValidatorMiddleware from '../middlewares/validators/user-validator.middleware';
 
 const router = express.Router();
 

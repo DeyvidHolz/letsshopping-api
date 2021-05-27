@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getConnection, Raw } from 'typeorm';
-import { Category } from '../entities/Category.entity';
+import { Category } from '../entities/category.entity';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';

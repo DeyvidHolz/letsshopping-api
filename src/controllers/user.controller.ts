@@ -4,7 +4,7 @@ import jwt, { decode } from 'jsonwebtoken';
 import { getConnection, Raw } from 'typeorm';
 
 import jwtConfig from '../config/jwt.config';
-import { User } from '../entities/User.entity';
+import { User } from '../entities/user.entity';
 import CryptHelper from '../helpers/crypt.helper';
 import StringHelper from '../helpers/string.helper';
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
@@ -12,9 +12,9 @@ import internalServerError from '../errors/http/internalServer.error';
 import notFound from '../errors/http/notFound.error';
 import userMessages from '../messages/user.messages';
 import { getMessage } from '../helpers/messages.helper';
-import { Cart } from '../entities/Cart.entity';
-import { PermissionGroup } from '../entities/PermissionGroup.entity';
-import { JwtUser } from '../types/controllers/userController.types';
+import { Cart } from '../entities/cart.entity';
+import { PermissionGroup } from '../entities/permission-group.entity';
+import { JwtUser } from '../types/controllers/user-controller.types';
 import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
 
 dotenv.config();

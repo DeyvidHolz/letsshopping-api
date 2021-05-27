@@ -1,6 +1,6 @@
 import validator from 'validator';
-import countryList from '../config/countryList.config';
-import addressValidationRegex from './validationRegex/address.validationRegex';
+import countryList from '../config/country-list';
+import addressValidationRegex from './validationRegex/address.validation-regex';
 import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
 
 import {

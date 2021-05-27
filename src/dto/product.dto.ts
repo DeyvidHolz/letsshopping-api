@@ -1,4 +1,4 @@
-import { CreateProductOptionDto } from './productOption.dto';
+import { CreateProductOptionDto } from './product-option.dto';
 
 type CreateProductDto = {
   code: string;

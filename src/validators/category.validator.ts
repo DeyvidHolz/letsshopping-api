@@ -1,5 +1,5 @@
 import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
-import categoryValidationRegex from './validationRegex/category.validationRegex';
+import categoryValidationRegex from './validationRegex/category.validation-regex';
 
 import {
   Validation,

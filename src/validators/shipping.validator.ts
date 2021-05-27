@@ -1,5 +1,5 @@
 import { CreateShippingDto, UpdateShippingDto } from '../dto/shipping.dto';
-import shippingValidationRegex from './validationRegex/shipping.validationRegex';
+import shippingValidationRegex from './validationRegex/shipping.validation-regex';
 
 import {
   Validation,

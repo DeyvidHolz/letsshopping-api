@@ -3,7 +3,7 @@ import express from 'express';
 import CategoryController from '../controllers/category.controller';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import CategoryValidatorMiddleware from '../middlewares/validators/categoryValidator.middleware';
+import CategoryValidatorMiddleware from '../middlewares/validators/category-validator.middleware';
 
 const router = express.Router();
 

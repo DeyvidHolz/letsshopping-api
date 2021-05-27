@@ -1,6 +1,6 @@
 import validator from 'validator';
 import { CreateCouponDto, UpdateCouponDto } from '../dto/coupon.dto';
-import couponValidationRegex from './validationRegex/coupon.validationRegex';
+import couponValidationRegex from './validationRegex/coupon.validation-regex';
 
 import {
   Validation,

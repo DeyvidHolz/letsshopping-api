@@ -1,6 +1,6 @@
 import { getConnection } from 'typeorm';
 import { CreateCategoryDto } from '../dto/category.dto';
-import { Category } from '../entities/Category.entity';
+import { Category } from '../entities/category.entity';
 
 const seeds: CreateCategoryDto[] = [
   {

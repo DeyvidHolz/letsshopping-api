@@ -2,7 +2,7 @@ import express from 'express';
 
 import AddressController from '../controllers/address.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import AddressValidatorMiddleware from '../middlewares/validators/addressValidator.middleware';
+import AddressValidatorMiddleware from '../middlewares/validators/address-validator.middleware';
 
 const router = express.Router();
 

@@ -3,12 +3,12 @@ import { Request, Response } from 'express';
 
 import unprocessableEntity from '../errors/http/unprocessableEntity.error';
 import notFound from '../errors/http/notFound.error';
-import { Order } from '../entities/Order.entity';
-import { Cart } from '../entities/Cart.entity';
-import { User } from '../entities/User.entity';
-import { OrderAddress } from '../entities/OrderAddress.entity';
-import { Address } from '../entities/Address.entity';
-import { CartProduct } from '../entities/CartProduct.entity';
+import { Order } from '../entities/order.entity';
+import { Cart } from '../entities/cart.entity';
+import { User } from '../entities/user.entity';
+import { OrderAddress } from '../entities/order-address.entity';
+import { Address } from '../entities/address.entity';
+import { CartProduct } from '../entities/cart-product.entity';
 import { getMessage } from '../helpers/messages.helper';
 import orderMessages from '../messages/order.messages';
 import OrderValidator from '../validators/order.validator';

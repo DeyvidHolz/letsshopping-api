@@ -15,28 +15,28 @@ import { createConnection, getConnection } from 'typeorm';
 
 // Configs
 import jwtConfig from './src/config/jwt.config';
-import permissionGroupsConfig from './src/config/permissionGroups.config';
+import permissionGroupsConfig from './src/config/permission-groups.config';
 
 // Routes
 import userRoutes from './src/routes/user.routes';
-import productReviewRoutes from './src/routes/productReview.routes';
+import productReviewRoutes from './src/routes/product-review.routes';
 import productRoutes from './src/routes/product.routes';
 import categoryRoutes from './src/routes/category.routes';
 import addressRoutes from './src/routes/address.routes';
 import couponRoutes from './src/routes/coupon.routes';
-import shopInfoRoutes from './src/routes/shopInfo.routes';
+import shopInfoRoutes from './src/routes/shop-info.routes';
 import cartRoutes from './src/routes/cart.routes';
 import orderRoutes from './src/routes/order.routes';
 import shippingRoutes from './src/routes/shipping.routes';
-import permissionGroupRoutes from './src/routes/permissionGroup.routes';
+import permissionGroupRoutes from './src/routes/permission-group.routes';
 import authRoutes from './src/routes/auth.routes';
 
 // Entities
-import { User } from './src/entities/User.entity';
-import { ShopInfo } from './src/entities/ShopInfo.entity';
-import { PermissionGroup } from './src/entities/PermissionGroup.entity';
+import { User } from './src/entities/user.entity';
+import { ShopInfo } from './src/entities/shop-info.entity';
+import { PermissionGroup } from './src/entities/permission-group.entity';
 import cryptHelper from './src/helpers/crypt.helper';
-import { Cart } from './src/entities/Cart.entity';
+import { Cart } from './src/entities/cart.entity';
 import { createSeeds } from './src/seeds/seeds';
 
 class Application {
