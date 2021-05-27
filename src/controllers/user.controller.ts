@@ -1,12 +1,11 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import jwt, { decode } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { getConnection, Raw } from 'typeorm';
 
 import jwtConfig from '../config/jwt.config';
 import { User } from '../entities/user.entity';
 import CryptHelper from '../helpers/crypt.helper';
-import StringHelper from '../helpers/string.helper';
 import unprocessableEntity from '../errors/http/unprocessable-entity.error';
 import internalServerError from '../errors/http/internal-server.error';
 import notFound from '../errors/http/not-found.error';

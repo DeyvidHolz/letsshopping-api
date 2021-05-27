@@ -15,7 +15,6 @@ import { createConnection, getConnection } from 'typeorm';
 
 // Configs
 import jwtConfig from './src/config/jwt.config';
-import permissionGroupsConfig from './src/config/permission-groups.config';
 
 // Routes
 import userRoutes from './src/routes/user.routes';
@@ -33,10 +32,6 @@ import authRoutes from './src/routes/auth.routes';
 
 // Entities
 import { User } from './src/entities/user.entity';
-import { ShopInfo } from './src/entities/shop-info.entity';
-import { PermissionGroup } from './src/entities/permission-group.entity';
-import cryptHelper from './src/helpers/crypt.helper';
-import { Cart } from './src/entities/cart.entity';
 import { createSeeds } from './src/seeds/seeds';
 
 class Application {
@@ -47,13 +42,8 @@ class Application {
     console.log('Loading application...'.yellow);
 
     this.app = express();
-
     this.connect().then(async () => {
       this.config();
-      this.createDefaultPermisionGroups();
-      this.createShop();
-      this.createAdminUser();
-
       await createSeeds();
 
       console.log('Application loaded!'.green);
@@ -130,80 +120,6 @@ class Application {
     this.app.use('/api/shippings', shippingRoutes);
     this.app.use('/api/permission-groups', permissionGroupRoutes);
     this.app.use('/api', authRoutes);
-  }
-
-  private async createDefaultPermisionGroups() {
-    console.log('Creating default data...'.yellow);
-
-    const permissionGroupRepository =
-      getConnection().getRepository(PermissionGroup);
-    const permissionGroups = await permissionGroupRepository.find();
-
-    if (!permissionGroups.length) {
-      const newPermissionGroups: PermissionGroup[] = [];
-
-      permissionGroupsConfig.defaultGroups.forEach((pg) =>
-        newPermissionGroups.push(
-          permissionGroupRepository.create(pg as PermissionGroup),
-        ),
-      );
-
-      await permissionGroupRepository.save(newPermissionGroups);
-    }
-  }
-
-  private async createShop() {
-    const shopInfoRepository = getConnection().getRepository(ShopInfo);
-
-    if (!(await shopInfoRepository.findOne(1))) {
-      const shopInfo = new ShopInfo();
-      shopInfo.name = process.env.SHOP_NAME;
-
-      await shopInfoRepository.save(shopInfo);
-    }
-  }
-
-  private async createAdminUser(force: boolean = false) {
-    const userRepository = getConnection().getRepository(User);
-    const permissionGroupRepository =
-      getConnection().getRepository(PermissionGroup);
-    const cartRepository = getConnection().getRepository(Cart);
-
-    const users = await userRepository.find();
-
-    if (!force) {
-      if (users.length) {
-        return;
-      }
-    }
-
-    const permissionGroup = await permissionGroupRepository.findOne({
-      where: { name: process.env.DEFAULT_ADMIN_PERMISSION_GROUP },
-    });
-
-    // Creating a cart for admin user
-    const cart = new Cart();
-    await cartRepository.save(cart);
-
-    // Creating admin user
-    const user = new User();
-    user.firstName = 'Admin';
-    user.lastName = '';
-    user.username = 'admin';
-    user.email = 'admin@admin.com';
-    user.birthDate = '1999-12-30';
-    user.password = cryptHelper.encryptPassword('admin');
-    user.permissionGroup = permissionGroup;
-    await userRepository.save(user);
-
-    // Saving relation
-    cart.user = user;
-    await cartRepository.save(cart);
-
-    user.cart = cart;
-    await userRepository.save(user);
-
-    console.log(`Admin user created. Username: ${user.username}`.blue);
   }
 
   public start = (port: number) => {

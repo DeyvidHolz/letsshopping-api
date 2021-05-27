@@ -1,3 +1,5 @@
+import { PermissionGroup } from '../entities/permission-group.entity';
+
 type CreateUserDto = {
   username: string;
   password: string;
@@ -5,6 +7,7 @@ type CreateUserDto = {
   lastName: string;
   email: string;
   birthDate: string;
+  permissionGroup?: PermissionGroup;
 };
 
 type UpdateUserDto = {
