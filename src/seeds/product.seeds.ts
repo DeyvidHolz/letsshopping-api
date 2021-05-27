@@ -1,5 +1,6 @@
 import { getConnection } from 'typeorm';
 import { CreateProductDto } from '../dto/product.dto';
+import { Category } from '../entities/category.entity';
 import { Product } from '../entities/product.entity';
 
 const seeds: CreateProductDto[] = [
@@ -12,7 +13,7 @@ const seeds: CreateProductDto[] = [
     mainImage: 'grapes.jpg',
     isActive: true,
     price: 5,
-    // categories: [{ id: 1 }],
+    categories: [{ id: 1 }],
     options: [
       {
         name: 'Qty',
@@ -32,7 +33,7 @@ const seeds: CreateProductDto[] = [
     mainImage: 'mango1.jpg',
     isActive: true,
     price: 15,
-    // categories: [{ id: 1 }],
+    categories: [{ id: 1 }],
     images: [
       { src: 'mango2.png', description: 'Wow, what a mango!' },
       { src: 'mango3.jpg' },
@@ -53,7 +54,7 @@ const seeds: CreateProductDto[] = [
     mainImage: 'pineapple1.jpg',
     isActive: true,
     price: 15,
-    // categories: [{ id: 1 }, { id: 2 }],
+    categories: [{ id: 1 }, { id: 2 }],
     images: [
       {
         src: 'pineapple2.jpg',
@@ -71,7 +72,7 @@ const seeds: CreateProductDto[] = [
     mainImage: 'pretzels.jpg',
     isActive: true,
     price: 10,
-    // categories: [{ id: 2 }],
+    categories: [{ id: 2 }],
   },
   {
     code: 'EX0005',
@@ -82,7 +83,7 @@ const seeds: CreateProductDto[] = [
     mainImage: 'popcorn.jpg',
     isActive: true,
     price: 10,
-    // categories: [{ id: 2 }],
+    categories: [{ id: 2 }],
   },
 ];
 
@@ -92,5 +93,5 @@ export async function createProductSeeds() {
   if (qty > 0) return;
 
   const products = repository.create(seeds as any);
-  repository.save(products);
+  await repository.save(products);
 }

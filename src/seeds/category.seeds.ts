@@ -23,5 +23,5 @@ export async function createCategorySeeds() {
   if (qty > 0) return;
 
   const categories = repository.create(seeds as any);
-  repository.save(categories);
+  await repository.save(categories);
 }

@@ -10,8 +10,8 @@ export async function createSeeds() {
   const runSeeds = process.env.RUN_SEEDS === 'true';
   if (runSeeds) {
     console.log('Creating seeds...'.blue);
-    createCategorySeeds();
-    createProductSeeds();
+    await createCategorySeeds();
+    await createProductSeeds();
     console.log('All seeds created'.blue);
   }
 }
