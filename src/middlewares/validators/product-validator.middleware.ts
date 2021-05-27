@@ -6,7 +6,7 @@ import {
   GetProductDto,
   UpdateProductDto,
 } from '../../dto/product.dto';
-import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
+import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import ProductValidator from '../../validators/product.validator';
 import ValidatorMiddleware from './validator.middleware';
 

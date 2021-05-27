@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getConnection } from 'typeorm';
-import internalServerError from '../errors/http/internalServer.error';
-import notFound from '../errors/http/notFound.error';
+import internalServerError from '../errors/http/internal-server.error';
+import notFound from '../errors/http/not-found.error';
 import { ProductReview } from '../entities/product-review.entity';
 import { getMessage } from '../helpers/messages.helper';
 import productReviewMessages from '../messages/product-review.messages';

@@ -1,8 +1,8 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
 
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import notFound from '../errors/http/notFound.error';
+import unprocessableEntity from '../errors/http/unprocessable-entity.error';
+import notFound from '../errors/http/not-found.error';
 import cartMessages from '../messages/cart.messages';
 import { Cart } from '../entities/cart.entity';
 import { Product } from '../entities/product.entity';

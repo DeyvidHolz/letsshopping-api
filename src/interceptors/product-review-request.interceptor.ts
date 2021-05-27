@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
+import unprocessableEntity from '../errors/http/unprocessable-entity.error';
 import { HandlerReturn } from '../types/middlewares/interceptors/handler-return.types';
 
 export class ProductReviewRequestInterceptor {

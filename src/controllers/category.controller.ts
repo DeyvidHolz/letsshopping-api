@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { getConnection, Raw } from 'typeorm';
 import { Category } from '../entities/category.entity';
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import internalServerError from '../errors/http/internalServer.error';
-import notFound from '../errors/http/notFound.error';
+import unprocessableEntity from '../errors/http/unprocessable-entity.error';
+import internalServerError from '../errors/http/internal-server.error';
+import notFound from '../errors/http/not-found.error';
 import { getMessage } from '../helpers/messages.helper';
 import categoryMessages from '../messages/category.messages';
 import {

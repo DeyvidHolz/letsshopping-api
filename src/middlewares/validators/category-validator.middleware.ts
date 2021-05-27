@@ -6,7 +6,7 @@ import {
   GetCategoryDto,
   UpdateCategoryDto,
 } from '../../dto/category.dto';
-import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
+import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import CategoryValidator from '../../validators/category.validator';
 import ValidatorMiddleware from './validator.middleware';
 

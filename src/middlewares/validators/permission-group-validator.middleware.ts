@@ -6,7 +6,7 @@ import {
   GetPermissionGroupDto,
   UpdatePermissionGroupDto,
 } from '../../dto/permission-group.dto';
-import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
+import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import PermissionGroupValidator from '../../validators/permission-group.validator';
 import ValidatorMiddleware from './validator.middleware';
 

@@ -1,7 +1,7 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
 
-import internalServerError from '../errors/http/internalServer.error';
+import internalServerError from '../errors/http/internal-server.error';
 import { ShopInfo } from '../entities/shop-info.entity';
 import { getMessage } from '../helpers/messages.helper';
 import shopInfoMessages from '../messages/shop-info.messages';

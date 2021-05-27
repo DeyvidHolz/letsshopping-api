@@ -1,9 +1,9 @@
 import { getConnection } from 'typeorm';
 import { Request, Response } from 'express';
 
-import unprocessableEntity from '../errors/http/unprocessableEntity.error';
-import internalServerError from '../errors/http/internalServer.error';
-import notFound from '../errors/http/notFound.error';
+import unprocessableEntity from '../errors/http/unprocessable-entity.error';
+import internalServerError from '../errors/http/internal-server.error';
+import notFound from '../errors/http/not-found.error';
 import { Coupon } from '../entities/coupon.entity';
 import {
   CreateCouponDto,

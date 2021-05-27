@@ -6,7 +6,7 @@ import {
   GetAddressDto,
   UpdateAddressDto,
 } from '../../dto/address.dto';
-import unprocessableEntity from '../../errors/http/unprocessableEntity.error';
+import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import { getMessage } from '../../helpers/messages.helper';
 import addressMessages from '../../messages/address.messages';
 import AddressValidator from '../../validators/address.validator';

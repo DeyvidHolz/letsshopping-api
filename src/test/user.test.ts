@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import dotenv from 'dotenv';
 
 import { User } from '../entities/user.entity';
-import RequestNotExpected from '../errors/test/requestNotExpected.error';
+import RequestNotExpected from '../errors/test/request-not-expected.error';
 
 dotenv.config();
 
