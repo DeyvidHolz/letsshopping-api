@@ -4,7 +4,7 @@ import ShopInfoController from '../controllers/shop-info.controller';
 import { ShopInfoRequestInterceptor } from '../interceptors/shop-info-request.interceptor';
 import AdminMiddleware from '../middlewares/admin.middleware';
 import AuthMiddleware from '../middlewares/auth.middleware';
-import ShopInfoValidatorMiddleware from '../middlewares/validators/shopInfo-validator.middleware';
+import ShopInfoValidatorMiddleware from '../middlewares/validators/shop-info-validator.middleware';
 
 const router = express.Router();
 
