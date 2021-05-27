@@ -14,6 +14,7 @@ import {
 import { getMessage } from '../helpers/messages.helper';
 import couponMessages from '../messages/coupon.messages';
 import CouponValidator from '../validators/coupon.validator';
+import { Logger } from '../helpers/logger.helper';
 
 class CouponController {
   private static getRepository() {
@@ -31,7 +32,7 @@ class CouponController {
         .status(201)
         .json({ message: getMessage(couponMessages.created, coupon), coupon });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       if (err.code === '23505') {
         return unprocessableEntity({
@@ -79,7 +80,7 @@ class CouponController {
         .status(200)
         .json({ message: getMessage(couponMessages.updated, coupon), coupon });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       if (err.code === '23505') {
         return unprocessableEntity({
@@ -103,7 +104,7 @@ class CouponController {
         .status(200)
         .json({ message: getMessage(couponMessages.deleted) });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);

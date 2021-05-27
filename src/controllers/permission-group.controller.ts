@@ -13,6 +13,7 @@ import {
   GetPermissionGroupDto,
   UpdatePermissionGroupDto,
 } from '../dto/permission-group.dto';
+import { Logger } from '../helpers/logger.helper';
 
 class PermissionGroupController {
   private static getRepository() {
@@ -34,7 +35,7 @@ class PermissionGroupController {
         permissionGroup,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       if (err.code === '23505') {
         return unprocessableEntity({
@@ -67,7 +68,7 @@ class PermissionGroupController {
         permissionGroup,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       if (err.code === '23505') {
         return unprocessableEntity({
@@ -128,7 +129,7 @@ class PermissionGroupController {
         .status(200)
         .json({ message: getMessage(permissionGroupMessages.deleted) });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);

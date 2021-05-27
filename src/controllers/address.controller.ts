@@ -13,6 +13,7 @@ import {
 } from '../dto/address.dto';
 import { getMessage } from '../helpers/messages.helper';
 import addressMessages from '../messages/address.messages';
+import { Logger } from '../helpers/logger.helper';
 
 class AddressController {
   private static getRepository() {
@@ -79,7 +80,7 @@ class AddressController {
         address,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);
@@ -185,7 +186,7 @@ class AddressController {
         address,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);
@@ -227,7 +228,7 @@ class AddressController {
         .status(200)
         .json({ message: getMessage(addressMessages.deleted) });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);

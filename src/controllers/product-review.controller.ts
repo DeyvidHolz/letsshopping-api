@@ -12,6 +12,7 @@ import {
   GetProductReviewDto,
   UpdateProductReviewDto,
 } from '../dto/product-review.dto';
+import { Logger } from '../helpers/logger.helper';
 
 class ProductReviewController {
   private static getRepository() {
@@ -38,7 +39,7 @@ class ProductReviewController {
         productReview,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       return internalServerError({
         message: 'An error occurred.',
@@ -93,7 +94,7 @@ class ProductReviewController {
         productReview,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       return internalServerError({
         message: 'An error occurred.',
@@ -111,7 +112,7 @@ class ProductReviewController {
         .status(200)
         .json({ message: getMessage(productReviewMessages.deleted) });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);

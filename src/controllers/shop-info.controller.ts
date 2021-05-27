@@ -5,6 +5,7 @@ import internalServerError from '../errors/http/internalServer.error';
 import { ShopInfo } from '../entities/shop-info.entity';
 import { getMessage } from '../helpers/messages.helper';
 import shopInfoMessages from '../messages/shop-info.messages';
+import { Logger } from '../helpers/logger.helper';
 
 class ShopInfoController {
   private static getRepository() {
@@ -22,7 +23,7 @@ class ShopInfoController {
         shopInfo,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
       return internalServerError({
         message: 'An error occurred.',
       }).send(res);
@@ -53,7 +54,7 @@ class ShopInfoController {
         shopInfo,
       });
     } catch (err) {
-      console.log(err);
+      Logger.critical(err);
 
       return internalServerError({
         message: 'An error occurred.',
