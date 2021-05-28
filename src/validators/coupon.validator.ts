@@ -27,8 +27,12 @@ export default class CouponValidator extends Validator {
   public validate(): Validation {
     super.validate();
 
-    if (!validator.isBoolean(String(this.data.isActive)))
+    if (
+      this.data.isActive !== undefined &&
+      !validator.isBoolean(String(this.data.isActive))
+    ) {
       this.addError('isActive');
+    }
 
     return {
       hasErrors: !!this.validationErrors.length,

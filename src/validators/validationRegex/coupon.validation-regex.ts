@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
 import { ValidationRegex } from '../validator';
-
-dotenv.config();
-const defaultRegexForNames = process.env.DEFAULT_REGEX_FOR_NAMES;
 
 const couponValidationRegex: ValidationRegex[] = [
   {
@@ -12,7 +8,6 @@ const couponValidationRegex: ValidationRegex[] = [
   {
     field: 'name',
     validations: [
-      { regex: `^[${defaultRegexForNames}&0-9 ]+$` },
       {
         regex: '^.{4,255}$',
         message: 'The field name must have 4 to 255 characters.',
@@ -21,6 +16,7 @@ const couponValidationRegex: ValidationRegex[] = [
   },
   {
     field: 'description',
+    required: false,
     validations: [
       {
         regex: '^.{4,255}$',
@@ -35,7 +31,6 @@ const couponValidationRegex: ValidationRegex[] = [
   },
   {
     field: 'discountAmount',
-    required: false,
     validations: [{ regex: '^[0-9]+$' }],
   },
   {

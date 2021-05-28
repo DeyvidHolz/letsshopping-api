@@ -70,8 +70,14 @@ class CouponController {
   public static async update(req: Request, res: Response) {
     const couponRepository = CouponController.getRepository();
     const dto: UpdateCouponDto = req.dto;
+    const currentCoupon = await couponRepository.findOne(dto.id);
 
-    // TODO: query category instead of just use .create, then update data.
+    if (!currentCoupon) {
+      return unprocessableEntity({
+        message: getMessage(couponMessages.notFound, { id: dto.id }),
+      }).send(res);
+    }
+
     const coupon = couponRepository.create(dto as Coupon);
 
     try {

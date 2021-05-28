@@ -108,17 +108,17 @@ class CategoryController {
   public static async update(req: Request, res: Response) {
     const categoryRepository = CategoryController.getRepository();
     const dto: UpdateCategoryDto = req.dto;
-    const category = await categoryRepository.create(dto as Category);
+    const currentCategory = await categoryRepository.findOne(dto.id);
 
-    // ! useless if statement
-    // TODO: query category instead of just use .create, then update data. Keep this 'if'.
-    if (!category) {
+    if (!currentCategory) {
       return notFound({
         message: getMessage(categoryMessages.searchByIDNotFound, {
           id: dto.id,
         }),
       }).send(res);
     }
+
+    const category = await categoryRepository.create(dto as Category);
 
     try {
       await categoryRepository.save(category);
