@@ -29,6 +29,7 @@ import orderRoutes from './src/routes/order.routes';
 import shippingRoutes from './src/routes/shipping.routes';
 import permissionGroupRoutes from './src/routes/permission-group.routes';
 import authRoutes from './src/routes/auth.routes';
+import fileUploadRoutes from './src/routes/file-upload.routes';
 
 // Entities
 import { User } from './src/entities/user.entity';
@@ -119,6 +120,7 @@ class Application {
     this.app.use('/api/orders', orderRoutes);
     this.app.use('/api/shippings', shippingRoutes);
     this.app.use('/api/permission-groups', permissionGroupRoutes);
+    this.app.use('/api', fileUploadRoutes);
     this.app.use('/api', authRoutes);
   }
 
