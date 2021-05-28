@@ -11,7 +11,7 @@ import {
   DeleteProductReviewDto,
   GetProductReviewDto,
   UpdateProductReviewDto,
-} from '../dto/product-review.dto';
+} from '../dtos/product-review.dto';
 import { Logger } from '../helpers/logger.helper';
 
 class ProductReviewController {

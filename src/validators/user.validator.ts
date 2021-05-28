@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import userValidationRegex from './validationRegex/user.validation-regex';
 
 import {

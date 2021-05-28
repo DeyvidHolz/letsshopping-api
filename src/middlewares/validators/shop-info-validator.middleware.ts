@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateShopInfoDto, UpdateShopInfoDto } from '../../dto/shop-info.dto';
+import { CreateShopInfoDto, UpdateShopInfoDto } from '../../dtos/shop-info.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import ShopInfoValidator from '../../validators/shop-info.validator';
 import ValidatorMiddleware from './validator.middleware';

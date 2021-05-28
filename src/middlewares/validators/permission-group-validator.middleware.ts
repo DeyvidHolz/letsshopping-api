@@ -5,7 +5,7 @@ import {
   DeletePermissionGroupDto,
   GetPermissionGroupDto,
   UpdatePermissionGroupDto,
-} from '../../dto/permission-group.dto';
+} from '../../dtos/permission-group.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import PermissionGroupValidator from '../../validators/permission-group.validator';
 import ValidatorMiddleware from './validator.middleware';

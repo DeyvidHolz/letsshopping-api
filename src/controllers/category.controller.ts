@@ -11,7 +11,7 @@ import {
   DeleteCategoryDto,
   GetCategoryDto,
   UpdateCategoryDto,
-} from '../dto/category.dto';
+} from '../dtos/category.dto';
 
 class CategoryController {
   private static getRepository() {

@@ -1,5 +1,5 @@
 import { getConnection } from 'typeorm';
-import { CreateProductDto } from '../dto/product.dto';
+import { CreateProductDto } from '../dtos/product.dto';
 import { Category } from '../entities/category.entity';
 import { Product } from '../entities/product.entity';
 

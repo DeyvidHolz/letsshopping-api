@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { CreateUserDto, UpdateUserDto } from '../../dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../../dtos/user.dto';
 import UserValidator from '../../validators/user.validator';
 import ValidatorMiddleware from './validator.middleware';
 

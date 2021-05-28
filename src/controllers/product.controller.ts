@@ -11,7 +11,7 @@ import {
   DeleteProductDto,
   GetProductDto,
   UpdateProductDto,
-} from '../dto/product.dto';
+} from '../dtos/product.dto';
 
 class ProductController {
   private static getRepository() {

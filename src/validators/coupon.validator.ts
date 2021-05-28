@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { CreateCouponDto, UpdateCouponDto } from '../dto/coupon.dto';
+import { CreateCouponDto, UpdateCouponDto } from '../dtos/coupon.dto';
 import couponValidationRegex from './validationRegex/coupon.validation-regex';
 
 import {

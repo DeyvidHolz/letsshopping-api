@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { getConnection } from 'typeorm';
-import { CreateShopInfoDto } from '../dto/shop-info.dto';
+import { CreateShopInfoDto } from '../dtos/shop-info.dto';
 import { ShopInfo } from '../entities/shop-info.entity';
 
 dotenv.config();

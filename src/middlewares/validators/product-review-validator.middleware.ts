@@ -5,7 +5,7 @@ import {
   DeleteProductReviewDto,
   GetProductReviewDto,
   UpdateProductReviewDto,
-} from '../../dto/product-review.dto';
+} from '../../dtos/product-review.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import ProductReviewValidator from '../../validators/product-review.validator';
 import ValidatorMiddleware from './validator.middleware';

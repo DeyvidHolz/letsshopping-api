@@ -10,7 +10,7 @@ import {
   CreateAddressDto,
   DeleteAddressDto,
   UpdateAddressDto,
-} from '../dto/address.dto';
+} from '../dtos/address.dto';
 import { getMessage } from '../helpers/messages.helper';
 import addressMessages from '../messages/address.messages';
 import { Logger } from '../helpers/logger.helper';

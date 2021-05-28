@@ -1,4 +1,4 @@
-import { CreateShopPhoneInfoDto } from '../dto/shop-phone.dto';
+import { CreateShopPhoneInfoDto } from '../dtos/shop-phone.dto';
 import shopPhoneValidationRegex from './validationRegex/shop-phone.validation-regex';
 
 import {

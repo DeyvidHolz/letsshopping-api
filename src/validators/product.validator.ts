@@ -1,4 +1,4 @@
-import { CreateProductDto, UpdateProductDto } from '../dto/product.dto';
+import { CreateProductDto, UpdateProductDto } from '../dtos/product.dto';
 import ProductOptionValidator from './product-option.validator';
 import productValidationRegex from './validationRegex/product.validation-regex';
 

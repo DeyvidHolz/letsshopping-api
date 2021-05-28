@@ -12,7 +12,7 @@ import {
   DeletePermissionGroupDto,
   GetPermissionGroupDto,
   UpdatePermissionGroupDto,
-} from '../dto/permission-group.dto';
+} from '../dtos/permission-group.dto';
 import { Logger } from '../helpers/logger.helper';
 
 class PermissionGroupController {

@@ -1,4 +1,4 @@
-import { CreateShopInfoDto, UpdateShopInfoDto } from '../dto/shop-info.dto';
+import { CreateShopInfoDto, UpdateShopInfoDto } from '../dtos/shop-info.dto';
 import ShopPhoneValidator from './shop-phone.validator';
 import shopInfoValidationRegex from './validationRegex/shop-info.validation-regex';
 

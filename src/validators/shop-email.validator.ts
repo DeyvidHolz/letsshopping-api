@@ -1,4 +1,4 @@
-import { CreateShopEmailInfoDto } from '../dto/shop-email.dto';
+import { CreateShopEmailInfoDto } from '../dtos/shop-email.dto';
 import shopEmailValidationRegex from './validationRegex/shop-email.validation-regex';
 
 import {

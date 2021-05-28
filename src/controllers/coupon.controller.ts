@@ -10,7 +10,7 @@ import {
   DeleteCouponDto,
   GetCouponDto,
   UpdateCouponDto,
-} from '../dto/coupon.dto';
+} from '../dtos/coupon.dto';
 import { getMessage } from '../helpers/messages.helper';
 import couponMessages from '../messages/coupon.messages';
 import CouponValidator from '../validators/coupon.validator';

@@ -1,7 +1,7 @@
 import {
   CreatePermissionGroupDto,
   UpdatePermissionGroupDto,
-} from '../dto/permission-group.dto';
+} from '../dtos/permission-group.dto';
 import permissionGroupValidationRegex from './validationRegex/permission-group.validation-regex';
 
 import {

@@ -5,7 +5,7 @@ import {
   DeleteCouponDto,
   GetCouponDto,
   UpdateCouponDto,
-} from '../../dto/coupon.dto';
+} from '../../dtos/coupon.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import { getMessage } from '../../helpers/messages.helper';
 import couponMessages from '../../messages/coupon.messages';

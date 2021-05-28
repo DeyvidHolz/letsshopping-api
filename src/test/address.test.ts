@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 import { Address } from '../entities/address.entity';
 import RequestNotExpected from '../errors/test/request-not-expected.error';
-import { CreateAddressDto, UpdateAddressDto } from '../dto/address.dto';
+import { CreateAddressDto, UpdateAddressDto } from '../dtos/address.dto';
 
 dotenv.config();
 

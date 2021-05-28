@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { getConnection } from 'typeorm';
-import { CreatePermissionGroupDto } from '../dto/permission-group.dto';
+import { CreatePermissionGroupDto } from '../dtos/permission-group.dto';
 import { PermissionGroup } from '../entities/permission-group.entity';
 
 dotenv.config();

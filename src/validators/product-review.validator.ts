@@ -1,7 +1,7 @@
 import {
   CreateProductReviewDto,
   UpdateProductReviewDto,
-} from '../dto/product-review.dto';
+} from '../dtos/product-review.dto';
 import productReviewValidationRegex from './validationRegex/product-review.validation-regex';
 
 import {

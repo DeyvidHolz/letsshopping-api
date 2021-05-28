@@ -1,4 +1,4 @@
-import { CreateShopSocialInfoDto } from '../dto/shop-social.dto';
+import { CreateShopSocialInfoDto } from '../dtos/shop-social.dto';
 import shopSocialValidationRegex from './validationRegex/shop-social.validation-regex';
 
 import {

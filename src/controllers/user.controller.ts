@@ -14,7 +14,7 @@ import { getMessage } from '../helpers/messages.helper';
 import { Cart } from '../entities/cart.entity';
 import { PermissionGroup } from '../entities/permission-group.entity';
 import { JwtUser } from '../types/controllers/user-controller.types';
-import { CreateUserDto, UpdateUserDto } from '../dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 
 dotenv.config();
 

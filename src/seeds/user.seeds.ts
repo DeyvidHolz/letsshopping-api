@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { getConnection } from 'typeorm';
-import { CreateUserDto } from '../dto/user.dto';
+import { CreateUserDto } from '../dtos/user.dto';
 import { PermissionGroup } from '../entities/permission-group.entity';
 import { User } from '../entities/user.entity';
 import CryptHelper from '../helpers/crypt.helper';

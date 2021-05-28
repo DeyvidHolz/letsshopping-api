@@ -4,7 +4,7 @@ import {
   CreateShippingDto,
   GetShippingDto,
   UpdateShippingDto,
-} from '../../dto/shipping.dto';
+} from '../../dtos/shipping.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import ShippingValidator from '../../validators/shipping.validator';
 import ValidatorMiddleware from './validator.middleware';

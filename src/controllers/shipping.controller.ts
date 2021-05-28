@@ -9,7 +9,7 @@ import {
   CreateShippingDto,
   GetShippingDto,
   UpdateShippingDto,
-} from '../dto/shipping.dto';
+} from '../dtos/shipping.dto';
 import { getMessage } from '../helpers/messages.helper';
 import shippingMessages from '../messages/shipping.messages';
 import ShippingValidator from '../validators/shipping.validator';

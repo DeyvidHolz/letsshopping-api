@@ -1,4 +1,4 @@
-import { CreateShippingDto, UpdateShippingDto } from '../dto/shipping.dto';
+import { CreateShippingDto, UpdateShippingDto } from '../dtos/shipping.dto';
 import shippingValidationRegex from './validationRegex/shipping.validation-regex';
 
 import {

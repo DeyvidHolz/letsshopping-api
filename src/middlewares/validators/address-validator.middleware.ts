@@ -5,7 +5,7 @@ import {
   DeleteAddressDto,
   GetAddressDto,
   UpdateAddressDto,
-} from '../../dto/address.dto';
+} from '../../dtos/address.dto';
 import unprocessableEntity from '../../errors/http/unprocessable-entity.error';
 import { getMessage } from '../../helpers/messages.helper';
 import addressMessages from '../../messages/address.messages';
