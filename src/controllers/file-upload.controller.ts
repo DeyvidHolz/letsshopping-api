@@ -10,7 +10,6 @@ import { Logger } from '../helpers/logger.helper';
 class FileUploadController {
   public static async imageUpload(req: Request, res: Response) {
     const file = req.dto.file;
-    console.log(req.dto);
     const currentFilePath = file.path;
     // const fileExtension = req.dto.fileExtension;
     const newFileName = `${uuidv4()}.jpg`;

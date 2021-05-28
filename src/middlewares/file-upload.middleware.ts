@@ -34,8 +34,6 @@ export class FileUploadMiddleware {
         fileExtension: getFileExtension(file.name),
       };
 
-      console.log('nexte');
-
       next();
     });
   }
